@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TP Fil Rouge</title>
+</head>
+<body>
+
+<h1>Programmers' list</h1>
+
+<table style="border: black solid 1px">
+    <thead style="background-color: burlywood">
+    <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th colspan="2">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="programmer : ${programmers}" th:id="'programmer-' + ${programmer.id}">
+        <td th:text="${programmer.nom}">Nom</td>
+        <td th:text="${programmer.prenom}">Prénom</td>
+        <td>
+            <form action="">
+                <button>Update</button>
+            </form>
+        <td>
+            <form th:action="@{/tp_fil_rouge/programmers/delete/{id}(id=${programmer.id})}" method="post">
+                <button class="btn btn-warning" type="submit">Delete</button>
+                <input type="hidden" name="_method" value="delete"/>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!--<form th:action="@{/tp_fil_rouge/programmer}" method="post" th:object="${newProgrammer}" >-->
+<!--    <h2>Add a new programmer</h2>-->
+<!--    <label for="nom">Nom:</label>-->
+<!--    <input type="text" id="nom" name="nom" required th:field="*{nom}">-->
+<!--    <br>-->
+<!--    <label for="prenom">Prénom:</label>-->
+<!--    <input type="text" id="prenom" name="prenom" required th:field="*{prenom}">-->
+<!--    <br>-->
+<!--    <label for="adresse">Adresse:</label>-->
+<!--    <input type="text" id="adresse" name="adresse" required th:field="*{adresse}">-->
+<!--    <br>-->
+<!--    <label for="langage">Langage:</label>-->
+<!--    <input type="text" id="langage" name="langage" required th:field="*{langage}">-->
+<!--    <br>-->
+<!--    <label for="livre">Livre:</label>-->
+<!--    <input type="text" id="livre" name="livre" required th:field="*{livre}">-->
+<!--    <br>-->
+<!--    <label for="salaire">Salaire:</label>-->
+<!--    <input type="number" id="salaire" name="salaire" required th:field="*{salaire}">-->
+<!--    <br>-->
+<!--    <button type="submit">Add Programmer</button>-->
+<!--</form>-->
+</body>
+</html>

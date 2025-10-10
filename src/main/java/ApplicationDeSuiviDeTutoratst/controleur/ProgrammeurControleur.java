@@ -20,12 +20,12 @@ public class ProgrammeurControleur {
         this.programmeurService = programmeurService;
     }
 
-    @GetMapping("/programmeurs")
+    @GetMapping("/")
     public String afficherProgrammeurs(Model model) {
         List<Programmeur> allProgramers = programmeurService.getProgrammeurs();
         model.addAttribute("programmeurs", allProgramers);
-        model.addAttribute("newProgrammer", new Programmeur());
-        return "programmeurs";
+//        model.addAttribute("newProgrammer", new Programmeur());
+        return "index";
     }
 
     @GetMapping("/unProgrammeur/{idProgrammeur}")
