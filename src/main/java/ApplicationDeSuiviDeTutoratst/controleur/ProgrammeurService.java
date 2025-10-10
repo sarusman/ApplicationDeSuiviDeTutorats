@@ -1,14 +1,12 @@
-package saru.tpfilerouge.controleur;
-import jakarta.persistence.EntityNotFoundException;
+package ApplicationDeSuiviDeTutoratst.controleur;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
-import saru.tpfilerouge.modele.ProgrammeurRepository;
-import saru.tpfilerouge.modele.Programmeur;
+import ApplicationDeSuiviDeTutoratst.modele.ProgrammeurRepository;
+import ApplicationDeSuiviDeTutoratst.modele.Programmeur;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class ProgrammeurService {

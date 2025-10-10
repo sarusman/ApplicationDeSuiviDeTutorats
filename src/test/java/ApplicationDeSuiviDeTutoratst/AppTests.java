@@ -1,10 +1,10 @@
-package saru.tpfilerouge;
+package ApplicationDeSuiviDeTutoratst;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TpFileRougeApplicationTests {
+class AppTests {
 
     @Test
     void contextLoads() {

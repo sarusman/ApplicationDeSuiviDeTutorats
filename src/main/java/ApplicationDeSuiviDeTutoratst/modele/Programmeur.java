@@ -1,4 +1,4 @@
-package saru.tpfilerouge.modele;
+package ApplicationDeSuiviDeTutoratst.modele;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
