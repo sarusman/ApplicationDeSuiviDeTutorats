@@ -33,6 +33,6 @@ public class TraineeController {
     public String getTraineeById(@PathVariable("id") Integer id, Model model) {
          Optional<Trainee> trainee = traineeService.getTraineeById(id);
          model.addAttribute("trainee", trainee.orElse(null));
-        return "traineeDetail";
+        return "traineeDetails";
     }
 }
