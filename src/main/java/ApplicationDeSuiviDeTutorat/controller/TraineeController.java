@@ -1,6 +1,7 @@
 package ApplicationDeSuiviDeTutorat.controller;
 import ApplicationDeSuiviDeTutorat.model.Trainee;
 import ApplicationDeSuiviDeTutorat.service.TraineeService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ApplicationDeSuiviDeTutorat.model.Programmeur;

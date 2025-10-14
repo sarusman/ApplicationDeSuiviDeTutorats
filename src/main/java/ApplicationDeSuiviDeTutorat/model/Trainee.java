@@ -72,11 +72,11 @@ public class Trainee {
         this.company = company;
     }
 
-    public String getProgram() {
+    public Program getProgram() {
         return program;
     }
 
-    public void setProgram(String program) {
+    public void setProgram(Program program) {
         this.program = program;
     }
 
@@ -88,11 +88,11 @@ public class Trainee {
         this.schoolYear = schoolYear;
     }
 
-    public String getMajor() {
+    public Major getMajor() {
         return major;
     }
 
-    public void setMajor(String major) {
+    public void setMajor(Major major) {
         this.major = major;
     }
 
