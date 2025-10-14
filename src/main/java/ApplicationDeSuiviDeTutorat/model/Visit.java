@@ -1,7 +1,7 @@
 package ApplicationDeSuiviDeTutorat.model;
 
 
-import ApplicationDeSuiviDeTutorat.model.Enum.VisitFormat;
+import ApplicationDeSuiviDeTutorat.Enum.VisitFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 

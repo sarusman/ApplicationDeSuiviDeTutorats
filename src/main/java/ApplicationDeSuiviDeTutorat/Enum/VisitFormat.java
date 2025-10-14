@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutorat.model.Enum;
+package ApplicationDeSuiviDeTutorat.Enum;
 
 public enum VisitFormat {
     DISTANCE, PRESENCE

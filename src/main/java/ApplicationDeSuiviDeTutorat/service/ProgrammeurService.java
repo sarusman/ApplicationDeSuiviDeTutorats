@@ -1,7 +1,7 @@
 package ApplicationDeSuiviDeTutorat.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
-import ApplicationDeSuiviDeTutorat.model.ProgrammeurRepository;
+import ApplicationDeSuiviDeTutorat.repository.ProgrammeurRepository;
 import ApplicationDeSuiviDeTutorat.model.Programmeur;
 import java.util.List;
 import java.util.Optional;
