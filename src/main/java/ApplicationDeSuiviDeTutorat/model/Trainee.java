@@ -1,6 +1,9 @@
 package ApplicationDeSuiviDeTutorat.model;
 
 
+import ApplicationDeSuiviDeTutorat.Enum.Major;
+import ApplicationDeSuiviDeTutorat.Enum.Program;
+import ApplicationDeSuiviDeTutorat.Enum.VisitFormat;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,14 +25,16 @@ public class Trainee {
             foreignKey = @ForeignKey(name="fk_trainee_company"))
     private Company company;
 
-    @Column(length=80)
-    private String program;
+    @Enumerated(EnumType.STRING)
+    @Column(length=80, nullable=false)
+    private Program program;
 
     @Column(name="school_year", length=20)  // ex: "2025-2026"
     private String schoolYear;
 
-    @Column(length=100)
-    private String major;
+    @Enumerated(EnumType.STRING)
+    @Column(length=100, nullable=false)
+    private Major major; // ex: "LSI", "BDML"
 
     @Column(name="last_name", nullable=false, length=100)
     private String lastName;
