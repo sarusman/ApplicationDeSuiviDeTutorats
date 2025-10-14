@@ -1,7 +1,8 @@
-package ApplicationDeSuiviDeTutoratst.controleur;
+package ApplicationDeSuiviDeTutoratst.controller;
+import ApplicationDeSuiviDeTutoratst.service.ProgrammeurService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ApplicationDeSuiviDeTutoratst.modele.Programmeur;
+import ApplicationDeSuiviDeTutoratst.model.Programmeur;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;

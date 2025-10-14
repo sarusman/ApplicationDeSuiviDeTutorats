@@ -1,8 +1,8 @@
-package ApplicationDeSuiviDeTutoratst.controleur;
+package ApplicationDeSuiviDeTutoratst.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
-import ApplicationDeSuiviDeTutoratst.modele.ProgrammeurRepository;
-import ApplicationDeSuiviDeTutoratst.modele.Programmeur;
+import ApplicationDeSuiviDeTutoratst.model.ProgrammeurRepository;
+import ApplicationDeSuiviDeTutoratst.model.Programmeur;
 import java.util.List;
 import java.util.Optional;
 

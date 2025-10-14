@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutoratst.modele.tmp;
+package ApplicationDeSuiviDeTutoratst.model.tmp;
 
 public class Programmeur {
 

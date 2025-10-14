@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutoratst.modele;
+package ApplicationDeSuiviDeTutoratst.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
