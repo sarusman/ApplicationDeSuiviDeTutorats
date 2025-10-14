@@ -21,4 +21,13 @@ public class TraineeService {
     public List<Trainee> getAllTrainess() {
         return traineeRepository.findAll();
     }
+
+    public Optional<Trainee> getTraineeById(Integer id) {
+        Optional<Trainee> singleTrainee = traineeRepository.findById(id);
+
+        return Optional.ofNullable(
+                singleTrainee.orElseThrow(
+                        () -> new IllegalStateException(
+                                "Trainee with " + id + " does not exist")));
+    }
 }

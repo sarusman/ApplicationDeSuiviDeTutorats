@@ -28,4 +28,11 @@ public class TraineeController {
 //        model.addAttribute("newProgrammer", new Programmeur());
         return "index";
     }
+
+    @GetMapping("/{id}")
+    public String getTraineeById(@PathVariable("id") Integer id, Model model) {
+         Optional<Trainee> trainee = traineeService.getTraineeById(id);
+         model.addAttribute("trainee", trainee.orElse(null));
+        return "traineeDetail";
+    }
 }
