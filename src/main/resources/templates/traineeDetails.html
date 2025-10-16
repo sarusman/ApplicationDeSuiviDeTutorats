@@ -40,6 +40,11 @@
                         <th>Phone</th>
                         <td th:text="${trainee.phone != null ? trainee.phone : 'NA'}"></td>
                     </tr>
+
+                    <tr>
+                        <th>Program</th>
+                        <td th:text="${trainee.program != null ? trainee.program : 'NA'}"></td>
+                    </tr>
                     <!-- Add other fields as needed -->
                     </tbody>
                 </table>
@@ -52,8 +57,7 @@
     <div class="modal fade" id="updateTraineeModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <!-- NOTE: You will implement the POST route '/trainees/update/{id}' in your controller -->
-                <form th:action="@{/trainees/update/{id}(id=${trainee.id})}" th:object="${trainee}" method="post">
+                <form th:action="@{/trainee/{id}(id=${trainee.id})}" th:object="${trainee}" method="post">
                     <div class="modal-header">
                         <h5 class="modal-title" id="updateModalLabel">Update [[${trainee.firstName}]]'s Profile</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -78,10 +82,15 @@
                             <label for="phone" class="form-label">Phone</label>
                             <input type="tel" class="form-control" id="phone" th:field="*{phone}">
                         </div>
+                        <div class="mb-3">
+                            <label for="program" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="program" th:field="*{program}">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <input type="hidden" name="_method" value="put"/>
                     </div>
                 </form>
             </div>

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Service
 public class TraineeService {
@@ -29,5 +30,17 @@ public class TraineeService {
                 singleTrainee.orElseThrow(
                         () -> new IllegalStateException(
                                 "Trainee with " + id + " does not exist")));
+    }
+
+    @Transactional
+    public Trainee updateTraineeById(Integer id, Trainee updatedTrainee) {
+        Trainee traineeToUpdate = traineeRepository.findById(id).orElseThrow();
+
+        if (traineeToUpdate != null) {
+            BeanUtils.copyProperties(updatedTrainee, traineeToUpdate, "id");
+            return traineeRepository.save(traineeToUpdate);
+        }
+
+        return null;
     }
 }
