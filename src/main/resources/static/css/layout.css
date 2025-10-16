@@ -74,7 +74,7 @@ body {
     color: #a0a0a0;
 }
 
-.sidebar.retracted .sidebar-menu li a span,
+.sidebar.retracted .sidebar-menu li,
 .sidebar.retracted .sidebar-menu .menu-header span {
     display: none;
 }

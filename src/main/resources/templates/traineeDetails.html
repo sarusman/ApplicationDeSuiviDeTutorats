@@ -5,17 +5,89 @@
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Trainee</title>
+    <title>Trainee Details</title>
+    <link rel="stylesheet" th:href="@{/css/traineeDetails.css}">
 </head>
 <body>
 <section layout:fragment="content">
 
-    <h1>Trainee Details</h1>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Trainee Details</h1>
+            <!-- Button to trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateTraineeModal">
+                <i class="bi bi-pencil-square"></i> Update Info
+            </button>
+        </div>
 
-    <p>First Name: <span th:text="${trainee. firstName}">First Name</span></p>
-    <p>Last Name: <span th:text="${trainee.lastName}">Last Name</span></p>
-    <p>Email: <span th:text="${trainee.mail != null ? trainee.mail : 'No email provided'}">Email</span></p>
-    <p>Phone: <span th:text="${trainee.phone != null ? trainee.phone : 'No phone provided'}">Phone</span></p>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered w-100">
+                    <tbody>
+                    <tr>
+                        <th style="width: 20%;">First Name</th>
+                        <td th:text="${trainee.firstName}">John</td>
+                    </tr>
+                    <tr>
+                        <th>Last Name</th>
+                        <td th:text="${trainee.lastName}">Doe</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td th:text="${trainee.mail != null ? trainee.mail : 'No email provided'}">john.doe@example.com</td>
+                    </tr>
+                    <tr>
+                        <th>Phone</th>
+                        <td th:text="${trainee.phone != null ? trainee.phone : 'No phone provided'}">123-456-7890</td>
+                    </tr>
+                    <!-- Add other fields as needed -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Update Trainee Modal -->
+    <div class="modal fade" id="updateTraineeModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- NOTE: You will implement the POST route '/trainees/update/{id}' in your controller -->
+                <form th:action="@{/trainees/update/{id}(id=${trainee.id})}" th:object="${trainee}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateModalLabel">Update [[${trainee.firstName}]]'s Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Hidden input to carry the ID -->
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="mail" th:field="*{mail}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" th:field="*{phone}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 </body>

@@ -1,0 +1,7 @@
+th {
+    background-color: #f8f9fa;
+}
+
+section[layout:fragment="content"] .container-fluid {
+                                       padding-top: 20px;
+                                   }
