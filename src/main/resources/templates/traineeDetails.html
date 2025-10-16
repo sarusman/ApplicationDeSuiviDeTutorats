@@ -20,7 +20,7 @@
             </button>
         </div>
 
-        <div class="card">
+<!--        <div class="card">-->
             <div class="card-body">
                 <table class="table table-bordered w-100">
                     <tbody>
@@ -30,21 +30,21 @@
                     </tr>
                     <tr>
                         <th>Last Name</th>
-                        <td th:text="${trainee.lastName}">Doe</td>
+                        <td th:text="${trainee.lastName}"></td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td th:text="${trainee.mail != null ? trainee.mail : 'No email provided'}">john.doe@example.com</td>
+                        <td th:text="${trainee.mail != null ? trainee.mail : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Phone</th>
-                        <td th:text="${trainee.phone != null ? trainee.phone : 'No phone provided'}">123-456-7890</td>
+                        <td th:text="${trainee.phone != null ? trainee.phone : 'NA'}"></td>
                     </tr>
                     <!-- Add other fields as needed -->
                     </tbody>
                 </table>
             </div>
-        </div>
+<!--        </div>-->
     </div>
 
 
