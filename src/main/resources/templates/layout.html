@@ -3,19 +3,46 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title>Suivi Tutorat</title>
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Suivi Tutorat</title>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
 </head>
 <body>
-<header>
-    <h1>Suivi Tutorat</h1>
-</header>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo-placeholder">
+            <span>Suivi Tutorat</span>
+        </div>
+        <button class="toggle-btn" id="toggle-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+    <ul class="sidebar-menu">
+        <li class="menu-header"><span>Trainees</span></li>
+        <li><a href="#">Trainee List</a></li>
+        <li><a href="#">Add Trainee</a></li>
+        <li class="menu-header"><span>Admin</span></li>
+        <li><a href="#">User Management</a></li>
+        <li><a href="#">Settings</a></li>
+    </ul>
+</div>
 
-<main layout:fragment="content">
-    <!-- Content of children pages -->
-</main>
+<div class="main-content" id="main-content">
+    <header>
+        <h1>Suivi Tutorat</h1>
+    </header>
 
-<footer>
-    <p>&copy; 2025 Suivi Tutorat</p>
-</footer>
+    <main layout:fragment="content">
+        <!-- Content of children pages will be inserted here -->
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Suivi Tutorat</p>
+    </footer>
+</div>
+
+<script th:src="@{/js/layout.js}"></script>
+
 </body>
 </html>
