@@ -1,17 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>Trainee</title>
 </head>
 <body>
+<section layout:fragment="content">
 
-<h1>Trainee Details</h1>
+    <h1>Trainee Details</h1>
 
-<p>First Name: <span th:text="${trainee. firstName}">First Name</span></p>
-<p>Last Name: <span th:text="${trainee.lastName}">Last Name</span></p>
-<p>Email: <span th:text="${trainee.mail != null ? trainee.mail : 'No email provided'}">Email</span></p>
-<p>Phone: <span th:text="${trainee.phone != null ? trainee.phone : 'No phone provided'}">Phone</span></p>
+    <p>First Name: <span th:text="${trainee. firstName}">First Name</span></p>
+    <p>Last Name: <span th:text="${trainee.lastName}">Last Name</span></p>
+    <p>Email: <span th:text="${trainee.mail != null ? trainee.mail : 'No email provided'}">Email</span></p>
+    <p>Phone: <span th:text="${trainee.phone != null ? trainee.phone : 'No phone provided'}">Phone</span></p>
+</section>
 
 </body>
 </html>
