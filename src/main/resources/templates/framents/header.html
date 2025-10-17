@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header(user)">
+    <div style="float: right;">
+        Bonjour <b th:text="${user}"></b> |
+        <a th:href="@{/logout}">Déconnectez-vous</a>
+    </div>
+</div>
+</body>
+</html>

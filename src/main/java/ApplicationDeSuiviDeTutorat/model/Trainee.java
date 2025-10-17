@@ -1,9 +1,8 @@
 package ApplicationDeSuiviDeTutorat.model;
 
 
-import ApplicationDeSuiviDeTutorat.Enum.Major;
-import ApplicationDeSuiviDeTutorat.Enum.Program;
-import ApplicationDeSuiviDeTutorat.Enum.VisitFormat;
+import ApplicationDeSuiviDeTutorat.model.Enum.Major;
+import ApplicationDeSuiviDeTutorat.model.Enum.Program;
 import jakarta.persistence.*;
 
 @Entity

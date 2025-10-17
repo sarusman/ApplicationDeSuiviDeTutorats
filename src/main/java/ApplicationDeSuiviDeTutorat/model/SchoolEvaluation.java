@@ -9,7 +9,6 @@ public class SchoolEvaluation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Optionnel mais pratique : qui est évalué ?
     @ManyToOne(optional=false, fetch=FetchType.LAZY)
     @JoinColumn(name="trainee_id", nullable=false,
             foreignKey=@ForeignKey(name="fk_schooleval_trainee"))
@@ -25,6 +24,4 @@ public class SchoolEvaluation {
             foreignKey=@ForeignKey(name="fk_schooleval_defense"))
     private TraineeDefense traineeDefense;
 
-    // getters & setters
-    // ...
 }

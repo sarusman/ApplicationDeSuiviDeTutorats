@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutorat.Enum;
+package ApplicationDeSuiviDeTutorat.model.Enum;
 
 public enum Major {
     LSI,
