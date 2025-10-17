@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="navbar" th:fragment="navbar">
+    <div class="navbar-container">
+        <h1 class="logo">
+            <img th:src="@{/images/logo.png}" alt="Logo ASTA">
+        </h1>
+        <div class="nav-right">
+            <span th:if="${session.user != null}">
+                Bonjour <span th:text="${session.user.prenom}">Utilisateur</span>
+            </span>
+            <a th:if="${session.user != null}" href="/logout" class="btn-logout">Déconnexion</a>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

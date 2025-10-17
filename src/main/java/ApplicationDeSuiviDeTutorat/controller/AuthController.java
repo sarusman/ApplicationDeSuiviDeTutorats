@@ -20,7 +20,7 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password) {
         if (authService.login(username, password)) {
-            return "redirect:/trainees";
+            return "redirect:/dashboard";
         }
         return "redirect:/login?error";
     }

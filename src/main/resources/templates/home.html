@@ -2,12 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Accueil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTA - Suivi de Tutorats</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
-<div th:replace="fragments/header :: header(${username})"></div>
 
-<h1>Bienvenue sur la page d'accueil</h1>
-<p>Vous êtes connecté en tant que <b th:text="${username}"></b>.</p>
+<div th:replace="fragments/menu :: navbar"></div>
+
+<main class="hero">
+    <div class="hero-content">
+        <h2>Application de Suivi de Tutorats d'Apprentis</h2>
+        <p>Gérez facilement le suivi de vos apprentis, leurs missions et leurs évaluations.</p>
+
+        <div class="cta-buttons">
+            <a th:if="${session.user == null}" href="/login" class="btn btn-primary">Se connecter</a>
+            <a th:if="${session.user != null}" href="/dashboard" class="btn btn-primary">Accéder au Dashboard</a>
+        </div>
+    </div>
+</main>
+
 </body>
 </html>

@@ -3,13 +3,11 @@ import ApplicationDeSuiviDeTutorat.model.Trainee;
 import ApplicationDeSuiviDeTutorat.repository.TraineeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
-import ApplicationDeSuiviDeTutorat.repository.ProgrammeurRepository;
-import ApplicationDeSuiviDeTutorat.model.Programmeur;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Service
 public class TraineeService {
