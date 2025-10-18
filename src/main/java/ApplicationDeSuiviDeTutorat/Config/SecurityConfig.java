@@ -20,10 +20,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/logout","/","/images/**", "/css/**", "/js/**", "/framents/**").permitAll()
+                        .requestMatchers("/login", "/logout", "/dashboard","/","/images/**", "/css/**", "/js/**", "/framents/**").permitAll()
                         .anyRequest().authenticated()
-                )
-                .formLogin(form -> form.disable());
+                );
         return http.build();
     }
 }
