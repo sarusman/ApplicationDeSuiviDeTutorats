@@ -25,7 +25,7 @@ body {
     padding: 0 20px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+
 }
 
 .logo {
@@ -33,7 +33,6 @@ body {
     font-weight: 600;
     color: #2d7a3e;
     display: flex;
-    align-items: center;
     gap: 10px;
 }
 
@@ -45,7 +44,6 @@ body {
 .nav-right {
     display: flex;
     gap: 20px;
-    align-items: center;
     font-size: 14px;
 }
 

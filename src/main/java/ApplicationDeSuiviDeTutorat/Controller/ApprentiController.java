@@ -1,6 +1,6 @@
-package ApplicationDeSuiviDeTutorat.controller;
-import ApplicationDeSuiviDeTutorat.model.Trainee;
-import ApplicationDeSuiviDeTutorat.service.TraineeService;
+package ApplicationDeSuiviDeTutorat.Controller;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
+import ApplicationDeSuiviDeTutorat.Service.ApprentiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,25 +13,25 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/trainee")
-public class TraineeController {
+public class ApprentiController {
 
     @Autowired
-    private TraineeService traineeService;
+    private ApprentiService traineeService;
 
-    public TraineeController(TraineeService traineeService) {
+    public ApprentiController(ApprentiService traineeService) {
         this.traineeService = traineeService;
     }
 
     @GetMapping("/{id}")
-    public String getTraineeById(@PathVariable("id") Integer id, Model model) {
-         Optional<Trainee> trainee = traineeService.getTraineeById(id);
+    public String getTraineeById(@PathVariable("id") Long id, Model model) {
+         Optional<Apprenti> trainee = traineeService.getApprentiBilanById(id);
          model.addAttribute("trainee", trainee.orElse(null));
         return "traineeDetails";
     }
 
     @PutMapping("/{id}")
-    public String updateTraineeById(@PathVariable Integer id,@ModelAttribute Trainee updatedTrainee ){
-        traineeService.updateTraineeById(id, updatedTrainee);
+    public String updateTraineeById(@PathVariable Long id,@ModelAttribute Apprenti updatedTrainee ){
+        traineeService.updateApprentiBilanById(id, updatedTrainee);
         return "redirect:/traineeDetails/" + id;
     }
 }

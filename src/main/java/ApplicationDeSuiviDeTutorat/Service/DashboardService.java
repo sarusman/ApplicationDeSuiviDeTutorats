@@ -1,7 +1,7 @@
-package ApplicationDeSuiviDeTutorat.service;
+package ApplicationDeSuiviDeTutorat.Service;
 
-import ApplicationDeSuiviDeTutorat.model.Mentor;
-import ApplicationDeSuiviDeTutorat.model.Trainee;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Tuteur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +10,13 @@ import java.util.List;
 @Service
 public class DashboardService {
     @Autowired
-    TraineeService traineeService;
+    ApprentiService traineeService;
     @Autowired
     MentorService mentorService;
 
-    public DashboardService(TraineeService traineeService,
-                            MentorService mentorService) {
-        this.traineeService = traineeService;
-        this.mentorService = mentorService;
+    public List<Apprenti> getTrainees() {
+        return traineeService.getAllApprentis();
     }
 
-    public List<Trainee> getTrainees() {
-        return traineeService.getAllTrainess();
-    }
-
-    public List<Mentor> getMentors() {return mentorService.getAllMentors();}
+    public List<Tuteur> getMentors() {return mentorService.getAllMentors();}
 }

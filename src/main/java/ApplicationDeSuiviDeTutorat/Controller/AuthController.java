@@ -1,10 +1,18 @@
-package ApplicationDeSuiviDeTutorat.controller;
-import ApplicationDeSuiviDeTutorat.model.User;
+package ApplicationDeSuiviDeTutorat.Controller;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
+import ApplicationDeSuiviDeTutorat.Models.Enums.Role;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ApplicationDeSuiviDeTutorat.service.AuthService;
+import ApplicationDeSuiviDeTutorat.Service.AuthService;
+
+import java.util.List;
+
 @Controller
 public class AuthController {
     private final AuthService authService;
@@ -20,9 +28,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password) {
-        if (authService.login(username, password)) {
+        Utilisateur utilisateur = new Utilisateur(username, password);
+
+        if (authService.login(utilisateur)) {
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            utilisateur.getUsername(),
+                            null
+                    );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             return "redirect:/dashboard";
         }
+
         return "redirect:/login?error";
     }
 
@@ -33,10 +51,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@RequestParam String username, @RequestParam String password) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        if (authService.register(user)) {
+        Utilisateur utilisateur = new Utilisateur(username, password);
+        if (authService.register(utilisateur)) {
             return "redirect:/login";
         }
         return "redirect:/register?error";

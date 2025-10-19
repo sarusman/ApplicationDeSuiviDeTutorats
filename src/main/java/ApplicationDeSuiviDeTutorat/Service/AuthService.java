@@ -1,7 +1,9 @@
-package ApplicationDeSuiviDeTutorat.service;
 
-import ApplicationDeSuiviDeTutorat.model.User;
-import ApplicationDeSuiviDeTutorat.repository.UserRepository;
+package ApplicationDeSuiviDeTutorat.Service;
+
+import ApplicationDeSuiviDeTutorat.Models.Enums.Role;
+import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,30 +11,38 @@ import java.util.Optional;
 
 @Service
 public class AuthService {
-    private final UserRepository userRepository;
+    private final UtilisateurRepository utilisateurRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public AuthService(UtilisateurRepository utilisateurRepository, PasswordEncoder passwordEncoder) {
+        this.utilisateurRepository = utilisateurRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean login(String username, String password) {
-        Optional<User> userOpt = userRepository.findByUsername(username);
-        return userOpt.map(user -> passwordEncoder.matches(password, user.getPassword()))
-                .orElse(false);
-    }
 
-    public boolean register(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return false; // Username already exists
+    public boolean login(Utilisateur utilisateur) {
+        Optional<Utilisateur> existingUser = utilisateurRepository.findByUsername(utilisateur.getUsername());
+        System.out.println("fdfds");
+        if (existingUser.isPresent()) {
+            Utilisateur user = existingUser.get();
+            if (passwordEncoder.matches(utilisateur.getPassword(), user.getPassword())) {
+                return true;
+            }
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return false;
+    }
+    public boolean register(Utilisateur utilisateur) {
+        if (utilisateurRepository.findByUsername(utilisateur.getUsername()).isPresent()) {
+            return false;
+        }
+        utilisateur.setRole(Role.TUTEUR);
+
+        utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
+        utilisateurRepository.save(utilisateur);
         return true;
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
+    public Utilisateur getUtilisateurByUsername(String username) {
+        return utilisateurRepository.findByUsername(username).orElse(null);
     }
 }

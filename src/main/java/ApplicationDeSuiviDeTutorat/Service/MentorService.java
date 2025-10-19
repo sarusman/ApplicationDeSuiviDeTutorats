@@ -1,6 +1,7 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.Tuteur;
+import ApplicationDeSuiviDeTutorat.Repository.TuteurRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -10,18 +11,18 @@ import java.util.Optional;
 
 @Service
 public class MentorService {
-    private final MentorRepository mentorRepository;
+    private final TuteurRepository mentorRepository;
 
-    public MentorService(MentorRepository mentorRepository) {
+    public MentorService(TuteurRepository mentorRepository) {
         this.mentorRepository = mentorRepository;
     }
 
-    public List<Mentor> getAllMentors() {
+    public List<Tuteur> getAllMentors() {
         return mentorRepository.findAll();
     }
 
-    public Optional<Mentor> getMentorById(Integer id) {
-        Optional<Mentor> singleMentor = mentorRepository.findById(id);
+    public Optional<Tuteur> getMentorById(Long id) {
+        Optional<Tuteur> singleMentor = mentorRepository.findById(id);
 
         return Optional.ofNullable(
                 singleMentor.orElseThrow(
@@ -30,8 +31,8 @@ public class MentorService {
     }
 
     @Transactional
-    public Mentor updateMentorById(Integer id, Mentor updatedMentor) {
-        Mentor mentorToUpdate = mentorRepository.findById(id).orElseThrow();
+    public Tuteur updateMentorById(Long id, Tuteur updatedMentor) {
+        Tuteur mentorToUpdate = mentorRepository.findById(id).orElseThrow();
 
         if (mentorRepository != null) {
             BeanUtils.copyProperties(updatedMentor, mentorToUpdate, "id");

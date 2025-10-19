@@ -1,7 +1,7 @@
-package ApplicationDeSuiviDeTutorat.controller;
+package ApplicationDeSuiviDeTutorat.Controller;
 
-import ApplicationDeSuiviDeTutorat.model.Mentor;
-import ApplicationDeSuiviDeTutorat.service.MentorService;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Tuteur;
+import ApplicationDeSuiviDeTutorat.Service.MentorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,14 +22,14 @@ public class MentorController
     public MentorController(MentorService mentorService) { this.mentorService = mentorService;}
 
     @GetMapping("/{id}")
-    public String getMentorById(@PathVariable("id") Integer id, Model model) {
-        Optional<Mentor> mentor = mentorService.getMentorById(id);
+    public String getMentorById(@PathVariable("id") Long id, Model model) {
+        Optional<Tuteur> mentor = mentorService.getMentorById(id);
         model.addAttribute("mentor", mentor.orElse(null));
         return "mentorDetails";
     }
 
     @PutMapping("/{id}")
-    public String updateMentorById(@PathVariable Integer id,@ModelAttribute Mentor updatedMentor){
+    public String updateMentorById(@PathVariable Long id,@ModelAttribute Tuteur updatedMentor){
         mentorService.updateMentorById(id, updatedMentor);
         return "redirect:/mentorDetails/" + id;
     }

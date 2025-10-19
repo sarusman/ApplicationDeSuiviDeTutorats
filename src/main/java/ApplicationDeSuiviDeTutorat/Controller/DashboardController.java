@@ -1,11 +1,9 @@
-package ApplicationDeSuiviDeTutorat.controller;
+package ApplicationDeSuiviDeTutorat.Controller;
 
-import ApplicationDeSuiviDeTutorat.service.DashboardService;
+import ApplicationDeSuiviDeTutorat.Service.DashboardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
-
-import java.security.Principal;
 
 @Controller
 public class DashboardController {
