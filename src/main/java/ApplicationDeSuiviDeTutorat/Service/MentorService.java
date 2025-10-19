@@ -1,7 +1,6 @@
-package ApplicationDeSuiviDeTutorat.service;
+package ApplicationDeSuiviDeTutorat.Service;
 
-import ApplicationDeSuiviDeTutorat.model.Mentor;
-import ApplicationDeSuiviDeTutorat.repository.MentorRepository;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Tuteur;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
