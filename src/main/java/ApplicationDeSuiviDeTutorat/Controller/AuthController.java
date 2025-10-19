@@ -49,6 +49,7 @@ public class AuthController {
 
         Utilisateur dbUser = authService.getUtilisateurByUsername(username);
         Role role = dbUser.getRole();
+        request.getSession(true).setAttribute("user", dbUser);
         var authorities = List.of(new SimpleGrantedAuthority(role.name()));
 
         var authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
