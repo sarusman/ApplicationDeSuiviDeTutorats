@@ -1,4 +1,5 @@
 package ApplicationDeSuiviDeTutorat.controller;
+import ApplicationDeSuiviDeTutorat.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,5 +24,21 @@ public class AuthController {
             return "redirect:/dashboard";
         }
         return "redirect:/login?error";
+    }
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(@RequestParam String username, @RequestParam String password) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        if (authService.register(user)) {
+            return "redirect:/login";
+        }
+        return "redirect:/register?error";
     }
 }

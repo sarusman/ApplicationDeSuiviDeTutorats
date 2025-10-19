@@ -23,6 +23,15 @@ public class AuthService {
                 .orElse(false);
     }
 
+    public boolean register(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return false; // Username already exists
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return true;
+    }
+
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
     }
