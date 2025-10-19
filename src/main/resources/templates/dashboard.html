@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
 <head>
     <title>Dashboard</title>
     <style>
@@ -13,7 +16,7 @@
     </style>
 </head>
 <body>
-
+<section layout:fragment="content">
 <h1>Dashboard</h1>
 
 <div class="tab-buttons">
@@ -68,6 +71,6 @@
         location.href = "/trainee/" + value;
     }
 </script>
-
+</section>
 </body>
 </html>
