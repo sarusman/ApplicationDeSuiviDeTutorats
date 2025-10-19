@@ -18,6 +18,7 @@ public class DashboardController {
     @GetMapping("/dashboard")
     public String Dashboard(Model model) {
         model.addAttribute("trainees", dashboardService.getTrainees());
+        model.addAttribute("mentors", dashboardService.getMentors());
         return "dashboard";
     }
 }
