@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASTA - Suivi de Tutorats</title>
-    <link rel="stylesheet" th:href="@{/css/menu.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
 </head>
 <body>
 
@@ -17,11 +17,11 @@
         <p>Gérez facilement le suivi de vos apprentis, leurs missions et leurs évaluations.</p>
 
         <div class="cta-buttons">
-            <th:block th:if="${#authentication == null or !#authentication.isAuthenticated()}">
+            <th:block th:if="${session.user == null}">
                 <a href="/login" class="btn btn-primary">Se connecter</a>
             </th:block>
 
-            <th:block th:if="${#authentication != null and #authentication.isAuthenticated()}">
+            <th:block th:if="${session.user != null}">
                 <a href="/dashboard" class="btn btn-primary">Accéder au Dashboard</a>
             </th:block>
         </div>
