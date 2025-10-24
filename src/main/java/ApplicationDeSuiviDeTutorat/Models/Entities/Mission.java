@@ -24,7 +24,7 @@ public class Mission {
 
     @ManyToOne
     @JoinColumn(name = "tuteur_id", nullable = false)
-    private Tuteur tuteur;
+    private TuteurEntreprise tuteur;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -41,6 +41,6 @@ public class Mission {
     public Entreprise getEntreprise() { return entreprise; }
     public void setEntreprise(Entreprise entreprise) { this.entreprise = entreprise; }
 
-    public Tuteur getTuteur() { return tuteur; }
-    public void setTuteur(Tuteur tuteur) { this.tuteur = tuteur; }
+    public TuteurEntreprise getTuteur() { return tuteur; }
+    public void setTuteur(TuteurEntreprise tuteur) { this.tuteur = tuteur; }
 }

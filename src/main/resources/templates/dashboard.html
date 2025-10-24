@@ -18,20 +18,28 @@
 
     <div id="apprenti" class="tab active">
         <h2>Liste des Apprentis</h2>
-        <table class="table table-striped table-condensed" style="width: auto" >
+
+        <div th:if="${#lists.isEmpty(apprentis)}" class="alert alert-warning" role="alert">
+            La liste est vide. Ajoutez au moins un apprenti.
+        </div>
+
+        <table th:unless="${#lists.isEmpty(apprentis)}"
+               class="table table-striped table-condensed"
+               style="width: auto">
             <thead class="thead-dark">
             <tr>
-                <th scope="col"><bold>Id</bold></th>
-                <th scope="col"><bold>Nom</bold></th>
-                <th scope="col"><bold>Prénom</bold></th>
+                <th scope="col"><b>Id</b></th>
+                <th scope="col"><b>Nom</b></th>
+                <th scope="col"><b>Prénom</b></th>
                 <th scope="col">Programme</th>
                 <th scope="col">E-mail</th>
                 <th scope="col">Téléphone</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="apprenti :${apprentis}"  style="cursor: pointer">
-                <td th:text="${apprenti.id}" th:onclick="|rowClicked('/apprenti/${apprenti.id}')|"></td>
+            <tr th:each="apprenti : ${apprentis}" style="cursor: pointer">
+                <td th:text="${apprenti.id}"
+                    th:onclick="|rowClicked('/apprenti/${apprenti.id}')|"></td>
                 <td th:text="${apprenti.nom}"></td>
                 <td th:text="${apprenti.prenom}"></td>
                 <td th:text="${apprenti.programme}"></td>
@@ -41,6 +49,7 @@
             </tbody>
         </table>
     </div>
+
 
     <script>
         function showTab(tabId, buttonID) {

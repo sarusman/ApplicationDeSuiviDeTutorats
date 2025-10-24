@@ -1,6 +1,6 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
-import ApplicationDeSuiviDeTutorat.Models.Entities.Tuteur;
+import ApplicationDeSuiviDeTutorat.Models.Entities.TuteurEntreprise;
 import ApplicationDeSuiviDeTutorat.Repository.TuteurRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -17,12 +17,12 @@ public class MentorService {
         this.mentorRepository = mentorRepository;
     }
 
-    public List<Tuteur> getAllMentors() {
+    public List<TuteurEntreprise> getAllMentors() {
         return mentorRepository.findAll();
     }
 
-    public Optional<Tuteur> getMentorById(Long id) {
-        Optional<Tuteur> singleMentor = mentorRepository.findById(id);
+    public Optional<TuteurEntreprise> getMentorById(Long id) {
+        Optional<TuteurEntreprise> singleMentor = mentorRepository.findById(id);
 
         return Optional.ofNullable(
                 singleMentor.orElseThrow(
@@ -31,8 +31,8 @@ public class MentorService {
     }
 
     @Transactional
-    public Tuteur updateMentorById(Long id, Tuteur updatedMentor) {
-        Tuteur mentorToUpdate = mentorRepository.findById(id).orElseThrow();
+    public TuteurEntreprise updateMentorById(Long id, TuteurEntreprise updatedMentor) {
+        TuteurEntreprise mentorToUpdate = mentorRepository.findById(id).orElseThrow();
 
         if (mentorRepository != null) {
             BeanUtils.copyProperties(updatedMentor, mentorToUpdate, "id");
