@@ -21,7 +21,7 @@ public class ApprentiService {
         return apprentiBilanRepository.findAll();
     }
 
-    public Optional<Apprenti> getApprentiBilanById(Long id) {
+    public Optional<Apprenti> getApprentiById(Long id) {
         Optional<Apprenti> singleApprenti = apprentiBilanRepository.findById(id);
 
         return Optional.ofNullable(

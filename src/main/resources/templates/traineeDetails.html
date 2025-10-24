@@ -5,7 +5,7 @@
       layout:decorate="~{fragments/menu}">
 <head>
     <meta charset="UTF-8">
-    <title>Trainee Details</title>
+    <title>Détails de l'apprenti</title>
     <link rel="stylesheet" th:href="@{/css/traineeDetails.css}">
 </head>
 <body>
@@ -13,78 +13,83 @@
 
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>Trainee Details</h1>
-            <button type="button" class="bt btn-primary" data-bs-toggle="modal" data-bs-target="#updateTraineeModal">
-                <i class="bi bi-pencil-square"></i> Update Info
+            <h1>Détails de l'apprenti</h1>
+            <!-- Button to trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateTraineeModal">
+                <i class="bi bi-pencil-square"></i> Mise à jour des infos
             </button>
         </div>
 
+<!--        <div class="card">-->
             <div class="card-body">
                 <table class="table table-bordered w-100">
                     <tbody>
                     <tr>
-                        <th style="width: 20%;">First Name</th>
-                        <td th:text="${trainee.prenom}">John</td>
+                        <th style="width: 20%;">Prenom</th>
+                        <td th:text="${apprenti.prenom}">John</td>
                     </tr>
                     <tr>
-                        <th>Last Name</th>
-                        <td th:text="${trainee.nom}"></td>
+                        <th>Nom</th>
+                        <td th:text="${apprenti.nom}"></td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td th:text="${trainee.mail != null ? trainee.mail : 'NA'}"></td>
+                        <td th:text="${apprenti.adresseElectronique != null ? apprenti.adresseElectronique : 'NA'}"></td>
                     </tr>
                     <tr>
-                        <th>Phone</th>
-                        <td th:text="${trainee.phone != null ? trainee.phone : 'NA'}"></td>
+                        <th>Téléphone</th>
+                        <td th:text="${apprenti.telephone != null ? apprenti.telephone : 'NA'}"></td>
                     </tr>
 
                     <tr>
-                        <th>Program</th>
-                        <td th:text="${trainee.program != null ? trainee.program : 'NA'}"></td>
+                        <th>Programme</th>
+                        <td th:text="${apprenti.programme != null ? apprenti.programme : 'NA'}"></td>
                     </tr>
                     <!-- Add other fields as needed -->
                     </tbody>
                 </table>
             </div>
+<!--        </div>-->
     </div>
 
 
+    <!-- Update Trainee Modal -->
     <div class="modal fade" id="updateTraineeModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form th:action="@{/trainee/{id}(id=${trainee.id})}" th:object="${trainee}" method="post">
+                <form th:action="@{/apprenti/{id}(id=${apprenti.id})}" th:object="${apprenti}" method="post">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="updateModalLabel">Update [[${trainee.firstName}]]'s Profile</h5>
+                        <h5 class="modal-title" id="updateModalLabel">Mise à jour du profile de [[${apprenti.prenom}]]</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <!-- Hidden input to carry the ID -->
                         <input type="hidden" th:field="*{id}" />
 
                         <div class="mb-3">
-                            <label for="firstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
+                            <label for="firstName" class="form-label">Prenom</label>
+                            <input type="text" class="form-control" id="firstName" th:field="*{prenom}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+                            <label for="lastName" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="lastName" th:field="*{nom}" required>
                         </div>
                         <div class="mb-3">
                             <label for="mail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="mail" th:field="*{mail}">
+                            <input type="email" class="form-control" id="mail" th:field="*{adresseElectronique}">
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="tel" class="form-control" id="phone" th:field="*{phone}">
+                            <label for="phone" class="form-label">Téléphone</label>
+                            <input type="tel" class="form-control" id="phone" th:field="*{telephone}">
                         </div>
                         <div class="mb-3">
-                            <label for="program" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="program" th:field="*{program}">
+                            <label for="program" class="form-label">Programme</label>
+                            <input type="text" class="form-control" id="program" th:field="*{programme}">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Sauvegarder les changements</button>
                         <input type="hidden" name="_method" value="put"/>
                     </div>
                 </form>

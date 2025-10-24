@@ -24,8 +24,8 @@ public class ApprentiController {
 
     @GetMapping("/{id}")
     public String getTraineeById(@PathVariable("id") Long id, Model model) {
-         Optional<Apprenti> trainee = traineeService.getApprentiBilanById(id);
-         model.addAttribute("trainee", trainee.orElse(null));
+         Optional<Apprenti> trainee = traineeService.getApprentiById(id);
+         model.addAttribute("apprenti", trainee.orElse(null));
         return "traineeDetails";
     }
 
