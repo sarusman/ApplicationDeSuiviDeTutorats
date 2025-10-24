@@ -17,13 +17,10 @@
         <p>Gérez facilement le suivi de vos apprentis, leurs missions et leurs évaluations.</p>
 
         <div class="cta-buttons">
-            <th:block th:if="${session.user == null}">
-                <a href="/login" class="btn btn-primary">Se connecter</a>
-            </th:block>
-
-            <th:block th:if="${session.user != null}">
-                <a href="/dashboard" class="btn btn-primary">Accéder au Dashboard</a>
-            </th:block>
+            <a th:href="${session.user == null ? '/login' : '/dashboard'}"
+               th:text="${session.user == null ? 'Se connecter' : 'Accéder au Dashboard'}"
+               class="btn btn-primary">
+            </a>
         </div>
     </div>
 </main>
