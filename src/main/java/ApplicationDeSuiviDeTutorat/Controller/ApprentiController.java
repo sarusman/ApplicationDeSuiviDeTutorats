@@ -1,5 +1,6 @@
 package ApplicationDeSuiviDeTutorat.Controller;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
 import ApplicationDeSuiviDeTutorat.Service.ApprentiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,20 @@ public class ApprentiController {
 
     @GetMapping("/{id}")
     public String getTraineeById(@PathVariable("id") Long id, Model model) {
-         Optional<Apprenti> trainee = traineeService.getApprentiById(id);
-         model.addAttribute("apprenti", trainee.orElse(null));
+        Optional<Apprenti> traineeOpt = traineeService.getApprentiById(id);
+
+        if (traineeOpt.isPresent()) {
+            Apprenti apprenti = traineeOpt.get();
+            Optional<Visite> derniereVisite = traineeService.findDerniereVisite(apprenti);
+            Optional<Visite> prochaineVisite = traineeService.findProchaineVisite(apprenti);
+
+            model.addAttribute("apprenti", apprenti);
+            model.addAttribute("derniereVisite", derniereVisite);
+            model.addAttribute("prochaineVisite", prochaineVisite);
+        } else {
+            model.addAttribute("apprenti", null);
+        }
+
         return "traineeDetails";
     }
 

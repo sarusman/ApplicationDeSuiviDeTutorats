@@ -13,7 +13,7 @@
 
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>Détails de l'apprenti</h1>
+            <h1>Détails de l'apprenti </h1>
             <!-- Button to trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateTraineeModal">
                 <i class="bi bi-pencil-square"></i> Editer
@@ -46,13 +46,13 @@
                     </tr>
 
                     <tr>
-                        <th>Dernière visite le</th>
-                        <td th:text="${apprenti.getDerniereVisite().isPresent() ? #temporals.format(apprenti.getDerniereVisite().get().date, 'dd/MM/yyyy') : 'Aucune visite passée'}"></td>
+                        <th style="width: 20%;">Dernière visite le</th>
+                        <td th:text="${derniereVisite.isPresent() ? #temporals.format(derniereVisite.get().date, 'dd/MM/yyyy') : 'Aucune visite passée'}"></td>
                     </tr>
 
                     <tr>
                         <th>Prochaine visite le</th>
-                        <td th:text="${apprenti.getProchaineVisite().isPresent() ? #temporals.format(apprenti.getProchaineVisite().get().date, 'dd/MM/yyyy') : 'Aucune visite à venir'}"></td>
+                        <td th:text="${prochaineVisite.isPresent() ? #temporals.format(prochaineVisite.get().date, 'dd/MM/yyyy') : 'Aucune visite à venir'}"></td>
                     </tr>
                     </tbody>
                 </table>
