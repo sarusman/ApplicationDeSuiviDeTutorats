@@ -1,7 +1,7 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.TuteurEntreprise;
-import ApplicationDeSuiviDeTutorat.Repository.TuteurRepository;
+import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -11,9 +11,9 @@ import java.util.Optional;
 
 @Service
 public class MentorService {
-    private final TuteurRepository mentorRepository;
+    private final TuteurEntrepriseRepository mentorRepository;
 
-    public MentorService(TuteurRepository mentorRepository) {
+    public MentorService(TuteurEntrepriseRepository mentorRepository) {
         this.mentorRepository = mentorRepository;
     }
 
