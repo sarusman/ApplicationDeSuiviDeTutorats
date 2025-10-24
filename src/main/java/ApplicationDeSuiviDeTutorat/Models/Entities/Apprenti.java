@@ -81,34 +81,4 @@ public class Apprenti {
     public void setVisites(List<Visite> visites) { this.visites = visites; }
     public List<EvaluationEcole> getEvaluations() { return evaluations; }
     public void setEvaluations(List<EvaluationEcole> evaluations) { this.evaluations = evaluations; }
-
-    /**
-     * Retourne la dernière visite qui a eu lieu avant la date d'aujourd'hui.
-     * @return un Optional contenant la visite la plus récente, ou un Optional vide si aucune visite passée n'est trouvée.
-     */
-    @Transient
-    public Optional<Visite> getDerniereVisite() {
-        if (visites == null) {
-            return Optional.empty();
-        }
-        LocalDate aujourdhui = LocalDate    .now();
-        return visites.stream()
-                .filter(v -> v.getDate() != null && v.getDate().isBefore(aujourdhui))
-                .max(Comparator.comparing(Visite::getDate));
-    }
-
-    /**
-     * Retourne la prochaine visite prévue à partir de la date d'aujourd'hui.
-     * @return un Optional contenant la visite future la plus proche, ou un Optional vide si aucune visite future n'est trouvée.
-     */
-    @Transient
-    public Optional<Visite> getProchaineVisite() {
-        if (visites == null) {
-            return Optional.empty();
-        }
-        LocalDate aujourdhui = LocalDate.now();
-        return visites.stream()
-                .filter(v -> v.getDate() != null && v.getDate().isAfter(aujourdhui))
-                .min(Comparator.comparing(Visite::getDate));
-    }
 }
