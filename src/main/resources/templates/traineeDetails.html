@@ -16,11 +16,10 @@
             <h1>Détails de l'apprenti</h1>
             <!-- Button to trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateTraineeModal">
-                <i class="bi bi-pencil-square"></i> Mise à jour des infos
+                <i class="bi bi-pencil-square"></i> Editer
             </button>
         </div>
 
-<!--        <div class="card">-->
             <div class="card-body">
                 <table class="table table-bordered w-100">
                     <tbody>
@@ -45,11 +44,49 @@
                         <th>Programme</th>
                         <td th:text="${apprenti.programme != null ? apprenti.programme : 'NA'}"></td>
                     </tr>
-                    <!-- Add other fields as needed -->
+
+                    <tr>
+                        <th>Dernière visite le</th>
+                        <td th:text="${apprenti.getDerniereVisite().isPresent() ? #temporals.format(apprenti.getDerniereVisite().get().date, 'dd/MM/yyyy') : 'Aucune visite passée'}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>Prochaine visite le</th>
+                        <td th:text="${apprenti.getProchaineVisite().isPresent() ? #temporals.format(apprenti.getProchaineVisite().get().date, 'dd/MM/yyyy') : 'Aucune visite à venir'}"></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
-<!--        </div>-->
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Historique des visites</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>Date de la visite</th>
+                    <th>Format</th>
+                    <th>Commentaire</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Itération sur la liste des visites -->
+                <tr th:each="visite : ${apprenti.visites}">
+                    <td th:text="${visite.date != null ? #temporals.format(visite.date, 'dd/MM/yyyy') : 'Date non définie'}"></td>
+                    <!-- Remplacez 'type' et 'commentaire' par les vrais attributs de votre entité Visite -->
+                    <td th:text="${visite.format}"></td>
+                    <td th:text="${visite.commentaires}"></td>
+                </tr>
+                <!-- Message si aucune visite n'est enregistrée -->
+                <tr th:if="${#lists.isEmpty(apprenti.visites)}">
+                    <td colspan="3" class="text-center">Aucune visite enregistrée pour cet apprenti.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 
@@ -98,6 +135,5 @@
     </div>
 
 </section>
-
 </body>
 </html>

@@ -1,8 +1,11 @@
 package ApplicationDeSuiviDeTutorat.Models.Entities;
-
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "apprenti")
@@ -53,6 +56,7 @@ public class Apprenti {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public Programme getProgramme() { return programme; }
     public void setProgramme(Programme programme) { this.programme = programme; }
     public String getAnneeAcademique() { return anneeAcademique; }
@@ -77,4 +81,34 @@ public class Apprenti {
     public void setVisites(List<Visite> visites) { this.visites = visites; }
     public List<EvaluationEcole> getEvaluations() { return evaluations; }
     public void setEvaluations(List<EvaluationEcole> evaluations) { this.evaluations = evaluations; }
+
+    /**
+     * Retourne la dernière visite qui a eu lieu avant la date d'aujourd'hui.
+     * @return un Optional contenant la visite la plus récente, ou un Optional vide si aucune visite passée n'est trouvée.
+     */
+    @Transient
+    public Optional<Visite> getDerniereVisite() {
+        if (visites == null) {
+            return Optional.empty();
+        }
+        LocalDate aujourdhui = LocalDate    .now();
+        return visites.stream()
+                .filter(v -> v.getDate() != null && v.getDate().isBefore(aujourdhui))
+                .max(Comparator.comparing(Visite::getDate));
+    }
+
+    /**
+     * Retourne la prochaine visite prévue à partir de la date d'aujourd'hui.
+     * @return un Optional contenant la visite future la plus proche, ou un Optional vide si aucune visite future n'est trouvée.
+     */
+    @Transient
+    public Optional<Visite> getProchaineVisite() {
+        if (visites == null) {
+            return Optional.empty();
+        }
+        LocalDate aujourdhui = LocalDate.now();
+        return visites.stream()
+                .filter(v -> v.getDate() != null && v.getDate().isAfter(aujourdhui))
+                .min(Comparator.comparing(Visite::getDate));
+    }
 }
