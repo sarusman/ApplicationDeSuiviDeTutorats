@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 "/images/**", "/css/**", "/js/**", "/fragments/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/dashboard").authenticated()
+                        .requestMatchers("/dashboard", "/apprenti/**").authenticated()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
