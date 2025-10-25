@@ -12,8 +12,17 @@
 <section layout:fragment="content">
     <h1>Dashboard</h1>
 
-    <div class="tab-buttons">
+    <div class="tab-buttons d-flex justify-content-between">
         <button id="AButton" class="button active" onclick="showTab('apprenti', 'AButton')">Apprentis</button>
+        <button id="ajouterApprenti"
+                class="btn btn-outline-info d-flex align-items-center gap-2"
+                data-bs-toggle="modal"
+                data-bs-target="#ajoutApprentiModal">
+            <b>
+                <i class="bi bi-plus-lg"></i>
+                Ajouter un apprenti
+            </b>
+        </button>
     </div>
 
     <div id="apprenti" class="tab active">
@@ -45,6 +54,92 @@
         </table>
     </div>
 
+<!--    modale d'ajout d'apprenti    -->
+    <div class="modal fade" id="ajoutApprentiModal" tabindex="-1" aria-labelledby="ajoutApprentiModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg"> <!-- modal-lg pour avoir plus de largeur pour les 2 colonnes -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ajoutApprentiModalLabel">Ajouter un nouvel apprenti</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form th:action="@{/apprenti/ajouter}" th:object="${nouvelApprenti}" method="post">
+                    <div class="modal-body">
+                        <div class="container-fluid">
+
+                            <!-- Ligne 1 : Nom et Prénom (Obligatoires) -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="nom" class="form-label">Nom *</label>
+                                    <input type="text" class="form-control" id="nom" th:field="*{nom}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="prenom" class="form-label">Prénom *</label>
+                                    <input type="text" class="form-control" id="prenom" th:field="*{prenom}" required>
+                                </div>
+                            </div>
+
+                            <!-- Ligne 2 : Email et Téléphone (Email obligatoire) -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Adresse Électronique *</label>
+                                    <input type="email" class="form-control" id="email" th:field="*{adresseElectronique}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="telephone" class="form-label">Téléphone</label>
+                                    <input type="tel" class="form-control" id="telephone" th:field="*{telephone}">
+                                </div>
+                            </div>
+
+                            <!-- Ligne 3 : Programme et Année Académique (Programme obligatoire) -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="programme" class="form-label">Programme *</label>
+                                    <select class="form-select" id="programme" th:field="*{programme}" required>
+                                        <option value="">Choisir un programme...</option>
+                                        <!-- On utilise la liste 'programmes' passée par le contrôleur -->
+                                        <option th:each="prog : ${programmes}" th:value="${prog}" th:text="${prog}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="annee" class="form-label">Année Académique</label>
+                                    <input type="text" class="form-control" id="annee" th:field="*{anneeAcademique}" placeholder="ex: 2024-2025">
+                                </div>
+                            </div>
+
+                            <!-- Ligne 4 : Entreprise et Tuteur Entreprise -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="entreprise" class="form-label">Entreprise *</label>
+                                    <!-- L'ID 'entrepriseSelect' sera utilisé par notre script -->
+                                    <select class="form-select" id="entrepriseSelect" th:field="*{entreprise}" required>
+                                        <option value="">Choisir une entreprise...</option>
+                                        <option th:each="ent : ${entreprises}" th:value="${ent.id}" th:text="${ent.raisonSociale}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tuteurEntreprise" class="form-label">Tuteur d'entreprise *</label>
+                                    <!-- L'ID 'tuteurSelect' sera utilisé par notre script. On ajoute l'attribut 'disabled' -->
+                                    <select class="form-select" id="tuteurSelect" th:field="*{tuteurEntreprise}" required disabled>
+                                        <option value="">-- Choisir une entreprise d'abord --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-floppy"></i>
+                            Enregistrer</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
     <script>
         function showTab(tabId, buttonID) {
             const tabs = document.querySelectorAll('.tab');
@@ -60,6 +155,54 @@
         function rowClicked(value) {
             location.href = value;
         }
+    </script>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const entrepriseSelect = document.getElementById('entrepriseSelect');
+            const tuteurSelect = document.getElementById('tuteurSelect');
+
+            entrepriseSelect.addEventListener('change', function() {
+                const entrepriseId = this.value;
+
+                // Réinitialiser et désactiver le champ tuteur si aucune entreprise n'est sélectionnée
+                tuteurSelect.innerHTML = '<option value="">-- Choisir une entreprise d'abord --</option>';
+                tuteurSelect.disabled = true;
+
+                // Si une entreprise est sélectionnée, faire l'appel API
+                if (entrepriseId) {
+                    // Construit l'URL de l'API en utilisant le contexte de l'application
+                    const url = /*[[@{/api/tuteurs/by-entreprise/}]]*/ '/api/tuteurs/by-entreprise/' + entrepriseId;
+
+                    fetch(url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('La réponse du réseau n\'était pas valide');
+                            }
+                            return response.json();
+                        })
+                        .then(tuteurs => {
+                            // Vider le select (sauf la première option)
+                            tuteurSelect.innerHTML = '<option value="">Choisir un tuteur...</option>';
+
+                            // Remplir le select avec les tuteurs reçus
+                            tuteurs.forEach(tuteur => {
+                                const option = document.createElement('option');
+                                option.value = tuteur.id;
+                                option.textContent = tuteur.prenom + ' ' + tuteur.nom;
+                                tuteurSelect.appendChild(option);
+                            });
+
+                            // Activer le champ tuteur
+                            tuteurSelect.disabled = false;
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération des tuteurs:', error);
+                            tuteurSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+                        });
+                }
+            });
+        });
     </script>
 </section>
 </body>
