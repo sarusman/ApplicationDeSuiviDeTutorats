@@ -18,6 +18,6 @@ public class TuteurEntrepriseService {
     }
 
     public List<TuteurEntreprise> findByEntrepriseId(Long entrepriseId) {
-        return (List<TuteurEntreprise>) tuteurEntrepriseRepository.findByEntreprise_Id((entrepriseId));
+        return tuteurEntrepriseRepository.findByEntrepriseId((entrepriseId));
     }
 }

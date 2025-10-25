@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface TuteurEntrepriseRepository extends JpaRepository<TuteurEntreprise, Long> {
 
-    List<TuteurEntreprise> findByEntreprise_Id(Long entrepriseId);
+    List<TuteurEntreprise> findByEntrepriseId(Long entrepriseId);
 }
