@@ -43,4 +43,12 @@ public class Utilisateur {
     public void setRole(Role role) { this.role = role; }
     public List<Apprenti> getApprentis() { return apprentis; }
     public void setApprentis(List<Apprenti> apprentis) { this.apprentis = apprentis; }
+
+    public Integer getUtilisateurId() {
+        return this.id != null ? this.id.intValue() : null;
+    }
+
+    public String getRoleString() {
+        return this.role != null ? this.role.name() : null;
+    }
 }

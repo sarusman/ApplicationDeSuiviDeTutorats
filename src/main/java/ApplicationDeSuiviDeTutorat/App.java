@@ -8,10 +8,6 @@ public class App {
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
-        System.out.println("Hello\n" +
-                           "LSI\n" +
-                           "I2/2025-26");
-
     }
 
 }

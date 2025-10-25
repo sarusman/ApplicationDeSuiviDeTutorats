@@ -1,8 +1,11 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
 import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
+import ApplicationDeSuiviDeTutorat.repository.UtilisateurRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -15,9 +18,11 @@ import java.util.Optional;
 @Service
 public class ApprentiService {
     private final ApprentiBilanRepository apprentiBilanRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public ApprentiService(ApprentiBilanRepository apprentiBilanRepository) {
+    public ApprentiService(ApprentiBilanRepository apprentiBilanRepository, UtilisateurRepository utilisateurRepository) {
         this.apprentiBilanRepository = apprentiBilanRepository;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     public List<Apprenti> getAllApprentis() {
@@ -31,6 +36,24 @@ public class ApprentiService {
                 singleApprenti.orElseThrow(
                         () -> new IllegalStateException(
                                 "Apprenti with " + id + " does not exist")));
+    }
+
+    /**
+     * Crée un nouvel apprenti et l'associe à un tuteur pédagogique.
+     * @param apprenti L'objet Apprenti à sauvegarder.
+     * @param tuteurId L'ID de l'utilisateur qui sera le tuteur pédagogique.
+     * @return L'apprenti sauvegardé.
+     */
+    @Transactional
+    public Apprenti createApprenti(Apprenti apprenti, Long tuteurId) {
+        Utilisateur tuteurPedagogique = utilisateurRepository
+                .findById(tuteurId)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur (Tuteur) non trouvé avec l'id : " + tuteurId));
+
+        // Associer le tuteur à l'apprenti
+        apprenti.setTuteurPedagogique(tuteurPedagogique);
+
+        return apprentiBilanRepository.save(apprenti);
     }
 
     @Transactional
@@ -54,7 +77,7 @@ public class ApprentiService {
         if (apprenti == null || apprenti.getVisites() == null) {
             return Optional.empty();
         }
-        LocalDate aujourdhui = LocalDate.EPOCH.now();
+        LocalDate aujourdhui = LocalDate.now();
         return apprenti.getVisites().stream()
                 .filter(v -> v.getDate() != null && v.getDate().isBefore(aujourdhui))
                 .max(Comparator.comparing(Visite::getDate));

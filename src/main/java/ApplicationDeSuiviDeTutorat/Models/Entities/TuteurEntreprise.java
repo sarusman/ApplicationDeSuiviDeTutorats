@@ -27,6 +27,10 @@ public class TuteurEntreprise {
     @Column(length = 500)
     private String remarques;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "entreprise_id", nullable = false)
+    private Entreprise entreprise;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNom() { return nom; }
@@ -41,4 +45,11 @@ public class TuteurEntreprise {
     public void setTelephone(String telephone) { this.telephone = telephone; }
     public String getRemarques() { return remarques; }
     public void setRemarques(String remarques) { this.remarques = remarques; }
+    public Entreprise getEntreprise() {
+        return entreprise;
+    }
+
+    public void setEntreprise(Entreprise entreprise) {
+        this.entreprise = entreprise;
+    }
 }
