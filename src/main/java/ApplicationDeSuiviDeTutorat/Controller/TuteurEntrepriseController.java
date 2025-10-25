@@ -1,4 +1,4 @@
- package ApplicationDeSuiviDeTutorat.Controller;
+package ApplicationDeSuiviDeTutorat.Controller;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.TuteurEntreprise;
 import ApplicationDeSuiviDeTutorat.Service.TuteurEntrepriseService;
@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+// Choix de JM : utiliser un rest controller + préfixe pour distinguer des controller renvoyant des vues thymeleaf
 @RestController
-@RequestMapping("/api/tuteurs") // On préfixe par /api pour distinguer des routes web classiques
+@RequestMapping("/api/tuteurs")
 public class TuteurEntrepriseController {
 
     private final TuteurEntrepriseService tuteurEntrepriseService;

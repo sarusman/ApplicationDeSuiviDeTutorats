@@ -1,4 +1,4 @@
- package ApplicationDeSuiviDeTutorat.Service;
+package ApplicationDeSuiviDeTutorat.Service;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.TuteurEntreprise;
 import ApplicationDeSuiviDeTutorat.repository.TuteurEntrepriseRepository;
@@ -18,6 +18,6 @@ public class TuteurEntrepriseService {
     }
 
     public List<TuteurEntreprise> findByEntrepriseId(Long entrepriseId) {
-        return (List<TuteurEntreprise>) tuteurEntrepriseRepository.findByEntrepriseId(entrepriseId);
+        return (List<TuteurEntreprise>) tuteurEntrepriseRepository.findByEntreprise_Id((entrepriseId));
     }
 }

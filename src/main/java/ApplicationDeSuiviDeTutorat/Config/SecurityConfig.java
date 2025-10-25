@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 "/images/**", "/css/**", "/js/**", "/fragments/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/dashboard").authenticated()
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form.disable())
