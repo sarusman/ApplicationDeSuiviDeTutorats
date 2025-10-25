@@ -4,6 +4,7 @@ import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
 import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
+import ApplicationDeSuiviDeTutorat.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -17,9 +18,9 @@ import java.util.Optional;
 @Service
 public class ApprentiService {
     private final ApprentiBilanRepository apprentiBilanRepository;
-    private final ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository utilisateurRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public ApprentiService(ApprentiBilanRepository apprentiBilanRepository, ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository utilisateurRepository) {
+    public ApprentiService(ApprentiBilanRepository apprentiBilanRepository, UtilisateurRepository utilisateurRepository) {
         this.apprentiBilanRepository = apprentiBilanRepository;
         this.utilisateurRepository = utilisateurRepository;
     }

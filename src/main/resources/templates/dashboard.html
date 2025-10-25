@@ -172,7 +172,7 @@
                 // Si une entreprise est sélectionnée, faire l'appel API
                 if (entrepriseId) {
                     // Construit l'URL de l'API en utilisant le contexte de l'application
-                    const url = /*[[@{/api/tuteurs/by-entreprise/}]]*/ '/api/tuteurs/by-entreprise/' + entrepriseId;
+                    const url = `/api/tuteurs/by-entreprise/${entrepriseId}`;
 
                     fetch(url)
                         .then(response => {

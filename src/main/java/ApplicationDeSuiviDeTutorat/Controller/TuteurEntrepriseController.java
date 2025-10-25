@@ -1,5 +1,6 @@
 package ApplicationDeSuiviDeTutorat.Controller;
 
+import ApplicationDeSuiviDeTutorat.Models.DTO.TuteurEntrepriseDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.TuteurEntreprise;
 import ApplicationDeSuiviDeTutorat.Service.TuteurEntrepriseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class TuteurEntrepriseController {
     }
 
     @GetMapping("/by-entreprise/{entrepriseId}")
-    public List<TuteurEntreprise> getTuteursParEntreprise(@PathVariable Long entrepriseId) {
+    public List<TuteurEntrepriseDTO> getTuteursParEntreprise(@PathVariable Long entrepriseId) {
         return tuteurEntrepriseService.findByEntrepriseId(entrepriseId);
     }
 }
