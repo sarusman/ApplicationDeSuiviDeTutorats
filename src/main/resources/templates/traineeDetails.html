@@ -21,7 +21,6 @@
                 </button>
             </div>
             <div class="card-body">
-                <!-- MODIFICATION : Application des classes 'table-striped' et 'table-hover' -->
                 <table class="table table-striped table-hover">
                     <tbody>
                     <tr>
@@ -38,11 +37,19 @@
                     </tr>
                     <tr>
                         <th>Téléphone</th>
-                        <td th:text="${apprenti.telephone != null ? apprenti.telephone : 'NA'}"></td>
+                        <td th:text="${apprenti.telephone != null && apprenti.telephone != '' ? apprenti.telephone : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Programme</th>
                         <td th:text="${apprenti.programme != null ? apprenti.programme : 'NA'}"></td>
+                    </tr>
+                    <tr>
+                        <th>Entreprise</th>
+                        <td th:text="${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : 'NA'}"></td>
+                    </tr>
+                    <tr>
+                        <th>Tuteur d'entreprise</th>
+                        <td th:text="${apprenti.tuteurEntreprise != null ? apprenti.tuteurEntreprise.prenom + ' ' + apprenti.tuteurEntreprise.nom : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Dernière visite le</th>
@@ -91,7 +98,7 @@
     <div class="modal fade" id="updateTraineeModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form th:action="@{/apprenti/{id}(id=${apprenti.id})}" th:object="${apprenti}" method="post">
+                <form th:action="@{/apprenti/update/{id}(id=${apprenti.id})}" th:object="${apprenti}" method="post">
                     <div class="modal-header">
                         <h5 class="modal-title" id="updateModalLabel">Mise à jour du profile de [[${apprenti.prenom}]]</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -122,15 +129,42 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">Sauvegarder les changements</button>
-                        <input type="hidden" name="_method" value="put"/>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-floppy"></i>
+                            Sauvegarder</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+<!--snackbar d'édition d'apprenti-->
+    <div id="snackbar" th:if="${updateSuccess}">
+        <i class="bi bi-check2-circle"></i>
+        Mise à jour de l'apprenti réussie
+    </div>
+
+    <div id="snackbar" th:if="${updateError}" class="text-danger">
+        <i class="bi bi-x-circle"></i>
+        Erreur lors de la mise à jour
+    </div>
+
+<!--snackbar script-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const snackbar = document.getElementById('snackbar');
+
+        if (snackbar) {
+            snackbar.className = 'show';
+
+            setTimeout(function() {
+                snackbar.className = snackbar.className.replace('show', '');
+            }, 5000);
+        }
+    });
+</script>
 </section>
+
 </body>
 </html>

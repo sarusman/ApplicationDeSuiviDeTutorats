@@ -48,10 +48,10 @@ public class Apprenti {
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
-    @OneToMany(mappedBy = "apprenti")
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Visite> visites;
 
-    @OneToMany(mappedBy = "apprenti")
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EvaluationEcole> evaluations;
 
     public Long getId() { return id; }
