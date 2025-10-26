@@ -30,8 +30,12 @@
         <table class="table table-striped table-condensed w-100">
             <thead class="thead-light text-white">
             <tr>
-                <th scope="col" class="text-white"><bold>Nom</bold></th>
-                <th scope="col" class="text-white"><bold>Prénom</bold></th>
+                <th scope="col" class="text-white">
+                    <bold>Nom</bold>
+                </th>
+                <th scope="col" class="text-white">
+                    <bold>Prénom</bold>
+                </th>
                 <th scope="col" class="text-white">Programme</th>
                 <th scope="col" class="text-white">E-mail</th>
                 <th scope="col" class="text-white">Téléphone</th>
@@ -39,7 +43,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="apprenti :${apprentis}">
+            <tr th:if="${!#lists.isEmpty(apprentis)}" th:each="apprenti :${apprentis}">
                 <td th:text="${apprenti.nom}"></td>
                 <td th:text="${apprenti.prenom}"></td>
                 <td th:text="${apprenti.programme}"></td>
@@ -58,12 +62,20 @@
                     </a>
                 </td>
             </tr>
+
+            <tr th:if="${#lists.isEmpty(apprentis)}">
+                <td class="text-danger text-center fs-5" colspan="6">
+                    La liste est vide.
+                    Ajoutez au moins un apprenti.
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
 
-<!--    modale d'ajout d'apprenti    -->
-    <div class="modal fade" id="ajoutApprentiModal" tabindex="-1" aria-labelledby="ajoutApprentiModalLabel" aria-hidden="true">
+    <!--    modale d'ajout d'apprenti    -->
+    <div class="modal fade" id="ajoutApprentiModal" tabindex="-1" aria-labelledby="ajoutApprentiModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-lg"> <!-- modal-lg pour avoir plus de largeur pour les 2 colonnes -->
             <div class="modal-content">
                 <div class="modal-header">
@@ -91,7 +103,8 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Adresse Électronique *</label>
-                                    <input type="email" class="form-control" id="email" th:field="*{adresseElectronique}" required>
+                                    <input type="email" class="form-control" id="email"
+                                           th:field="*{adresseElectronique}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="telephone" class="form-label">Téléphone</label>
@@ -106,12 +119,14 @@
                                     <select class="form-select" id="programme" th:field="*{programme}" required>
                                         <option value="">Choisir un programme...</option>
                                         <!-- On utilise la liste 'programmes' passée par le contrôleur -->
-                                        <option th:each="prog : ${programmes}" th:value="${prog}" th:text="${prog}"></option>
+                                        <option th:each="prog : ${programmes}" th:value="${prog}"
+                                                th:text="${prog}"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="annee" class="form-label">Année Académique</label>
-                                    <input type="text" class="form-control" id="annee" th:field="*{anneeAcademique}" placeholder="ex: 2024-2025">
+                                    <input type="text" class="form-control" id="annee" th:field="*{anneeAcademique}"
+                                           placeholder="ex: 2024-2025">
                                 </div>
                             </div>
 
@@ -122,13 +137,15 @@
                                     <!-- L'ID 'entrepriseSelect' sera utilisé par notre script -->
                                     <select class="form-select" id="entrepriseSelect" th:field="*{entreprise}" required>
                                         <option value="">Choisir une entreprise...</option>
-                                        <option th:each="ent : ${entreprises}" th:value="${ent.id}" th:text="${ent.raisonSociale}"></option>
+                                        <option th:each="ent : ${entreprises}" th:value="${ent.id}"
+                                                th:text="${ent.raisonSociale}"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="tuteurEntreprise" class="form-label">Tuteur d'entreprise *</label>
                                     <!-- L'ID 'tuteurSelect' sera utilisé par notre script. On ajoute l'attribut 'disabled' -->
-                                    <select class="form-select" id="tuteurSelect" th:field="*{tuteurEntreprise}" required disabled>
+                                    <select class="form-select" id="tuteurSelect" th:field="*{tuteurEntreprise}"
+                                            required disabled>
                                         <option value="">-- Choisir une entreprise d'abord --</option>
                                     </select>
                                 </div>
@@ -140,7 +157,8 @@
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-floppy"></i>
-                            Enregistrer</button>
+                            Enregistrer
+                        </button>
                     </div>
                 </form>
 
@@ -149,7 +167,8 @@
     </div>
 
     <!-- Modale de confirmation de suppression -->
-    <div class="modal fade" id="confirmationSuppressionModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmationSuppressionModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -192,11 +211,11 @@
     </script>
 
     <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const entrepriseSelect = document.getElementById('entrepriseSelect');
             const tuteurSelect = document.getElementById('tuteurSelect');
 
-            entrepriseSelect.addEventListener('change', function() {
+            entrepriseSelect.addEventListener('change', function () {
                 const entrepriseId = this.value;
 
                 tuteurSelect.innerHTML = '<option value="">-- Choisir une entreprise dabord --</option>';
@@ -236,7 +255,7 @@
         });
     </script>
 
-<!--    script pour la suppression d'un apprenti -->
+    <!--    script pour la suppression d'un apprenti -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const confirmationModal = document.getElementById('confirmationSuppressionModal');
