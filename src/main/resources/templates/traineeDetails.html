@@ -150,20 +150,10 @@
         Erreur lors de la mise à jour
     </div>
 
-<!--snackbar script-->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const snackbar = document.getElementById('snackbar');
 
-        if (snackbar) {
-            snackbar.className = 'show';
-
-            setTimeout(function() {
-                snackbar.className = snackbar.className.replace('show', '');
-            }, 5000);
-        }
-    });
-</script>
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/traineeDetails.js}"></script>
+</th:block>
 </section>
 
 </body>
