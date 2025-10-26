@@ -139,7 +139,32 @@
         </div>
     </div>
 
+<!--snackbar d'édition d'apprenti-->
+    <div id="snackbar" th:if="${updateSuccess}">
+        <i class="bi bi-check2-circle"></i>
+        Mise à jour de l'apprenti réussie
+    </div>
 
+    <div id="snackbar" th:if="${updateError}" class="text-danger">
+        <i class="bi bi-x-circle"></i>
+        Erreur lors de la mise à jour
+    </div>
+
+<!--snackbar script-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const snackbar = document.getElementById('snackbar');
+
+        if (snackbar) {
+            snackbar.className = 'show';
+
+            setTimeout(function() {
+                snackbar.className = snackbar.className.replace('show', '');
+            }, 5000);
+        }
+    });
+</script>
 </section>
+
 </body>
 </html>

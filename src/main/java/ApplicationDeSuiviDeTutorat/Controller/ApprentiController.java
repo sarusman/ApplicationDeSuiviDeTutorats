@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -50,8 +51,16 @@ public class ApprentiController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateTraineeById(@PathVariable Long id,@ModelAttribute Apprenti updatedTrainee ){
-        apprentiService.updateApprentiBilanById(id, updatedTrainee);
+    public String updateTraineeById(@PathVariable Long id, @ModelAttribute Apprenti updatedTrainee, RedirectAttributes redirectAttributes) {
+        try {
+            apprentiService.updateApprentiBilanById(id, updatedTrainee);
+
+            redirectAttributes.addFlashAttribute("updateSuccess", "Mise à jour de l'apprenti réussie.");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("updateError", "Une erreur est survenue lors de la mise à jour.");
+        }
+
         return STR."redirect:/apprenti/\{id}";
     }
 
