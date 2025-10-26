@@ -37,7 +37,7 @@
                     </tr>
                     <tr>
                         <th>Téléphone</th>
-                        <td th:text="${apprenti.telephone != null ? apprenti.telephone : 'NA'}"></td>
+                        <td th:text="${apprenti.telephone != null && apprenti.telephone != '' ? apprenti.telephone : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Programme</th>
@@ -45,12 +45,12 @@
                     </tr>
                     <tr>
                         <th>Entreprise</th>
-                        <td th:text="${apprenti.entreprise != null ? apprenti.entreprise : 'NA'}"></td>
+                        <td th:text="${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : 'NA'}"></td>
                     </tr>
-<!--                    <tr>-->
-<!--                        <th>Tuteur d'entreprise</th>-->
-<!--                        <td th:text="${apprenti.tuteur_entreprise != null ? apprenti.tuteur_entreprise : 'NA'}"></td>-->
-<!--                    </tr>-->
+                    <tr>
+                        <th>Tuteur d'entreprise</th>
+                        <td th:text="${apprenti.tuteurEntreprise != null ? apprenti.tuteurEntreprise.prenom + ' ' + apprenti.tuteurEntreprise.nom : 'NA'}"></td>
+                    </tr>
                     <tr>
                         <th>Dernière visite le</th>
                         <td th:text="${derniereVisite.isPresent() ? #temporals.format(derniereVisite.get().date, 'dd/MM/yyyy') : 'Aucune visite passée'}"></td>
@@ -133,7 +133,6 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-floppy"></i>
                             Sauvegarder</button>
-                        <input type="hidden" name="_method" value="put"/>
                     </div>
                 </form>
             </div>

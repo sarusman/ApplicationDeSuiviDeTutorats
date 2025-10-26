@@ -49,7 +49,7 @@ public class ApprentiController {
         return "traineeDetails";
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}")
     public String updateTraineeById(@PathVariable Long id,@ModelAttribute Apprenti updatedTrainee ){
         apprentiService.updateApprentiBilanById(id, updatedTrainee);
         return STR."redirect:/apprenti/\{id}";
