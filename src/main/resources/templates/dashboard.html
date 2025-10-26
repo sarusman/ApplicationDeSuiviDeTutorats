@@ -27,27 +27,27 @@
 
     <div id="apprenti" class="tab active">
         <h2>Liste des Apprentis</h2>
-        <table class="table table-striped table-condensed" style="width: auto" >
-            <thead class="thead-dark">
+        <table class="table table-striped table-condensed w-100">
+            <thead class="thead-light text-white">
             <tr>
-                <th scope="col"><bold>Nom</bold></th>
-                <th scope="col"><bold>Prénom</bold></th>
-                <th scope="col">Programme</th>
-                <th scope="col">E-mail</th>
-                <th scope="col">Téléphone</th>
-                <th scope="col">Actions</th>
+                <th scope="col" class="text-white"><bold>Nom</bold></th>
+                <th scope="col" class="text-white"><bold>Prénom</bold></th>
+                <th scope="col" class="text-white">Programme</th>
+                <th scope="col" class="text-white">E-mail</th>
+                <th scope="col" class="text-white">Téléphone</th>
+                <th scope="col" class="text-center text-white">Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="apprenti :${apprentis}"  style="cursor: pointer">
+            <tr th:each="apprenti :${apprentis}">
                 <td th:text="${apprenti.nom}"></td>
                 <td th:text="${apprenti.prenom}"></td>
                 <td th:text="${apprenti.programme}"></td>
                 <td th:text="${apprenti.adresseElectronique}"></td>
                 <td th:text="${apprenti.telephone}"></td>
-                <td>
+                <td class="d-flex justify-content-center gap-3">
                     <a th:href="@{|/apprenti/${apprenti.id}|}"><i class="bi bi-eye"></i></a>
-                    <a th:href="@{|/apprenti/${apprenti.id}|}"><i class="bi bi-eye"></i></a>
+                    <a th:href="@{|/apprenti/${apprenti.id}|}"><i class="bi bi-trash text-danger"></i></a>
                 </td>
             </tr>
             </tbody>
@@ -165,13 +165,10 @@
             entrepriseSelect.addEventListener('change', function() {
                 const entrepriseId = this.value;
 
-                // Réinitialiser et désactiver le champ tuteur si aucune entreprise n'est sélectionnée
                 tuteurSelect.innerHTML = '<option value="">-- Choisir une entreprise dabord --</option>';
                 tuteurSelect.disabled = true;
 
-                // Si une entreprise est sélectionnée, faire l'appel API
                 if (entrepriseId) {
-                    // Construit l'URL de l'API en utilisant le contexte de l'application
                     const url = `/api/tuteurs/by-entreprise/${entrepriseId}`;
 
                     fetch(url)
