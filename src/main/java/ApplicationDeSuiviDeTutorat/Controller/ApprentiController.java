@@ -71,4 +71,13 @@ public class ApprentiController {
 
         return "redirect:/dashboard";
     }
+
+    /**
+     * Suppression d'un apprenti.
+     */
+    @PostMapping("/supprimer/{id}")
+    public String supprimerApprenti(@PathVariable("id") Long id) {
+        apprentiService.deleteApprentiById(id);
+        return "redirect:/dashboard";
+    }
 }

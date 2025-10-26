@@ -98,5 +98,17 @@ public class ApprentiService {
                 .min(Comparator.comparing(Visite::getDate));
     }
 
+    /**
+     * Supprime un apprenti par son ID.
+     * @param id L'ID de l'apprenti à supprimer.
+     */
+    @Transactional
+    public void deleteApprentiById(Long id) {
+        if (!apprentiBilanRepository.existsById(id)) {
+            throw new EntityNotFoundException(STR."Apprenti non trouvé avec l'id : \{id}");
+        }
+        apprentiBilanRepository.deleteById(id);
+    }
+
 
 }

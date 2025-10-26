@@ -47,7 +47,15 @@
                 <td th:text="${apprenti.telephone}"></td>
                 <td class="d-flex justify-content-center gap-3">
                     <a th:href="@{|/apprenti/${apprenti.id}|}"><i class="bi bi-eye"></i></a>
-                    <a th:href="@{|/apprenti/${apprenti.id}|}"><i class="bi bi-trash text-danger"></i></a>
+                    <a href="#"
+                       class="delete-link"
+                       data-bs-toggle="modal"
+                       data-bs-target="#confirmationSuppressionModal"
+                       th:data-nom="${apprenti.nom}"
+                       th:data-prenom="${apprenti.prenom}"
+                       th:data-url="@{/apprenti/supprimer/{id}(id=${apprenti.id})}">
+                        <i class="bi bi-trash text-danger"></i>
+                    </a>
                 </td>
             </tr>
             </tbody>
@@ -140,6 +148,32 @@
         </div>
     </div>
 
+    <!-- Modale de confirmation de suppression -->
+    <div class="modal fade" id="confirmationSuppressionModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirmation de suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="modalText"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+
+                    <!-- Formulaire de suppression -->
+                    <form id="deleteForm" method="post" th:action="@{/}" class="d-inline">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function showTab(tabId, buttonID) {
             const tabs = document.querySelectorAll('.tab');
@@ -199,6 +233,31 @@
                         });
                 }
             });
+        });
+    </script>
+
+<!--    script pour la suppression d'un apprenti -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const confirmationModal = document.getElementById('confirmationSuppressionModal');
+            if (confirmationModal) {
+                confirmationModal.addEventListener('show.bs.modal', function (event) {
+                    // 'event.relatedTarget' est le lien <a> qui a déclenché la modale
+                    const button = event.relatedTarget;
+
+                    // Récupérer les données depuis les attributs data-*
+                    const nom = button.getAttribute('data-nom');
+                    const prenom = button.getAttribute('data-prenom');
+                    const deleteUrl = button.getAttribute('data-url');
+
+                    // Mettre à jour le texte de la modale
+                    const modalText = confirmationModal.querySelector('#modalText');
+                    modalText.textContent = `Êtes-vous certain de vouloir supprimer l'apprenti ${prenom} ${nom} ?`;
+
+                    const deleteForm = confirmationModal.querySelector('#deleteForm');
+                    deleteForm.setAttribute('action', deleteUrl);
+                });
+            }
         });
     </script>
 </section>

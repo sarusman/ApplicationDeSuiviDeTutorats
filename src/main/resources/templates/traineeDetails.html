@@ -44,6 +44,14 @@
                         <td th:text="${apprenti.programme != null ? apprenti.programme : 'NA'}"></td>
                     </tr>
                     <tr>
+                        <th>Entreprise</th>
+                        <td th:text="${apprenti.entreprise != null ? apprenti.entreprise : 'NA'}"></td>
+                    </tr>
+<!--                    <tr>-->
+<!--                        <th>Tuteur d'entreprise</th>-->
+<!--                        <td th:text="${apprenti.tuteur_entreprise != null ? apprenti.tuteur_entreprise : 'NA'}"></td>-->
+<!--                    </tr>-->
+                    <tr>
                         <th>Dernière visite le</th>
                         <td th:text="${derniereVisite.isPresent() ? #temporals.format(derniereVisite.get().date, 'dd/MM/yyyy') : 'Aucune visite passée'}"></td>
                     </tr>
@@ -131,6 +139,7 @@
             </div>
         </div>
     </div>
+
 
 </section>
 </body>
