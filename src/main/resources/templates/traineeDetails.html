@@ -98,7 +98,7 @@
     <div class="modal fade" id="updateTraineeModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form th:action="@{/apprenti/{id}(id=${apprenti.id})}" th:object="${apprenti}" method="post">
+                <form th:action="@{/apprenti/update/{id}(id=${apprenti.id})}" th:object="${apprenti}" method="post">
                     <div class="modal-header">
                         <h5 class="modal-title" id="updateModalLabel">Mise à jour du profile de [[${apprenti.prenom}]]</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

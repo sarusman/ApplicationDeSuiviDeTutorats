@@ -58,14 +58,16 @@ public class ApprentiService {
 
     @Transactional
     public Apprenti updateApprentiBilanById(Long id, Apprenti updatedApprenti) {
-        Apprenti apprentiToUpdate = apprentiBilanRepository.findById(id).orElseThrow();
+        Apprenti apprentiToUpdate = apprentiBilanRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Apprenti non trouvé avec l'id : " + id));
 
-        if (apprentiToUpdate != null) {
-            BeanUtils.copyProperties(updatedApprenti, apprentiToUpdate, "id");
-            return apprentiBilanRepository.save(apprentiToUpdate);
-        }
+        apprentiToUpdate.setNom(updatedApprenti.getNom());
+        apprentiToUpdate.setPrenom(updatedApprenti.getPrenom());
+        apprentiToUpdate.setAdresseElectronique(updatedApprenti.getAdresseElectronique());
+        apprentiToUpdate.setTelephone(updatedApprenti.getTelephone());
+        apprentiToUpdate.setProgramme(updatedApprenti.getProgramme());
 
-        return null;
+        return apprentiBilanRepository.save(apprentiToUpdate);
     }
 
     /**
