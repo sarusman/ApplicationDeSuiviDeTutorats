@@ -8,16 +8,16 @@ public class Apprenti {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String nom;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String prenom;
 
-    @Column(length = 120)
+    @Column(length = 120, nullable = false,  unique = true)
     private String adresseElectronique;
 
-    @Column(length = 20)
+    @Column(length = 20,  nullable = false,  unique = true)
     private String telephone;
 
     public Long getId() { return id; }

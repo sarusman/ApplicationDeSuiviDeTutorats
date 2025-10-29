@@ -9,10 +9,10 @@ public class Entreprise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 150)
+    @Column(length = 150,  nullable = false, unique = true)
     private String raisonSociale;
 
-    @Column(length = 255)
+    @Column(length = 255,  nullable = false, unique = true)
     private String adresse;
 
     @Column(length = 255)

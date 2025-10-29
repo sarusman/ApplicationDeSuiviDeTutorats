@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +73,7 @@ public class ApprentiService {
         if (apprenti == null || anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).isEmpty()) {
             return Optional.empty();
         }
-        LocalDate aujourdhui = LocalDate.now();
+        LocalDateTime aujourdhui = LocalDateTime.now();
         return anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).stream().findFirst()
                 .map(anneeAlternance -> anneeAlternance.getVisites().stream()
                         .filter(v -> v.getDate() != null && v.getDate().isBefore(aujourdhui))
@@ -89,7 +90,7 @@ public class ApprentiService {
         if (apprenti == null || anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).isEmpty()) {
             return Optional.empty();
         }
-        LocalDate aujourdhui = LocalDate.now();
+        LocalDateTime aujourdhui = LocalDateTime.now();
         return anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).stream().findFirst()
                 .map(anneeAlternance -> anneeAlternance.getVisites().stream()
                         .filter(v -> v.getDate() != null && v.getDate().isAfter(aujourdhui))

@@ -9,19 +9,19 @@ public class TuteurEntreprise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String nom;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String prenom;
 
     @Column(length = 120)
     private String poste;
 
-    @Column(length = 180)
+    @Column(length = 180, nullable = false, unique = true)
     private String adresseElectronique;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false, unique = true)
     private String telephone;
 
     @Column(length = 500)

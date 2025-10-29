@@ -11,9 +11,10 @@ public class AnneeAcademique {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Date date_debut;
 
-    @Column
+    @Column(nullable = false)
     private Date date_fin;
 
     @Column(length = 100)
