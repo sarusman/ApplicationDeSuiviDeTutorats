@@ -1,6 +1,8 @@
 package ApplicationDeSuiviDeTutorat.Controller;
+
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Role;
+import ApplicationDeSuiviDeTutorat.Service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ApplicationDeSuiviDeTutorat.Service.AuthService;
 
 import java.util.List;
 

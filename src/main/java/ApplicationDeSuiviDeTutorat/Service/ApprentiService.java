@@ -8,7 +8,6 @@ import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
 import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

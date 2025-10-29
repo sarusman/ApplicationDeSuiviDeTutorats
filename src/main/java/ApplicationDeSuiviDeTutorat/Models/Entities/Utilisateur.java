@@ -2,6 +2,7 @@ package ApplicationDeSuiviDeTutorat.Models.Entities;
 
 import ApplicationDeSuiviDeTutorat.Models.Enums.Role;
 import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity

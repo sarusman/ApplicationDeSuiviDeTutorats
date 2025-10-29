@@ -1,10 +1,8 @@
 package ApplicationDeSuiviDeTutorat.Models.Entities;
 
-import ApplicationDeSuiviDeTutorat.App;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Entity

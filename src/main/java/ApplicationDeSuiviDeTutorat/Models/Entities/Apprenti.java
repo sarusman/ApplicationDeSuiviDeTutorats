@@ -1,5 +1,4 @@
 package ApplicationDeSuiviDeTutorat.Models.Entities;
-import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import jakarta.persistence.*;
 
 @Entity

@@ -1,13 +1,11 @@
 package ApplicationDeSuiviDeTutorat.Controller;
 
 import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiFormDTO;
-import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAcademique;
 import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import ApplicationDeSuiviDeTutorat.Repository.AnneeAcademiqueRepository;
-import ApplicationDeSuiviDeTutorat.Repository.AnneeAlternanceRepository;
 import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
 import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import ApplicationDeSuiviDeTutorat.Service.UtilisateurService;
