@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragments/menu}"
->
+      layout:decorate="~{fragments/menu}">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
@@ -12,42 +11,88 @@
 <section layout:fragment="content">
     <h1>Dashboard</h1>
 
-    <div class="tab-buttons d-flex justify-content-between">
-        <button id="AButton" class="button active" onclick="showTab('apprenti', 'AButton')">Apprentis</button>
+    <div th:if="${successMessage}" class="alert alert-success text-center fw-bold" role="alert"
+         style="max-width: 600px; margin: 20px auto;">
+        <span th:text="${successMessage}"></span>
+    </div>
 
-        <div class="d-flex justify-content-between align-items-center gap-3">
-            <div class="input-group">
+    <div th:if="${errorMessage}" class="alert alert-danger text-center fw-bold" role="alert"
+         style="max-width: 600px; margin: 20px auto;">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Zone filtres + bouton ajout -->
+    <div class="tab-buttons d-flex flex-column gap-3">
+
+        <div class="d-flex flex-wrap gap-3 align-items-end">
+
+            <div class="input-group" style="max-width: 220px;">
                 <span class="input-group-text">
-                    <i class="bi bi-search"></i>
+                    <i class="bi bi-person"></i>
                 </span>
-                    <input type="text"
-                           class="form-control"
-                           placeholder="Rechercher..."
-                           id="searchApprenti">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Nom / Prénom"
+                       id="filterNomPrenom">
             </div>
-            <button id="ajouterApprenti"
-                    class="btn btn-outline-info d-flex align-items-center gap-2 w-100"
-                    data-bs-toggle="modal"
-                    data-bs-target="#ajoutApprentiModal">
-                <b>
-                    <i class="bi bi-plus-lg"></i>
-                    Ajouter un apprenti
-                </b>
+
+            <div class="input-group" style="max-width: 220px;">
+                <span class="input-group-text">
+                    <i class="bi bi-building"></i>
+                </span>
+                <input type="text"
+                       class="form-control"
+                       placeholder="Entreprise"
+                       id="filterEntreprise">
+            </div>
+
+            <div class="input-group" style="max-width: 240px;">
+                <span class="input-group-text">
+                    <i class="bi bi-card-list"></i>
+                </span>
+                <input type="text"
+                       class="form-control"
+                       placeholder="Mots-clés mission"
+                       id="filterMission">
+            </div>
+
+            <div class="input-group" style="max-width: 200px;">
+                <span class="input-group-text">
+                    <i class="bi bi-calendar-event"></i>
+                </span>
+                <input type="text"
+                       class="form-control"
+                       placeholder="Année acad. ex: 2024-2025"
+                       id="filterAnnee">
+            </div>
+
+            <button class="btn btn-outline-secondary"
+                    id="resetFiltersBtn">
+                <i class="bi bi-x-circle"></i>
+                Réinitialiser
             </button>
+
+            <div class="ms-auto d-flex gap-3 flex-grow-1 justify-content-end">
+                <button id="ajouterApprenti"
+                        class="btn btn-outline-info d-flex align-items-center gap-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#ajoutApprentiModal">
+                    <b>
+                        <i class="bi bi-plus-lg"></i>
+                        Ajouter un apprenti
+                    </b>
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="apprenti" class="tab active">
+    <div id="apprenti" class="tab active mt-4">
         <h2>Liste des Apprentis</h2>
         <table class="table table-striped table-condensed w-100">
             <thead class="thead-light text-white">
             <tr>
-                <th scope="col" class="text-white">
-                    <bold>Nom</bold>
-                </th>
-                <th scope="col" class="text-white">
-                    <bold>Prénom</bold>
-                </th>
+                <th scope="col" class="text-white"><bold>Nom</bold></th>
+                <th scope="col" class="text-white"><bold>Prénom</bold></th>
                 <th scope="col" class="text-white">Programme</th>
                 <th scope="col" class="text-white">Entreprise</th>
                 <th scope="col" class="text-white">Missions (mots-clés)</th>
@@ -56,14 +101,22 @@
                 <th scope="col" class="text-center text-white">Actions</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:if="${!#lists.isEmpty(apprentis)}" th:each="apprenti :${apprentis}" class="apprenti-row">
+            <tbody id="apprentiTableBody">
+
+            <!-- Lignes d'apprentis -->
+            <tr th:if="${!#lists.isEmpty(apprentis)}"
+                th:each="apprenti : ${apprentis}"
+                class="apprenti-row"
+                th:data-fullname="${apprenti.prenom + ' ' + apprenti.nom}"
+                th:data-entreprise="${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : ''}"
+                th:data-mission="${apprenti.mission != null ? apprenti.mission.motsCles : ''}"
+                th:data-annee="${apprenti.anneeAcademique != null ? apprenti.anneeAcademique : ''}"
+            >
                 <td th:text="${apprenti.nom}"></td>
                 <td th:text="${apprenti.prenom}"></td>
                 <td th:text="${apprenti.programme}"></td>
                 <td th:text="${apprenti.entreprise.raisonSociale}"></td>
                 <td th:text="${apprenti.mission?.motsCles ?: 'NA'}"></td>
-
                 <td th:text="${apprenti.adresseElectronique}"></td>
                 <td th:text="${apprenti.telephone}"></td>
                 <td class="d-flex justify-content-center gap-3">
@@ -80,6 +133,7 @@
                 </td>
             </tr>
 
+            <!-- Cas: aucun apprenti en base -->
             <tr th:if="${#lists.isEmpty(apprentis)}">
                 <td class="text-danger text-center fs-5" colspan="8">
                     La liste est vide.
@@ -87,20 +141,23 @@
                 </td>
             </tr>
 
+            <!-- Cas: aucun résultat avec les filtres -->
             <tr id="noResultsRow" style="display: none;">
                 <td class="text-muted text-center" colspan="8">
                     Aucun apprenti ne correspond à votre recherche.
                 </td>
             </tr>
+
             </tbody>
         </table>
     </div>
 
-    <!--    modale d'ajout d'apprenti    -->
+    <!-- Modale d'ajout d'apprenti -->
     <div class="modal fade" id="ajoutApprentiModal" tabindex="-1" aria-labelledby="ajoutApprentiModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-lg"> <!-- modal-lg pour avoir plus de largeur pour les 2 colonnes -->
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="ajoutApprentiModalLabel">Ajouter un nouvel apprenti</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -110,7 +167,6 @@
                     <div class="modal-body">
                         <div class="container-fluid">
 
-                            <!-- Ligne 1 : Nom et Prénom (Obligatoires) -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="nom" class="form-label">Nom *</label>
@@ -122,7 +178,6 @@
                                 </div>
                             </div>
 
-                            <!-- Ligne 2 : Email et Téléphone (Email obligatoire) -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Adresse Électronique *</label>
@@ -130,19 +185,19 @@
                                            th:field="*{adresseElectronique}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="telephone" class="form-label">Téléphone</label>
-                                    <input type="tel" class="form-control" id="telephone" th:field="*{telephone}">
+                                    <label for="telephone" class="form-label">Téléphone *</label>
+                                    <input type="tel" class="form-control" id="telephone" th:field="*{telephone}"
+                                           pattern="[0-9]{10}" placeholder="0123456789" required>
                                 </div>
                             </div>
 
-                            <!-- Ligne 3 : Programme et Année Académique (Programme obligatoire) -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="programme" class="form-label">Programme *</label>
                                     <select class="form-select" id="programme" th:field="*{programme}" required>
                                         <option value="">Choisir un programme...</option>
-                                        <!-- On utilise la liste 'programmes' passée par le contrôleur -->
-                                        <option th:each="prog : ${programmes}" th:value="${prog}"
+                                        <option th:each="prog : ${programmes}"
+                                                th:value="${prog}"
                                                 th:text="${prog}"></option>
                                     </select>
                                 </div>
@@ -153,20 +208,18 @@
                                 </div>
                             </div>
 
-                            <!-- Ligne 4 : Entreprise et Tuteur Entreprise -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="entreprise" class="form-label">Entreprise *</label>
-                                    <!-- L'ID 'entrepriseSelect' sera utilisé par notre script -->
+                                    <label for="entrepriseSelect" class="form-label">Entreprise *</label>
                                     <select class="form-select" id="entrepriseSelect" th:field="*{entreprise}" required>
                                         <option value="">Choisir une entreprise...</option>
-                                        <option th:each="ent : ${entreprises}" th:value="${ent.id}"
+                                        <option th:each="ent : ${entreprises}"
+                                                th:value="${ent.id}"
                                                 th:text="${ent.raisonSociale}"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="tuteurEntreprise" class="form-label">Tuteur d'entreprise *</label>
-                                    <!-- L'ID 'tuteurSelect' sera utilisé par notre script. On ajoute l'attribut 'disabled' -->
+                                    <label for="tuteurSelect" class="form-label">Tuteur d'entreprise *</label>
                                     <select class="form-select" id="tuteurSelect" th:field="*{tuteurEntreprise}"
                                             required disabled>
                                         <option value="">-- Choisir une entreprise d'abord --</option>
@@ -176,6 +229,7 @@
 
                         </div>
                     </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary">
@@ -194,17 +248,19 @@
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmationModalLabel">Confirmation de suppression</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body text-center">
                     <p id="modalText"></p>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
 
-                    <!-- Formulaire de suppression -->
                     <form id="deleteForm" method="post" th:action="@{/}" class="d-inline">
                         <button type="submit" class="btn btn-danger">
                             <i class="bi bi-trash"></i>
@@ -212,6 +268,7 @@
                         </button>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
@@ -219,6 +276,7 @@
     <th:block layout:fragment="scripts">
         <script th:src="@{/js/dashboard.js}"></script>
     </th:block>
+
 </section>
 </body>
 </html>

@@ -12,11 +12,29 @@
 <section layout:fragment="content">
 
     <div class="container-fluid">
+
+        <!-- Messages flash -->
+        <div th:if="${updateSuccess}" class="alert alert-success text-center fw-bold" role="alert"
+             style="max-width: 600px; margin: 20px auto;">
+            <i class="bi bi-check2-circle"></i>
+            <span th:text="${updateSuccess}">Mise à jour réussie.</span>
+        </div>
+
+        <div th:if="${updateError}" class="alert alert-danger text-center fw-bold" role="alert"
+             style="max-width: 600px; margin: 20px auto;">
+            <i class="bi bi-x-circle"></i>
+            <span th:text="${updateError}">Erreur lors de la mise à jour.</span>
+        </div>
+
+        <!-- Infos générales -->
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h2 class="mb-0" th:text="'Informations générales de ' + ${apprenti.prenom} + ' ' + ${apprenti.nom}"></h2>
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateTraineeModal">
+                <button type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#updateTraineeModal">
                     <i class="bi bi-pencil-square"></i> Éditer
                 </button>
             </div>
@@ -44,6 +62,10 @@
                         <td th:text="${apprenti.programme != null ? apprenti.programme : 'NA'}"></td>
                     </tr>
                     <tr>
+                        <th>Année académique</th>
+                        <td th:text="${apprenti.anneeAcademique != null && apprenti.anneeAcademique != '' ? apprenti.anneeAcademique : 'NA'}"></td>
+                    </tr>
+                    <tr>
                         <th>Entreprise</th>
                         <td th:text="${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : 'NA'}"></td>
                     </tr>
@@ -64,6 +86,7 @@
             </div>
         </div>
 
+        <!-- Historique des visites -->
         <div class="card">
             <div class="card-header">
                 <h2>Historique des visites</h2>
@@ -78,13 +101,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- Itération sur la liste des visites -->
                     <tr th:each="visite : ${apprenti.visites}">
                         <td th:text="${visite.date != null ? #temporals.format(visite.date, 'dd/MM/yyyy') : 'Date non définie'}"></td>
                         <td th:text="${visite.format}"></td>
                         <td th:text="${visite.commentaires}"></td>
                     </tr>
-                    <!-- Message si aucune visite n'est enregistrée -->
+
                     <tr th:if="${#lists.isEmpty(apprenti.visites)}">
                         <td colspan="3" class="text-center">Aucune visite enregistrée pour cet apprenti.</td>
                     </tr>
@@ -93,68 +115,151 @@
             </div>
         </div>
 
+    </div>
 
-    <!-- Update Trainee Modal -->
+
+    <!-- Modale de mise à jour de l'apprenti -->
     <div class="modal fade" id="updateTraineeModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form th:action="@{/apprenti/update/{id}(id=${apprenti.id})}" th:object="${apprenti}" method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="updateModalLabel">Mise à jour du profile de [[${apprenti.prenom}]]</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Hidden input to carry the ID -->
-                        <input type="hidden" th:field="*{id}" />
 
-                        <div class="mb-3">
-                            <label for="firstName" class="form-label">Prenom</label>
-                            <input type="text" class="form-control" id="firstName" th:field="*{prenom}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="lastName" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="lastName" th:field="*{nom}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="mail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="mail" th:field="*{adresseElectronique}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Téléphone</label>
-                            <input type="tel" class="form-control" id="phone" th:field="*{telephone}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="program" class="form-label">Programme</label>
-                            <input type="text" class="form-control" id="program" th:field="*{programme}">
+                <form th:action="@{/apprenti/update/{id}(id=${apprenti.id})}"
+                      th:object="${apprenti}"
+                      method="post">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateModalLabel">
+                            Mise à jour du profil de
+                            <span th:text="${apprenti.prenom}">Prénom</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="container-fluid">
+
+                            <input type="hidden" th:field="*{id}"/>
+
+                            <!-- Ligne 1 : Nom / Prénom -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="prenom" class="form-label">Prénom *</label>
+                                    <input type="text" id="prenom" class="form-control" th:field="*{prenom}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nom" class="form-label">Nom *</label>
+                                    <input type="text" id="nom" class="form-control" th:field="*{nom}" required>
+                                </div>
+                            </div>
+
+                            <!-- Ligne 2 : Email / Téléphone -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="adresseElectronique" class="form-label">Adresse Électronique *</label>
+                                    <input type="email"
+                                           id="adresseElectronique"
+                                           class="form-control"
+                                           th:field="*{adresseElectronique}"
+                                           required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="telephone" class="form-label">Téléphone</label>
+                                    <input type="tel"
+                                           id="telephone"
+                                           class="form-control"
+                                           th:field="*{telephone}"
+                                           pattern="[0-9]{10}"
+                                           placeholder="0123456789">
+                                </div>
+                            </div>
+
+                            <!-- Ligne 3 : Programme / Année académique -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="programme" class="form-label">Programme *</label>
+                                    <select id="programme"
+                                            class="form-select"
+                                            th:field="*{programme}"
+                                            required>
+                                        <option value="">Choisir un programme...</option>
+                                        <option th:each="prog : ${programmes}"
+                                                th:value="${prog}"
+                                                th:text="${prog}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="anneeAcademique" class="form-label">Année Académique</label>
+                                    <input type="text"
+                                           id="anneeAcademique"
+                                           class="form-control"
+                                           th:field="*{anneeAcademique}"
+                                           placeholder="ex: 2024-2025">
+                                </div>
+                            </div>
+
+                            <!-- Ligne 4 : Entreprise / Tuteur d'entreprise -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="entrepriseSelectModal" class="form-label">Entreprise *</label>
+                                    <select id="entrepriseSelectModal"
+                                            class="form-select"
+                                            th:field="*{entreprise}"
+                                            required>
+                                        <option value="">Choisir une entreprise...</option>
+                                        <option th:each="ent : ${entreprises}"
+                                                th:value="${ent.id}"
+                                                th:text="${ent.raisonSociale}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="tuteurSelectModal" class="form-label">Tuteur d'entreprise *</label>
+                                    <select id="tuteurSelectModal"
+                                            class="form-select"
+                                            th:field="*{tuteurEntreprise}"
+                                            required>
+                                        <!-- si l'apprenti a déjà un tuteurEntreprise on le met 1er choix -->
+                                        <option th:if="${apprenti.tuteurEntreprise != null}"
+                                                th:value="${apprenti.tuteurEntreprise.id}"
+                                                th:text="${apprenti.tuteurEntreprise.prenom + ' ' + apprenti.tuteurEntreprise.nom}">
+                                        </option>
+
+                                        <!-- sinon placeholder -->
+                                        <option th:if="${apprenti.tuteurEntreprise == null}"
+                                                value="">
+                                            -- Sélectionner un tuteur --
+                                        </option>
+                                    </select>
+                                    <!-- note: comme sur le dashboard, le JS côté front peut recharger les tuteurs
+                                         selon l'entreprise choisie -->
+                                </div>
+                            </div>
+
                         </div>
                     </div>
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Annuler</button>
+
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-floppy"></i>
-                            Sauvegarder</button>
+                            Sauvegarder
+                        </button>
                     </div>
+
                 </form>
             </div>
         </div>
     </div>
 
-<!--snackbar d'édition d'apprenti-->
-    <div id="snackbar" th:if="${updateSuccess}">
-        <i class="bi bi-check2-circle"></i>
-        Mise à jour de l'apprenti réussie
-    </div>
+    <th:block layout:fragment="scripts">
+        <script th:src="@{/js/traineeDetails.js}"></script>
+    </th:block>
 
-    <div id="snackbar" th:if="${updateError}" class="text-danger">
-        <i class="bi bi-x-circle"></i>
-        Erreur lors de la mise à jour
-    </div>
-
-
-<th:block layout:fragment="scripts">
-    <script th:src="@{/js/traineeDetails.js}"></script>
-</th:block>
 </section>
-
 </body>
 </html>
