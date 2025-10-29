@@ -22,7 +22,7 @@ public class Utilisateur {
     private Role role;
 
     @OneToMany(mappedBy = "tuteurPedagogique")
-    private List<Apprenti> apprentis;
+    private List<AnneeAlternance> anneeAlternances;
 
 
     public Utilisateur() {
@@ -41,8 +41,8 @@ public class Utilisateur {
     public void setPassword(String password) { this.password = password; }
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
-    public List<Apprenti> getApprentis() { return apprentis; }
-    public void setApprentis(List<Apprenti> apprentis) { this.apprentis = apprentis; }
+    public List<AnneeAlternance> getApprentis() { return anneeAlternances; }
+    public void setApprentis(List<AnneeAlternance> apprentis) { this.anneeAlternances = apprentis; }
 
     public Integer getUtilisateurId() {
         return this.id != null ? this.id.intValue() : null;

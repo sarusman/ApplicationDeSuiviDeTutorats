@@ -1,10 +1,11 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
+import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
-import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
+import ApplicationDeSuiviDeTutorat.Repository.AnneeAlternanceRepository;
 import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
-import ApplicationDeSuiviDeTutorat.repository.UtilisateurRepository;
+import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class ApprentiService {
     private final ApprentiBilanRepository apprentiBilanRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final AnneeAlternanceRepository anneeAlternanceRepository;
 
-    public ApprentiService(ApprentiBilanRepository apprentiBilanRepository, UtilisateurRepository utilisateurRepository) {
+    public ApprentiService(ApprentiBilanRepository apprentiBilanRepository, UtilisateurRepository utilisateurRepository, AnneeAlternanceRepository anneeAlternanceRepository) {
         this.apprentiBilanRepository = apprentiBilanRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.anneeAlternanceRepository = anneeAlternanceRepository;
     }
 
     public List<Apprenti> getAllApprentis() {
@@ -41,18 +44,10 @@ public class ApprentiService {
     /**
      * Crée un nouvel apprenti et l'associe à un tuteur pédagogique.
      * @param apprenti L'objet Apprenti à sauvegarder.
-     * @param tuteurId L'ID de l'utilisateur qui sera le tuteur pédagogique.
      * @return L'apprenti sauvegardé.
      */
     @Transactional
-    public Apprenti createApprenti(Apprenti apprenti, Long tuteurId) {
-        Utilisateur tuteurPedagogique = utilisateurRepository
-                .findById(tuteurId)
-                .orElseThrow(() -> new EntityNotFoundException("Utilisateur (Tuteur) non trouvé avec l'id : " + tuteurId));
-
-        // Associer le tuteur à l'apprenti
-        apprenti.setTuteurPedagogique(tuteurPedagogique);
-
+    public Apprenti createApprenti(Apprenti apprenti) {
         return apprentiBilanRepository.save(apprenti);
     }
 
@@ -65,7 +60,6 @@ public class ApprentiService {
         apprentiToUpdate.setPrenom(updatedApprenti.getPrenom());
         apprentiToUpdate.setAdresseElectronique(updatedApprenti.getAdresseElectronique());
         apprentiToUpdate.setTelephone(updatedApprenti.getTelephone());
-        apprentiToUpdate.setProgramme(updatedApprenti.getProgramme());
 
         return apprentiBilanRepository.save(apprentiToUpdate);
     }
@@ -76,13 +70,15 @@ public class ApprentiService {
      * @return un Optional contenant la visite la plus récente, ou un Optional vide.
      */
     public Optional<Visite> findDerniereVisite(Apprenti apprenti) {
-        if (apprenti == null || apprenti.getVisites() == null) {
+        if (apprenti == null || anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).isEmpty()) {
             return Optional.empty();
         }
         LocalDate aujourdhui = LocalDate.now();
-        return apprenti.getVisites().stream()
-                .filter(v -> v.getDate() != null && v.getDate().isBefore(aujourdhui))
-                .max(Comparator.comparing(Visite::getDate));
+        return anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).stream().findFirst()
+                .map(anneeAlternance -> anneeAlternance.getVisites().stream()
+                        .filter(v -> v.getDate() != null && v.getDate().isBefore(aujourdhui))
+                        .max(Comparator.comparing(Visite::getDate)))
+                .orElse(Optional.empty());
     }
 
     /**
@@ -91,13 +87,15 @@ public class ApprentiService {
      * @return un Optional contenant la visite future la plus proche, ou un Optional vide.
      */
     public Optional<Visite> findProchaineVisite(Apprenti apprenti) {
-        if (apprenti == null || apprenti.getVisites() == null) {
+        if (apprenti == null || anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).isEmpty()) {
             return Optional.empty();
         }
         LocalDate aujourdhui = LocalDate.now();
-        return apprenti.getVisites().stream()
-                .filter(v -> v.getDate() != null && v.getDate().isAfter(aujourdhui))
-                .min(Comparator.comparing(Visite::getDate));
+        return anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).stream().findFirst()
+                .map(anneeAlternance -> anneeAlternance.getVisites().stream()
+                        .filter(v -> v.getDate() != null && v.getDate().isAfter(aujourdhui))
+                        .min(Comparator.comparing(Visite::getDate)))
+                .orElse(Optional.empty());
     }
 
     /**
@@ -112,5 +110,8 @@ public class ApprentiService {
         apprentiBilanRepository.deleteById(id);
     }
 
+    public AnneeAlternance createAnneeAlternance(AnneeAlternance anneeAlternance) {
+        return anneeAlternanceRepository.save(anneeAlternance);
+    }
 
 }

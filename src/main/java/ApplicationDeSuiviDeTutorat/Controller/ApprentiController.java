@@ -1,21 +1,20 @@
 package ApplicationDeSuiviDeTutorat.Controller;
+import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
 import ApplicationDeSuiviDeTutorat.Service.ApprentiService;
-import ApplicationDeSuiviDeTutorat.repository.UtilisateurRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -24,10 +23,8 @@ public class ApprentiController {
 
     @Autowired
     private ApprentiService apprentiService;
-    private final UtilisateurRepository utilisateurRepository;
 
-    public ApprentiController(ApprentiService apprentiService, UtilisateurRepository utilisateurRepository) {
-        this.utilisateurRepository = utilisateurRepository;
+    public ApprentiController(ApprentiService apprentiService) {
         this.apprentiService = apprentiService;
     }
 
@@ -50,17 +47,9 @@ public class ApprentiController {
         return "traineeDetails";
     }
 
-    @PostMapping("/update/{id}")
-    public String updateTraineeById(@PathVariable Long id, @ModelAttribute Apprenti updatedTrainee, RedirectAttributes redirectAttributes) {
-        try {
-            apprentiService.updateApprentiBilanById(id, updatedTrainee);
-
-            redirectAttributes.addFlashAttribute("updateSuccess", "Mise à jour de l'apprenti réussie.");
-
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("updateError", "Une erreur est survenue lors de la mise à jour.");
-        }
-
+    @PutMapping("/{id}")
+    public String updateTraineeById(@PathVariable Long id,@ModelAttribute Apprenti updatedTrainee ){
+        apprentiService.updateApprentiBilanById(id, updatedTrainee);
         return STR."redirect:/apprenti/\{id}";
     }
 
@@ -68,25 +57,18 @@ public class ApprentiController {
      * Traite la soumission du formulaire d'ajout d'apprenti depuis la modale.
      */
     @PostMapping("/ajouter")
-    public String ajouterApprenti(@ModelAttribute Apprenti apprenti, Principal principal) {
-        String username = principal.getName();
+    public String ajouterApprenti(@ModelAttribute Apprenti apprenti, @ModelAttribute AnneeAlternance anneeAlternance, HttpServletRequest request) {
+        if(apprenti == null || anneeAlternance == null || request == null) throw new IllegalArgumentException(); // Change exception
 
-        Utilisateur tuteurConnecte = utilisateurRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+        Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("user");
+        Long tuteurId = utilisateur.getId();
 
-        Long tuteurId = tuteurConnecte.getId();
+        apprentiService.createApprenti(apprenti);
 
-        apprentiService.createApprenti(apprenti, tuteurId);
+        anneeAlternance.setApprenti(apprenti);
+        anneeAlternance.setTuteurPedagogique(utilisateur);
+        apprentiService.createAnneeAlternance(anneeAlternance);
 
-        return "redirect:/dashboard";
-    }
-
-    /**
-     * Suppression d'un apprenti.
-     */
-    @PostMapping("/supprimer/{id}")
-    public String supprimerApprenti(@PathVariable("id") Long id) {
-        apprentiService.deleteApprentiById(id);
         return "redirect:/dashboard";
     }
 }

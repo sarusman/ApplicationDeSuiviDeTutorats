@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutorat.repository;
+package ApplicationDeSuiviDeTutorat.Repository;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.TuteurEntreprise;
 import org.springframework.data.domain.Sort;

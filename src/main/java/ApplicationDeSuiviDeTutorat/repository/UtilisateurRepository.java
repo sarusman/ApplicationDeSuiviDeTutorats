@@ -1,5 +1,7 @@
-package ApplicationDeSuiviDeTutorat.repository;
+package ApplicationDeSuiviDeTutorat.Repository;
 
+import ApplicationDeSuiviDeTutorat.App;
+import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,6 @@ import java.util.Optional;
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> {
     Optional<Utilisateur> findByUsername(String username);
 
-    @Query("SELECT a FROM Apprenti a WHERE a.tuteurPedagogique.id = :tuteurId")
+    @Query("SELECT DISTINCT aa.apprenti FROM AnneeAlternance aa WHERE aa.tuteurPedagogique.id = :tuteurId")
     List<Apprenti> findApprentisByTuteurId(Long tuteurId);
-
 }

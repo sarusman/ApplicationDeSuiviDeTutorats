@@ -2,23 +2,12 @@ package ApplicationDeSuiviDeTutorat.Models.Entities;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
 @Entity
 @Table(name = "apprenti")
 public class Apprenti {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Enumerated(EnumType.STRING)
-    private Programme programme;
-
-    @Column(length = 50)
-    private String anneeAcademique;
 
     @Column(length = 100)
     private String nom;
@@ -32,35 +21,9 @@ public class Apprenti {
     @Column(length = 20)
     private String telephone;
 
-    @ManyToOne
-    @JoinColumn(name = "entreprise_id")
-    private Entreprise entreprise;
-
-    @ManyToOne
-    @JoinColumn(name = "tuteur_entreprise_id")
-    private TuteurEntreprise tuteurEntreprise;
-
-    @ManyToOne
-    @JoinColumn(name = "tuteur_pedagogique_id")
-    private Utilisateur tuteurPedagogique;
-
-    @OneToOne
-    @JoinColumn(name = "mission_id")
-    private Mission mission;
-
-    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Visite> visites;
-
-    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EvaluationEcole> evaluations;
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Programme getProgramme() { return programme; }
-    public void setProgramme(Programme programme) { this.programme = programme; }
-    public String getAnneeAcademique() { return anneeAcademique; }
-    public void setAnneeAcademique(String anneeAcademique) { this.anneeAcademique = anneeAcademique; }
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
     public String getPrenom() { return prenom; }
@@ -69,16 +32,5 @@ public class Apprenti {
     public void setAdresseElectronique(String adresseElectronique) { this.adresseElectronique = adresseElectronique; }
     public String getTelephone() { return telephone; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
-    public Entreprise getEntreprise() { return entreprise; }
-    public void setEntreprise(Entreprise entreprise) { this.entreprise = entreprise; }
-    public TuteurEntreprise getTuteurEntreprise() { return tuteurEntreprise; }
-    public void setTuteurEntreprise(TuteurEntreprise tuteurEntreprise) { this.tuteurEntreprise = tuteurEntreprise; }
-    public Utilisateur getTuteurPedagogique() { return tuteurPedagogique; }
-    public void setTuteurPedagogique(Utilisateur tuteurPedagogique) { this.tuteurPedagogique = tuteurPedagogique; }
-    public Mission getMission() { return mission; }
-    public void setMission(Mission mission) { this.mission = mission; }
-    public List<Visite> getVisites() { return visites; }
-    public void setVisites(List<Visite> visites) { this.visites = visites; }
-    public List<EvaluationEcole> getEvaluations() { return evaluations; }
-    public void setEvaluations(List<EvaluationEcole> evaluations) { this.evaluations = evaluations; }
+
 }

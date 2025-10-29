@@ -2,8 +2,6 @@ package ApplicationDeSuiviDeTutorat.Models.Entities;
 import ApplicationDeSuiviDeTutorat.Models.Enums.FormatVisite;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
 
 @Entity
 @Table(name = "visite")
@@ -22,8 +20,7 @@ public class Visite {
     private String commentaires;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "apprenti_id", nullable = false)
-    private Apprenti apprenti;
+    private AnneeAlternance AnneeAlternance;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -37,6 +34,6 @@ public class Visite {
     public String getCommentaires() { return commentaires; }
     public void setCommentaires(String commentaires) { this.commentaires = commentaires; }
 
-    public Apprenti getApprenti() { return apprenti; }
-    public void setApprenti(Apprenti apprenti) { this.apprenti = apprenti; }
+    public AnneeAlternance getApprenti() { return AnneeAlternance; }
+    public void setApprenti(AnneeAlternance apprenti) { this.AnneeAlternance = apprenti; }
 }

@@ -14,91 +14,46 @@
 
     <div class="tab-buttons d-flex justify-content-between">
         <button id="AButton" class="button active" onclick="showTab('apprenti', 'AButton')">Apprentis</button>
-
-        <div class="d-flex justify-content-between align-items-center gap-3">
-            <div class="input-group">
-                <span class="input-group-text">
-                    <i class="bi bi-search"></i>
-                </span>
-                    <input type="text"
-                           class="form-control"
-                           placeholder="Rechercher..."
-                           id="searchApprenti">
-            </div>
-            <button id="ajouterApprenti"
-                    class="btn btn-outline-info d-flex align-items-center gap-2 w-100"
-                    data-bs-toggle="modal"
-                    data-bs-target="#ajoutApprentiModal">
-                <b>
-                    <i class="bi bi-plus-lg"></i>
-                    Ajouter un apprenti
-                </b>
-            </button>
-        </div>
+        <button id="ajouterApprenti"
+                class="btn btn-outline-info d-flex align-items-center gap-2"
+                data-bs-toggle="modal"
+                data-bs-target="#ajoutApprentiModal">
+            <b>
+                <i class="bi bi-plus-lg"></i>
+                Ajouter un apprenti
+            </b>
+        </button>
     </div>
 
     <div id="apprenti" class="tab active">
         <h2>Liste des Apprentis</h2>
-        <table class="table table-striped table-condensed w-100">
-            <thead class="thead-light text-white">
+        <table class="table table-striped table-condensed" style="width: auto" >
+            <thead class="thead-dark">
             <tr>
-                <th scope="col" class="text-white">
-                    <bold>Nom</bold>
-                </th>
-                <th scope="col" class="text-white">
-                    <bold>Prénom</bold>
-                </th>
-                <th scope="col" class="text-white">Programme</th>
-                <th scope="col" class="text-white">Entreprise</th>
-                <th scope="col" class="text-white">Missions (mots-clés)</th>
-                <th scope="col" class="text-white">E-mail</th>
-                <th scope="col" class="text-white">Téléphone</th>
-                <th scope="col" class="text-center text-white">Actions</th>
+                <th scope="col"><bold>Nom</bold></th>
+                <th scope="col"><bold>Prénom</bold></th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Téléphone</th>
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${!#lists.isEmpty(apprentis)}" th:each="apprenti :${apprentis}" class="apprenti-row">
+            <tr th:each="apprenti :${apprentis}"  style="cursor: pointer">
                 <td th:text="${apprenti.nom}"></td>
                 <td th:text="${apprenti.prenom}"></td>
-                <td th:text="${apprenti.programme}"></td>
-                <td th:text="${apprenti.entreprise.raisonSociale}"></td>
-                <td th:text="${apprenti.mission?.motsCles ?: 'NA'}"></td>
-
                 <td th:text="${apprenti.adresseElectronique}"></td>
                 <td th:text="${apprenti.telephone}"></td>
-                <td class="d-flex justify-content-center gap-3">
+                <td>
                     <a th:href="@{|/apprenti/${apprenti.id}|}"><i class="bi bi-eye"></i></a>
-                    <a href="#"
-                       class="delete-link"
-                       data-bs-toggle="modal"
-                       data-bs-target="#confirmationSuppressionModal"
-                       th:data-nom="${apprenti.nom}"
-                       th:data-prenom="${apprenti.prenom}"
-                       th:data-url="@{/apprenti/supprimer/{id}(id=${apprenti.id})}">
-                        <i class="bi bi-trash text-danger"></i>
-                    </a>
-                </td>
-            </tr>
-
-            <tr th:if="${#lists.isEmpty(apprentis)}">
-                <td class="text-danger text-center fs-5" colspan="8">
-                    La liste est vide.
-                    Ajoutez au moins un apprenti.
-                </td>
-            </tr>
-
-            <tr id="noResultsRow" style="display: none;">
-                <td class="text-muted text-center" colspan="8">
-                    Aucun apprenti ne correspond à votre recherche.
+                    <a th:href="@{|/apprenti/${apprenti.id}|}"><i class="bi bi-eye"></i></a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <!--    modale d'ajout d'apprenti    -->
-    <div class="modal fade" id="ajoutApprentiModal" tabindex="-1" aria-labelledby="ajoutApprentiModalLabel"
-         aria-hidden="true">
+<!--    modale d'ajout d'apprenti    -->
+    <div class="modal fade" id="ajoutApprentiModal" tabindex="-1" aria-labelledby="ajoutApprentiModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg"> <!-- modal-lg pour avoir plus de largeur pour les 2 colonnes -->
             <div class="modal-content">
                 <div class="modal-header">
@@ -107,6 +62,7 @@
                 </div>
 
                 <form th:action="@{/apprenti/ajouter}" th:object="${nouvelApprenti}" method="post">
+                    <input type="hidden" name="nouvelleAnneeAlternance" th:value="${nouvelleAnneeAlternance}">
                     <div class="modal-body">
                         <div class="container-fluid">
 
@@ -126,8 +82,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Adresse Électronique *</label>
-                                    <input type="email" class="form-control" id="email"
-                                           th:field="*{adresseElectronique}" required>
+                                    <input type="email" class="form-control" id="email" th:field="*{adresseElectronique}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="telephone" class="form-label">Téléphone</label>
@@ -139,17 +94,19 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="programme" class="form-label">Programme *</label>
-                                    <select class="form-select" id="programme" th:field="*{programme}" required>
+                                    <select class="form-select" id="programme" th:field="${nouvelleAnneeAlternance.programme}" required>
                                         <option value="">Choisir un programme...</option>
                                         <!-- On utilise la liste 'programmes' passée par le contrôleur -->
-                                        <option th:each="prog : ${programmes}" th:value="${prog}"
-                                                th:text="${prog}"></option>
+                                        <option th:each="prog : ${programmes}" th:value="${prog}" th:text="${prog}"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="annee" class="form-label">Année Académique</label>
-                                    <input type="text" class="form-control" id="annee" th:field="*{anneeAcademique}"
-                                           placeholder="ex: 2024-2025">
+                                    <select class="form-select" id="annee" th:field="${nouvelleAnneeAlternance.anneeAcademique}" required>
+                                        <option value="">Choisir une année académique...</option>
+                                        <!-- On utilise la liste 'anneesAcademique' passée par le contrôleur -->
+                                        <option th:each="annee : ${anneesAcademique}" th:value="${annee}" th:text="${annee.name()}"></option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -158,18 +115,17 @@
                                 <div class="col-md-6">
                                     <label for="entreprise" class="form-label">Entreprise *</label>
                                     <!-- L'ID 'entrepriseSelect' sera utilisé par notre script -->
-                                    <select class="form-select" id="entrepriseSelect" th:field="*{entreprise}" required>
+                                    <select class="form-select" id="entreprise" th:field="${nouvelleAnneeAlternance.entreprise}" required>
                                         <option value="">Choisir une entreprise...</option>
-                                        <option th:each="ent : ${entreprises}" th:value="${ent.id}"
-                                                th:text="${ent.raisonSociale}"></option>
+                                        <option th:each="ent : ${entreprises}" th:value="${ent.id}" th:text="${ent.raisonSociale}"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="tuteurEntreprise" class="form-label">Tuteur d'entreprise *</label>
                                     <!-- L'ID 'tuteurSelect' sera utilisé par notre script. On ajoute l'attribut 'disabled' -->
-                                    <select class="form-select" id="tuteurSelect" th:field="*{tuteurEntreprise}"
-                                            required disabled>
+                                    <select class="form-select" id="tuteurEntreprise" th:field="${nouvelleAnneeAlternance.tuteurEntreprise}" required>
                                         <option value="">-- Choisir une entreprise d'abord --</option>
+                                        <option th:each="tut : ${tuteurEntreprise}" th:value="${tut.id}" th:text="${tut}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -180,8 +136,7 @@
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-floppy"></i>
-                            Enregistrer
-                        </button>
+                            Enregistrer</button>
                     </div>
                 </form>
 
@@ -189,36 +144,70 @@
         </div>
     </div>
 
-    <!-- Modale de confirmation de suppression -->
-    <div class="modal fade" id="confirmationSuppressionModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmationModalLabel">Confirmation de suppression</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p id="modalText"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+    <script>
+        function showTab(tabId, buttonID) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
 
-                    <!-- Formulaire de suppression -->
-                    <form id="deleteForm" method="post" th:action="@{/}" class="d-inline">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-trash"></i>
-                            Supprimer
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => button.classList.remove('active'));
 
-    <th:block layout:fragment="scripts">
-        <script th:src="@{/js/dashboard.js}"></script>
-    </th:block>
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById(buttonID).classList.add('active');
+        }
+
+        function rowClicked(value) {
+            location.href = value;
+        }
+    </script>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const entrepriseSelect = document.getElementById('entrepriseSelect');
+            const tuteurSelect = document.getElementById('tuteurSelect');
+
+            entrepriseSelect.addEventListener('change', function() {
+                const entrepriseId = this.value;
+
+                // Réinitialiser et désactiver le champ tuteur si aucune entreprise n'est sélectionnée
+                tuteurSelect.innerHTML = '<option value="">-- Choisir une entreprise dabord --</option>';
+                tuteurSelect.disabled = true;
+
+                // Si une entreprise est sélectionnée, faire l'appel API
+                if (entrepriseId) {
+                    // Construit l'URL de l'API en utilisant le contexte de l'application
+                    const url = `/api/tuteurs/by-entreprise/${entrepriseId}`;
+
+                    fetch(url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('La réponse du réseau n\'était pas valide');
+                            }
+                            return response.json();
+                        })
+                        .then(tuteurs => {
+                            // Vider le select (sauf la première option)
+                            tuteurSelect.innerHTML = '<option value="">Choisir un tuteur...</option>';
+
+                            // Remplir le select avec les tuteurs reçus
+                            tuteurs.forEach(tuteur => {
+                                const option = document.createElement('option');
+                                option.value = tuteur.id;
+                                option.textContent = tuteur.prenom + ' ' + tuteur.nom;
+                                tuteurSelect.appendChild(option);
+                            });
+
+                            // Activer le champ tuteur
+                            tuteurSelect.disabled = false;
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération des tuteurs:', error);
+                            tuteurSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+                        });
+                }
+            });
+        });
+    </script>
 </section>
 </body>
 </html>
