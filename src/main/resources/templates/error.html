@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${status} + ' - ' + ${errorTitle}">Erreur</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}">
+</head>
+<body>
+<div class="error-container">
+    <div class="error-code" th:text="${status}">500</div>
+    <h1 class="error-title" th:text="${errorTitle}">Erreur</h1>
+    <p class="error-message" th:text="${errorMessage}">Message d'erreur</p>
+
+    <div class="error-actions">
+        <a href="/dashboard" class="btn btn-primary">Aller au tableau de bord</a>
+        <a href="javascript:history.back()" class="btn btn-secondary">Retour</a>
+    </div>
+
+    <div class="error-code-info">
+        Erreur <span th:text="${status}">500</span>
+    </div>
+</div>
+</body>
+</html>

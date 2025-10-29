@@ -56,8 +56,15 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .permitAll()
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendRedirect("/error?status=401");
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendRedirect("/error?status=403");
+                        })
                 );
-
         return http.build();
     }
 }

@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutorat.Config;
+package ApplicationDeSuiviDeTutorat.Service.Converters;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.Entreprise;
 import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;

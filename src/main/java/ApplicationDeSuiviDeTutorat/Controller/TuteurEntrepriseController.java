@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
-// Choix de JM : utiliser un rest controller + préfixe pour distinguer des controller renvoyant des vues thymeleaf
 @RestController
 @Tag(name = "Tuteurs API", description = "API pour la gestion des tuteurs d'entreprise")
 @RequestMapping("/api/tuteurs")
