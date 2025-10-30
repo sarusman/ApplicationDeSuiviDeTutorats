@@ -6,6 +6,8 @@ import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
 import jakarta.transaction.Transactional;
+import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

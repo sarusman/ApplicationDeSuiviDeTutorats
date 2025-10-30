@@ -1,13 +1,17 @@
 package ApplicationDeSuiviDeTutorat.Controller.Web;
 
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiAnneeAlternanceDTO;
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiDetailDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
-import ApplicationDeSuiviDeTutorat.Service.ApprentiService;
-import ApplicationDeSuiviDeTutorat.Service.EntrepriseService;
-import ApplicationDeSuiviDeTutorat.Service.ProgrammeService;
-import ApplicationDeSuiviDeTutorat.Service.UtilisateurService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
+import ApplicationDeSuiviDeTutorat.Repository.AnneeAcademiqueRepository;
+import ApplicationDeSuiviDeTutorat.Repository.AnneeAlternanceRepository;
+import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
+import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
+import ApplicationDeSuiviDeTutorat.Service.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +28,23 @@ public class ApprentiWebController {
     private final UtilisateurService utilisateurService;
     private final ProgrammeService programmeService;
     private final EntrepriseService entrepriseService;
+    private final AnneeAcademiqueRepository anneeAcademiqueRepository;
+    private final TuteurEntrepriseRepository tuteurEntrepriseRepository;
+    private final AnneeAlternanceRepository anneeAlternanceRepository;
+    private final AnneeAlternanceService anneeAlternanceService;
 
-    public ApprentiWebController(ApprentiService apprentiService,
+    public ApprentiWebController(UtilisateurRepository utilisateurRepository, ApprentiService apprentiService,
                                  UtilisateurService utilisateurService,
                                  ProgrammeService programmeService,
-                                 EntrepriseService entrepriseService) {
+                                 EntrepriseService entrepriseService, AnneeAcademiqueRepository anneeAcademiqueRepository, TuteurEntrepriseRepository tuteurEntrepriseRepository, AnneeAlternanceRepository anneeAlternanceRepository, AnneeAlternanceService anneeAlternanceService) {
         this.apprentiService = apprentiService;
         this.utilisateurService = utilisateurService;
         this.programmeService = programmeService;
         this.entrepriseService = entrepriseService;
+        this.anneeAcademiqueRepository = anneeAcademiqueRepository;
+        this.tuteurEntrepriseRepository = tuteurEntrepriseRepository;
+        this.anneeAlternanceRepository = anneeAlternanceRepository;
+        this.anneeAlternanceService = anneeAlternanceService;
     }
 
     @GetMapping("/{id}")
@@ -46,28 +58,26 @@ public class ApprentiWebController {
 
         Optional<Apprenti> traineeOpt = apprentiService.getApprentiById(id);
 
-        if (traineeOpt.isPresent()) {
-            Apprenti apprenti = traineeOpt.get();
+        Apprenti apprenti = traineeOpt.get();
 
-            Optional<Visite> derniereVisite = apprentiService.findDerniereVisite(apprenti);
-            Optional<Visite> prochaineVisite = apprentiService.findProchaineVisite(apprenti);
+        Optional<Visite> derniereVisite = apprentiService.findDerniereVisite(apprenti);
+        Optional<Visite> prochaineVisite = apprentiService.findProchaineVisite(apprenti);
 
-            model.addAttribute("apprenti", apprenti);
-            model.addAttribute("derniereVisite", derniereVisite);
-            model.addAttribute("prochaineVisite", prochaineVisite);
+        model.addAttribute("apprentieDetailDTO", apprentiService.toDetailDTO(apprenti));
+        model.addAttribute("derniereVisite", derniereVisite);
+        model.addAttribute("prochaineVisite", prochaineVisite);
 
-            model.addAttribute("programmes", programmeService.getProgrammesArray());
-            model.addAttribute("entreprises", entrepriseService.findAll());
-        } else {
-            model.addAttribute("apprenti", null);
-        }
+        model.addAttribute("programmes", Programme.values());
+        model.addAttribute("entreprises", entrepriseService.findAll());
+        model.addAttribute("anneesAcademique", anneeAcademiqueRepository.findAll());
+        model.addAttribute("tuteurEntreprise", tuteurEntrepriseRepository.findAll());
 
         return "traineeDetails";
     }
 
     @PostMapping("/update/{id}")
     public String updateTraineeById(@PathVariable Long id,
-                                    @ModelAttribute Apprenti updatedTrainee,
+                                    @ModelAttribute ApprentiDetailDTO updatedTrainee,
                                     Principal principal,
                                     RedirectAttributes redirectAttributes) {
 
@@ -79,10 +89,10 @@ public class ApprentiWebController {
             Apprenti actuel = apprentiService.getApprentiById(id)
                     .orElseThrow(() -> new IllegalStateException("Apprenti introuvable"));
 
-            String nouvelEmail = updatedTrainee.getAdresseElectronique();
+            String nouvelEmail = updatedTrainee.getApprenti().getAdresseElectronique();
             String ancienEmail = actuel.getAdresseElectronique();
 
-            String nouveauTel = updatedTrainee.getTelephone();
+            String nouveauTel = updatedTrainee.getApprenti().getTelephone();
             String ancienTel = actuel.getTelephone();
 
             boolean emailChange = (nouvelEmail != null && !nouvelEmail.equalsIgnoreCase(ancienEmail));
@@ -105,7 +115,7 @@ public class ApprentiWebController {
                 return "redirect:/apprenti/" + id;
             }
 
-            apprentiService.updateApprentiBilanById(id, updatedTrainee);
+            apprentiService.updateApprentiById(id, updatedTrainee);
 
             redirectAttributes.addFlashAttribute(
                     "updateSuccess",
@@ -123,39 +133,13 @@ public class ApprentiWebController {
     }
 
     @PostMapping("/ajouter")
-    public String ajouterApprenti(@ModelAttribute Apprenti apprenti,
-                                  Principal principal,
-                                  RedirectAttributes redirectAttributes) {
+    public String ajouterApprenti(@ModelAttribute ApprentiAnneeAlternanceDTO anneeAlternance, HttpServletRequest request) {
+        if(anneeAlternance == null || request == null) throw new IllegalArgumentException(); // Change exception
 
-        if (principal == null) {
-            return "redirect:/login";
-        }
+        Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("user");
+        Long tuteurId = utilisateur.getId();
 
-        String username = principal.getName();
-
-        Utilisateur tuteurConnecte = utilisateurService.trouverParUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
-
-        Long tuteurId = tuteurConnecte.getId();
-
-        boolean mailExiste = apprentiService.existeAdresse(apprenti.getAdresseElectronique());
-        boolean telExiste = (apprenti.getTelephone() != null && !apprenti.getTelephone().isBlank())
-                && apprentiService.existeTelephone(apprenti.getTelephone());
-
-        if (mailExiste || telExiste) {
-            redirectAttributes.addFlashAttribute(
-                    "errorMessage",
-                    "Impossible d'ajouter l'apprenti : cet e-mail ou ce téléphone est déjà utilisé."
-            );
-            return "redirect:/dashboard";
-        }
-
-        apprentiService.createApprenti(apprenti, tuteurId);
-
-        redirectAttributes.addFlashAttribute(
-                "successMessage",
-                "L'apprenti a été ajouté avec succès."
-        );
+        apprentiService.createApprenti(anneeAlternance, tuteurId);
 
         return "redirect:/dashboard";
     }

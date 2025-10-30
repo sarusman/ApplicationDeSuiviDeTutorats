@@ -4,6 +4,7 @@ import ApplicationDeSuiviDeTutorat.Models.DTO.DashboardDto;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
+import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import ApplicationDeSuiviDeTutorat.Service.UtilisateurService;
 import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import io.swagger.v3.oas.annotations.Operation;

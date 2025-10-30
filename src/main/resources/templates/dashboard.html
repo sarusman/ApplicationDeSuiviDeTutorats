@@ -104,37 +104,37 @@
             <tbody id="apprentiTableBody">
 
             <!-- Lignes d'apprentis -->
-            <tr th:if="${!#lists.isEmpty(apprentis)}"
-                th:each="apprenti : ${apprentis}"
+            <tr th:if="${!#lists.isEmpty(apprentiDetailDTO)}"
+                th:each="dto : ${apprentiDetailDTO}"
                 class="apprenti-row"
-                th:data-fullname="${apprenti.prenom + ' ' + apprenti.nom}"
-                th:data-entreprise="${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : ''}"
-                th:data-mission="${apprenti.mission != null ? apprenti.mission.motsCles : ''}"
-                th:data-annee="${apprenti.anneeAcademique != null ? apprenti.anneeAcademique : ''}"
+                th:data-fullname="${dto.nom + ' ' + dto.prenom}"
+                th:data-entreprise="${dto.entrepriseRaisonSociale()}"
+                th:data-mission="${dto.missionMotsCles}"
+                th:data-annee="${dto.anneeAcademiqueDisplay}"
             >
-                <td th:text="${apprenti.nom}"></td>
-                <td th:text="${apprenti.prenom}"></td>
-                <td th:text="${apprenti.programme}"></td>
-                <td th:text="${apprenti.entreprise.raisonSociale}"></td>
-                <td th:text="${apprenti.mission?.motsCles ?: 'NA'}"></td>
-                <td th:text="${apprenti.adresseElectronique}"></td>
-                <td th:text="${apprenti.telephone}"></td>
+                <td th:text="${dto.nom!= null ? dto.nom : 'NA'}"></td>
+                <td th:text="${dto.prenom!= null ? dto.prenom : 'NA'}"></td>
+                <td th:text="${dto.programme!= null ? dto.programme : 'NA'}"></td>
+                <td th:text="${dto.entrepriseRaisonSociale!= null ? dto.entrepriseRaisonSociale : 'NA'}"></td>
+                <td th:text="${dto.missionMotsCles!= null ? dto.missionMotsCles : 'NA'}"></td>
+                <td th:text="${dto.adresseElectronique!= null ? dto.adresseElectronique : 'NA'}"></td>
+                <td th:text="${dto.telephone!= null ? dto.telephone : 'NA'}"></td>
                 <td class="d-flex justify-content-center gap-3">
-                    <a th:href="@{|/apprenti/${apprenti.id}|}"><i class="bi bi-eye"></i></a>
+                    <a th:href="@{|/apprenti/${dto.id}|}"><i class="bi bi-eye"></i></a>
                     <a href="#"
                        class="delete-link"
                        data-bs-toggle="modal"
                        data-bs-target="#confirmationSuppressionModal"
-                       th:data-nom="${apprenti.nom}"
-                       th:data-prenom="${apprenti.prenom}"
-                       th:data-url="@{/apprenti/supprimer/{id}(id=${apprenti.id})}">
+                       th:data-nom="${dto.nom}"
+                       th:data-prenom="${dto.prenom}"
+                       th:data-url="@{/apprenti/supprimer/{id}(id=${dto.id})}">
                         <i class="bi bi-trash text-danger"></i>
                     </a>
                 </td>
             </tr>
 
             <!-- Cas: aucun apprenti en base -->
-            <tr th:if="${#lists.isEmpty(apprentis)}">
+            <tr th:if="${#lists.isEmpty(apprentiDetailDTO)}">
                 <td class="text-danger text-center fs-5" colspan="8">
                     La liste est vide.
                     Ajoutez au moins un apprenti.
@@ -163,7 +163,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <form th:action="@{/apprenti/ajouter}" th:object="${nouvelApprenti}" method="post">
+                <form th:action="@{/apprenti/ajouter}" th:object="${ApprentiAlternanceDTO}" method="post">
                     <div class="modal-body">
                         <div class="container-fluid">
 
@@ -202,9 +202,13 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="annee" class="form-label">Année Académique</label>
-                                    <input type="text" class="form-control" id="annee" th:field="*{anneeAcademique}"
-                                           placeholder="ex: 2024-2025">
+                                    <label for="annee" class="form-label">Année Académique *</label>
+                                    <select class="form-select" id="annee" th:field="*{anneeAcademique}">
+                                    <option value="">Choisir une Annee Academique...</option>
+                                    <option th:each="aa : ${anneesAcademique}"
+                                            th:value="${aa.id}"
+                                            th:text="${aa.name()}"></option>
+                                    </select>
                                 </div>
                             </div>
 

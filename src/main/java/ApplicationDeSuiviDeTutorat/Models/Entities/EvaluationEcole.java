@@ -21,8 +21,7 @@ public class EvaluationEcole {
     private java.time.LocalDate dateSoutenance;
 
     @ManyToOne
-    @JoinColumn(name = "apprenti_id", nullable = false)
-    private Apprenti apprenti;
+    private AnneeAlternance AnneeAlternance;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -39,6 +38,6 @@ public class EvaluationEcole {
     public java.time.LocalDate getDateSoutenance() { return dateSoutenance; }
     public void setDateSoutenance(java.time.LocalDate dateSoutenance) { this.dateSoutenance = dateSoutenance; }
 
-    public Apprenti getApprenti() { return apprenti; }
-    public void setApprenti(Apprenti apprenti) { this.apprenti = apprenti; }
+    public AnneeAlternance getApprenti() { return AnneeAlternance; }
+    public void setApprenti(AnneeAlternance apprenti) { this.AnneeAlternance = apprenti; }
 }

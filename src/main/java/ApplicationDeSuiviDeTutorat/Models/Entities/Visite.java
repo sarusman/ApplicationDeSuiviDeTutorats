@@ -2,7 +2,7 @@ package ApplicationDeSuiviDeTutorat.Models.Entities;
 import ApplicationDeSuiviDeTutorat.Models.Enums.FormatVisite;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -13,7 +13,7 @@ public class Visite {
     private Long id;
 
     @Column
-    private java.time.LocalDate date;
+    private LocalDateTime date;
 
     @Enumerated(EnumType.STRING)
     private FormatVisite format;
@@ -22,14 +22,13 @@ public class Visite {
     private String commentaires;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "apprenti_id", nullable = false)
-    private Apprenti apprenti;
+    private AnneeAlternance AnneeAlternance;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public java.time.LocalDate getDate() { return date; }
-    public void setDate(java.time.LocalDate date) { this.date = date; }
+    public LocalDateTime getDate() { return date; }
+    public void setDate(LocalDateTime date) { this.date = date; }
 
     public FormatVisite getFormat() { return format; }
     public void setFormat(FormatVisite format) { this.format = format; }
@@ -37,6 +36,6 @@ public class Visite {
     public String getCommentaires() { return commentaires; }
     public void setCommentaires(String commentaires) { this.commentaires = commentaires; }
 
-    public Apprenti getApprenti() { return apprenti; }
-    public void setApprenti(Apprenti apprenti) { this.apprenti = apprenti; }
+    public AnneeAlternance getApprenti() { return AnneeAlternance; }
+    public void setApprenti(AnneeAlternance apprenti) { this.AnneeAlternance = apprenti; }
 }

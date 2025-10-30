@@ -29,7 +29,7 @@
         <!-- Infos générales -->
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="mb-0" th:text="'Informations générales de ' + ${apprenti.prenom} + ' ' + ${apprenti.nom}"></h2>
+                <h2 class="mb-0" th:text="'Informations générales de ' + ${apprentieDetailDTO.apprenti.prenom} + ' ' + ${apprentieDetailDTO.apprenti.nom}"></h2>
 
                 <button type="button"
                         class="btn btn-primary"
@@ -43,35 +43,35 @@
                     <tbody>
                     <tr>
                         <th style="width: 25%;">Prénom</th>
-                        <td th:text="${apprenti.prenom}">John</td>
+                        <td th:text="${apprentieDetailDTO.apprenti.prenom}">John</td>
                     </tr>
                     <tr>
                         <th>Nom</th>
-                        <td th:text="${apprenti.nom}"></td>
+                        <td th:text="${apprentieDetailDTO.apprenti.nom}"></td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td th:text="${apprenti.adresseElectronique != null ? apprenti.adresseElectronique : 'NA'}"></td>
+                        <td th:text="${apprentieDetailDTO.apprenti.adresseElectronique != null ? apprentieDetailDTO.apprenti.adresseElectronique : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Téléphone</th>
-                        <td th:text="${apprenti.telephone != null && apprenti.telephone != '' ? apprenti.telephone : 'NA'}"></td>
+                        <td th:text="${apprentieDetailDTO.apprenti.telephone != null && apprentieDetailDTO.apprenti.telephone != '' ? apprentieDetailDTO.apprenti.telephone : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Programme</th>
-                        <td th:text="${apprenti.programme != null ? apprenti.programme : 'NA'}"></td>
+                        <td th:text="${apprentieDetailDTO.anneeAlternance.programme != null ? apprentieDetailDTO.anneeAlternance.programme : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Année académique</th>
-                        <td th:text="${apprenti.anneeAcademique != null && apprenti.anneeAcademique != '' ? apprenti.anneeAcademique : 'NA'}"></td>
+                        <td th:text="${apprentieDetailDTO.anneeAlternance.anneeAcademique != null && apprentieDetailDTO.anneeAlternance.anneeAcademique.name() != '' ? apprentieDetailDTO.anneeAlternance.anneeAcademique.name() : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Entreprise</th>
-                        <td th:text="${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : 'NA'}"></td>
+                        <td th:text="${apprentieDetailDTO.anneeAlternance.entreprise != null ? apprentieDetailDTO.anneeAlternance.entreprise.raisonSociale : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Tuteur d'entreprise</th>
-                        <td th:text="${apprenti.tuteurEntreprise != null ? apprenti.tuteurEntreprise.prenom + ' ' + apprenti.tuteurEntreprise.nom : 'NA'}"></td>
+                        <td th:text="${apprentieDetailDTO.anneeAlternance.tuteurEntreprise != null ? apprentieDetailDTO.anneeAlternance.tuteurEntreprise.prenom + ' ' + apprentieDetailDTO.anneeAlternance.tuteurEntreprise.nom : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Dernière visite le</th>
@@ -87,33 +87,33 @@
         </div>
 
         <!-- Historique des visites -->
-        <div class="card">
-            <div class="card-header">
-                <h2>Historique des visites</h2>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th>Date de la visite</th>
-                        <th>Format</th>
-                        <th>Commentaires</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="visite : ${apprenti.visites}">
-                        <td th:text="${visite.date != null ? #temporals.format(visite.date, 'dd/MM/yyyy') : 'Date non définie'}"></td>
-                        <td th:text="${visite.format}"></td>
-                        <td th:text="${visite.commentaires}"></td>
-                    </tr>
+<!--        <div class="card">-->
+<!--            <div class="card-header">-->
+<!--                <h2>Historique des visites</h2>-->
+<!--            </div>-->
+<!--            <div class="card-body">-->
+<!--                <table class="table table-striped table-hover">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th>Date de la visite</th>-->
+<!--                        <th>Format</th>-->
+<!--                        <th>Commentaires</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:each="visite : ${apprenti.visites}">-->
+<!--                        <td th:text="${visite.date != null ? #temporals.format(visite.date, 'dd/MM/yyyy') : 'Date non définie'}"></td>-->
+<!--                        <td th:text="${visite.format}"></td>-->
+<!--                        <td th:text="${visite.commentaires}"></td>-->
+<!--                    </tr>-->
 
-                    <tr th:if="${#lists.isEmpty(apprenti.visites)}">
-                        <td colspan="3" class="text-center">Aucune visite enregistrée pour cet apprenti.</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!--                    <tr th:if="${#lists.isEmpty(apprenti.visites)}">-->
+<!--                        <td colspan="3" class="text-center">Aucune visite enregistrée pour cet apprenti.</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
 
     </div>
 
@@ -123,14 +123,14 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
 
-                <form th:action="@{/apprenti/update/{id}(id=${apprenti.id})}"
-                      th:object="${apprenti}"
+                <form th:action="@{/apprenti/update/{id}(id=${apprentieDetailDTO.apprenti.id})}"
+                      th:object="${apprentieDetailDTO}"
                       method="post">
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="updateModalLabel">
                             Mise à jour du profil de
-                            <span th:text="${apprenti.prenom}">Prénom</span>
+                            <span th:text="${apprentieDetailDTO.apprenti.prenom}">Prénom</span>
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
@@ -138,17 +138,17 @@
                     <div class="modal-body">
                         <div class="container-fluid">
 
-                            <input type="hidden" th:field="*{id}"/>
+                            <input type="hidden" th:field="*{apprenti.id}"/>
 
                             <!-- Ligne 1 : Nom / Prénom -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="prenom" class="form-label">Prénom *</label>
-                                    <input type="text" id="prenom" class="form-control" th:field="*{prenom}" required>
+                                    <input type="text" id="prenom" class="form-control" th:field="*{apprenti.prenom}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="nom" class="form-label">Nom *</label>
-                                    <input type="text" id="nom" class="form-control" th:field="*{nom}" required>
+                                    <input type="text" id="nom" class="form-control" th:field="*{apprenti.nom}" required>
                                 </div>
                             </div>
 
@@ -159,7 +159,7 @@
                                     <input type="email"
                                            id="adresseElectronique"
                                            class="form-control"
-                                           th:field="*{adresseElectronique}"
+                                           th:field="*{apprenti.adresseElectronique}"
                                            required>
                                 </div>
                                 <div class="col-md-6">
@@ -167,7 +167,7 @@
                                     <input type="tel"
                                            id="telephone"
                                            class="form-control"
-                                           th:field="*{telephone}"
+                                           th:field="*{apprenti.telephone}"
                                            pattern="[0-9]{10}"
                                            placeholder="0123456789">
                                 </div>
@@ -179,7 +179,7 @@
                                     <label for="programme" class="form-label">Programme *</label>
                                     <select id="programme"
                                             class="form-select"
-                                            th:field="*{programme}"
+                                            th:field="*{anneeAlternance.programme}"
                                             required>
                                         <option value="">Choisir un programme...</option>
                                         <option th:each="prog : ${programmes}"
@@ -193,7 +193,7 @@
                                     <input type="text"
                                            id="anneeAcademique"
                                            class="form-control"
-                                           th:field="*{anneeAcademique}"
+                                           th:field="*{anneeAlternance.anneeAcademique}"
                                            placeholder="ex: 2024-2025">
                                 </div>
                             </div>
@@ -204,7 +204,7 @@
                                     <label for="entrepriseSelectModal" class="form-label">Entreprise *</label>
                                     <select id="entrepriseSelectModal"
                                             class="form-select"
-                                            th:field="*{entreprise}"
+                                            th:field="*{anneeAlternance.entreprise}"
                                             required>
                                         <option value="">Choisir une entreprise...</option>
                                         <option th:each="ent : ${entreprises}"
@@ -218,16 +218,16 @@
                                     <label for="tuteurSelectModal" class="form-label">Tuteur d'entreprise *</label>
                                     <select id="tuteurSelectModal"
                                             class="form-select"
-                                            th:field="*{tuteurEntreprise}"
+                                            th:field="*{anneeAlternance.tuteurEntreprise}"
                                             required>
                                         <!-- si l'apprenti a déjà un tuteurEntreprise on le met 1er choix -->
-                                        <option th:if="${apprenti.tuteurEntreprise != null}"
-                                                th:value="${apprenti.tuteurEntreprise.id}"
-                                                th:text="${apprenti.tuteurEntreprise.prenom + ' ' + apprenti.tuteurEntreprise.nom}">
+                                        <option th:if="*{anneeAlternance.tuteurEntreprise != null}"
+                                                th:value="*{anneeAlternance.tuteurEntreprise.id}"
+                                                th:text="*{anneeAlternance.tuteurEntreprise.prenom + ' ' + anneeAlternance.tuteurEntreprise.nom}">
                                         </option>
 
                                         <!-- sinon placeholder -->
-                                        <option th:if="${apprenti.tuteurEntreprise == null}"
+                                        <option th:if="*{anneeAlternance.tuteurEntreprise == null}"
                                                 value="">
                                             -- Sélectionner un tuteur --
                                         </option>

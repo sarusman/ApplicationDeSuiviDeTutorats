@@ -18,14 +18,6 @@ public class Mission {
     @Column(length = 500)
     private String commentaires;
 
-    @ManyToOne
-    @JoinColumn(name = "entreprise_id", nullable = false)
-    private Entreprise entreprise;
-
-    @ManyToOne
-    @JoinColumn(name = "tuteur_id", nullable = false)
-    private TuteurEntreprise tuteur;
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -37,10 +29,4 @@ public class Mission {
 
     public String getCommentaires() { return commentaires; }
     public void setCommentaires(String commentaires) { this.commentaires = commentaires; }
-
-    public Entreprise getEntreprise() { return entreprise; }
-    public void setEntreprise(Entreprise entreprise) { this.entreprise = entreprise; }
-
-    public TuteurEntreprise getTuteur() { return tuteur; }
-    public void setTuteur(TuteurEntreprise tuteur) { this.tuteur = tuteur; }
 }

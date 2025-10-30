@@ -1,11 +1,6 @@
 package ApplicationDeSuiviDeTutorat.Models.Entities;
-import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
+import ApplicationDeSuiviDeTutorat.Models.Enums.EtatApprenti;
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name = "apprenti")
@@ -14,53 +9,24 @@ public class Apprenti {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private Programme programme;
-
-    @Column(length = 50)
-    private String anneeAcademique;
-
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String nom;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String prenom;
 
-    @Column(length = 120)
+    @Column(length = 120, nullable = false,  unique = true)
     private String adresseElectronique;
 
-    @Column(length = 20)
+    @Column(length = 20,  nullable = false,  unique = true)
     private String telephone;
 
-    @ManyToOne
-    @JoinColumn(name = "entreprise_id")
-    private Entreprise entreprise;
-
-    @ManyToOne
-    @JoinColumn(name = "tuteur_entreprise_id")
-    private TuteurEntreprise tuteurEntreprise;
-
-    @ManyToOne
-    @JoinColumn(name = "tuteur_pedagogique_id")
-    private Utilisateur tuteurPedagogique;
-
-    @OneToOne
-    @JoinColumn(name = "mission_id")
-    private Mission mission;
-
-    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Visite> visites;
-
-    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EvaluationEcole> evaluations;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EtatApprenti etat = EtatApprenti.ACTIF;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    public Programme getProgramme() { return programme; }
-    public void setProgramme(Programme programme) { this.programme = programme; }
-    public String getAnneeAcademique() { return anneeAcademique; }
-    public void setAnneeAcademique(String anneeAcademique) { this.anneeAcademique = anneeAcademique; }
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
     public String getPrenom() { return prenom; }
@@ -69,16 +35,6 @@ public class Apprenti {
     public void setAdresseElectronique(String adresseElectronique) { this.adresseElectronique = adresseElectronique; }
     public String getTelephone() { return telephone; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
-    public Entreprise getEntreprise() { return entreprise; }
-    public void setEntreprise(Entreprise entreprise) { this.entreprise = entreprise; }
-    public TuteurEntreprise getTuteurEntreprise() { return tuteurEntreprise; }
-    public void setTuteurEntreprise(TuteurEntreprise tuteurEntreprise) { this.tuteurEntreprise = tuteurEntreprise; }
-    public Utilisateur getTuteurPedagogique() { return tuteurPedagogique; }
-    public void setTuteurPedagogique(Utilisateur tuteurPedagogique) { this.tuteurPedagogique = tuteurPedagogique; }
-    public Mission getMission() { return mission; }
-    public void setMission(Mission mission) { this.mission = mission; }
-    public List<Visite> getVisites() { return visites; }
-    public void setVisites(List<Visite> visites) { this.visites = visites; }
-    public List<EvaluationEcole> getEvaluations() { return evaluations; }
-    public void setEvaluations(List<EvaluationEcole> evaluations) { this.evaluations = evaluations; }
+    public EtatApprenti getEtat() { return etat; }
+    public void setEtat(EtatApprenti etat) { this.etat = etat; }
 }
