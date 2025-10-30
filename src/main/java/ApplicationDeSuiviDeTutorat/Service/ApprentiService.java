@@ -5,13 +5,13 @@ import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
 import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
+import ApplicationDeSuiviDeTutorat.Repository.VisiteRepository;
 import ApplicationDeSuiviDeTutorat.repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +20,14 @@ public class ApprentiService {
 
     private final ApprentiBilanRepository apprentiBilanRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final VisiteRepository visiteRepository;
 
     public ApprentiService(ApprentiBilanRepository apprentiBilanRepository,
-                           UtilisateurRepository utilisateurRepository) {
+                           UtilisateurRepository utilisateurRepository,
+                           VisiteRepository visiteRepository) {
         this.apprentiBilanRepository = apprentiBilanRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.visiteRepository = visiteRepository;
     }
 
     public List<Apprenti> getAllApprentis() {
@@ -84,23 +87,14 @@ public class ApprentiService {
     }
 
     public Optional<Visite> findDerniereVisite(Apprenti apprenti) {
-        if (apprenti == null || apprenti.getVisites() == null) {
-            return Optional.empty();
-        }
-        LocalDate aujourdhui = LocalDate.now();
-        return apprenti.getVisites().stream()
-                .filter(v -> v.getDate() != null && v.getDate().isBefore(aujourdhui))
-                .max(Comparator.comparing(Visite::getDate));
+        if (apprenti == null || apprenti.getId() == null) return Optional.empty();
+        return visiteRepository.findDerniereNative(apprenti.getId(), LocalDate.now()
+        );
     }
 
     public Optional<Visite> findProchaineVisite(Apprenti apprenti) {
-        if (apprenti == null || apprenti.getVisites() == null) {
-            return Optional.empty();
-        }
-        LocalDate aujourdhui = LocalDate.now();
-        return apprenti.getVisites().stream()
-                .filter(v -> v.getDate() != null && v.getDate().isAfter(aujourdhui))
-                .min(Comparator.comparing(Visite::getDate));
+        if (apprenti == null || apprenti.getId() == null) return Optional.empty();
+        return visiteRepository.findProchaineNative(apprenti.getId(), LocalDate.now());
     }
 
     private ApprentiDto toDto(Apprenti a) {
@@ -138,3 +132,5 @@ public class ApprentiService {
                 .toList();
     }
 }
+
+
