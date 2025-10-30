@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutorat.Controller.web;
+package ApplicationDeSuiviDeTutorat.Controller.Web;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
@@ -18,18 +18,14 @@ import java.security.Principal;
 public class DashboardWebController {
 
     private final UtilisateurService utilisateurService;
-    private final ApprentiService apprentiService;
     private final EntrepriseRepository entrepriseRepository;
-    private final TuteurEntrepriseRepository tuteurEntrepriseRepository;
 
     public DashboardWebController(UtilisateurService utilisateurService,
                                   ApprentiService apprentiService,
                                   EntrepriseRepository entrepriseRepository,
                                   TuteurEntrepriseRepository tuteurEntrepriseRepository) {
         this.utilisateurService = utilisateurService;
-        this.apprentiService = apprentiService;
         this.entrepriseRepository = entrepriseRepository;
-        this.tuteurEntrepriseRepository = tuteurEntrepriseRepository;
     }
 
     @GetMapping("/dashboard")
