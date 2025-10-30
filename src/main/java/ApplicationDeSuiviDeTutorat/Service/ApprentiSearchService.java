@@ -12,11 +12,9 @@ import java.util.List;
 public class ApprentiSearchService {
 
     private final ApprentiBilanRepository repo;
-    private final ApprentiService apprentiService;
 
-    public ApprentiSearchService(ApprentiBilanRepository repo, ApprentiService apprentiService) {
+    public ApprentiSearchService(ApprentiBilanRepository repo) {
         this.repo = repo;
-        this.apprentiService = apprentiService;
     }
 
     public List<ApprentiDto> search(String q,
@@ -26,8 +24,20 @@ public class ApprentiSearchService {
                                     Programme programme,
                                     Boolean archived) {
         List<Apprenti> res = repo.search(q, entrepriseId, mission, annee, programme, archived);
-        return res.stream().map(a -> apprentiService
-                .getApprentiDtoById(a.getId())
-                .orElseThrow()).toList();
+        return res.stream().map(this::toDto).toList();
+    }
+
+    private ApprentiDto toDto(Apprenti a) {
+        String entrepriseNom = (a.getEntreprise() != null) ? a.getEntreprise().getNom() : null;
+        String tuteurNom = (a.getTuteurPedagogique() != null) ? a.getTuteurPedagogique().getUsername() : null;
+        return new ApprentiDto(
+                a.getId(),
+                a.getNom(),
+                a.getPrenom(),
+                a.getAdresseElectronique(),
+                a.getTelephone(),
+                entrepriseNom,
+                tuteurNom
+        );
     }
 }

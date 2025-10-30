@@ -9,9 +9,10 @@ import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
 import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
+import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
 import ApplicationDeSuiviDeTutorat.Repository.VisiteRepository;
-import ApplicationDeSuiviDeTutorat.repository.UtilisateurRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,19 +20,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(Transactional.TxType.SUPPORTS)
 public class ApprentiService {
 
     private final ApprentiBilanRepository apprentiBilanRepository;
     private final UtilisateurRepository utilisateurRepository;
     private final VisiteRepository visiteRepository;
-
-    public ApprentiService(ApprentiBilanRepository apprentiBilanRepository,
-                           UtilisateurRepository utilisateurRepository,
-                           VisiteRepository visiteRepository) {
-        this.apprentiBilanRepository = apprentiBilanRepository;
-        this.utilisateurRepository = utilisateurRepository;
-        this.visiteRepository = visiteRepository;
-    }
 
     public List<Apprenti> getAllApprentis() {
         return apprentiBilanRepository.findAll();
@@ -43,7 +38,7 @@ public class ApprentiService {
                 new ApprentiNotFoundException("Apprenti with " + id + " does not exist")));
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRED)
     public Apprenti createApprenti(Apprenti apprenti, Long tuteurId) {
         Utilisateur tuteurPedagogique = utilisateurRepository
                 .findById(tuteurId)
@@ -64,7 +59,7 @@ public class ApprentiService {
         return apprentiBilanRepository.save(apprenti);
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRED)
     public Apprenti updateApprentiBilanById(Long id, Apprenti updatedApprenti) {
         Apprenti apprentiToUpdate = apprentiBilanRepository.findById(id)
                 .orElseThrow(() -> new ApprentiNotFoundException("Apprenti non trouvé avec l'id : " + id));
@@ -93,7 +88,7 @@ public class ApprentiService {
         return apprentiBilanRepository.save(apprentiToUpdate);
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRED)
     public void deleteApprentiById(Long id) {
         if (!apprentiBilanRepository.existsById(id)) {
             throw new ApprentiNotFoundException("Apprenti non trouvé avec l'id : " + id);
