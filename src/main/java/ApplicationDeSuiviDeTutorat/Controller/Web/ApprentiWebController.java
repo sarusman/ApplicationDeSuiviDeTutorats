@@ -1,8 +1,10 @@
 package ApplicationDeSuiviDeTutorat.Controller.Web;
 
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiAnneeAlternanceDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
+import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
 import ApplicationDeSuiviDeTutorat.Service.ApprentiService;
 import ApplicationDeSuiviDeTutorat.Service.EntrepriseService;
 import ApplicationDeSuiviDeTutorat.Service.ProgrammeService;
@@ -20,12 +22,13 @@ import java.util.Optional;
 @RequestMapping("/apprenti")
 public class ApprentiWebController {
 
+    private final UtilisateurRepository utilisateurRepository;
     private final ApprentiService apprentiService;
     private final UtilisateurService utilisateurService;
     private final ProgrammeService programmeService;
     private final EntrepriseService entrepriseService;
 
-    public ApprentiWebController(ApprentiService apprentiService,
+    public ApprentiWebController(UtilisateurRepository utilisateurRepository,   ApprentiService apprentiService,
                                  UtilisateurService utilisateurService,
                                  ProgrammeService programmeService,
                                  EntrepriseService entrepriseService) {
@@ -123,7 +126,7 @@ public class ApprentiWebController {
     }
 
     @PostMapping("/ajouter")
-    public String ajouterApprenti(@ModelAttribute Apprenti apprenti,
+    public String ajouterApprenti(@ModelAttribute ApprentiAnneeAlternanceDTO dto,
                                   Principal principal,
                                   RedirectAttributes redirectAttributes) {
 
@@ -139,8 +142,8 @@ public class ApprentiWebController {
         Long tuteurId = tuteurConnecte.getId();
 
         boolean mailExiste = apprentiService.existeAdresse(apprenti.getAdresseElectronique());
-        boolean telExiste = (apprenti.getTelephone() != null && !apprenti.getTelephone().isBlank())
-                && apprentiService.existeTelephone(apprenti.getTelephone());
+        boolean telExiste = (dto.telephone() != null && !dto.telephone().isBlank())
+                && apprentiService.existeTelephone(dto.telephone());
 
         if (mailExiste || telExiste) {
             redirectAttributes.addFlashAttribute(
@@ -150,7 +153,10 @@ public class ApprentiWebController {
             return "redirect:/dashboard";
         }
 
-        apprentiService.createApprenti(apprenti, tuteurId);
+        Utilisateur tuteur = utilisateurRepository.findById(tuteurId)
+                .orElseThrow(() -> new IllegalStateException("Tuteur introuvable"));
+
+        apprentiService.createApprenti(dto);
 
         redirectAttributes.addFlashAttribute(
                 "successMessage",

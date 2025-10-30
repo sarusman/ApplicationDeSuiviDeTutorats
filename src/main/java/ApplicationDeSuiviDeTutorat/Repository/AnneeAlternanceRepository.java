@@ -2,6 +2,7 @@ package ApplicationDeSuiviDeTutorat.Repository;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternanceId;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Entreprise;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,8 @@ public interface AnneeAlternanceRepository extends JpaRepository<AnneeAlternance
             WHERE a_sub.etat = 'ACTIF'
             GROUP BY aa_sub.apprenti_id)""", nativeQuery = true)
     List<AnneeAlternance> findLastForAllActif();
+
+    List<AnneeAlternance> findByApprentiId(Long apprentiId);
+
+    List<AnneeAlternance> findByTuteurPedagogiqueId(Long tuteurPedagogiqueId);
 }
