@@ -8,8 +8,6 @@ import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
 import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import ApplicationDeSuiviDeTutorat.Service.ApprentiService;
 import ApplicationDeSuiviDeTutorat.Service.UtilisateurService;
-import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
-import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +19,6 @@ import java.security.Principal;
 public class DashboardWebController {
 
     private final ApprentiService apprentiService;
-    private final UtilisateurService utilisateurService;
     private final UtilisateurService utilisateurService;
     private final EntrepriseRepository entrepriseRepository;
     private final AnneeAcademiqueRepository anneeAcademiqueRepository;

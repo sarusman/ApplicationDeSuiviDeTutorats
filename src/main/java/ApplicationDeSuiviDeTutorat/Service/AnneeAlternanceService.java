@@ -11,11 +11,16 @@ import ApplicationDeSuiviDeTutorat.Repository.AnneeAcademiqueRepository;
 import ApplicationDeSuiviDeTutorat.Repository.AnneeAlternanceRepository;
 import ApplicationDeSuiviDeTutorat.Repository.ApprentiRepository;
 import ApplicationDeSuiviDeTutorat.Repository.MissionRepository;
+import ApplicationDeSuiviDeTutorat.Repository.Specs.AnneeAlternanceSpecs;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class AnneeAlternanceService {
@@ -117,6 +122,32 @@ public class AnneeAlternanceService {
             anneeAlternanceRepository.saveAll(newAlternancesToSave);
             System.out.println("Creation de " + newAlternancesToSave.size() + " nouvelles entree d'anneeAlternance pour les apprenties actifs.");
         }
+    }
+
+    public List<Apprenti> search(
+            String q,
+            Long entrepriseId,
+            String mission,
+            String annee,
+            Programme programme,
+            Boolean archived
+    ) {
+        Specification<AnneeAlternance> spec = where(AnneeAlternanceSpecs.hasAnnee(annee))
+                .and(AnneeAlternanceSpecs.hasProgramme(programme))
+                .and(AnneeAlternanceSpecs.hasEntreprise(entrepriseId))
+                .and(AnneeAlternanceSpecs.hasSearchQuery(q))
+                .and(AnneeAlternanceSpecs.hasMission(mission))
+                .and(AnneeAlternanceSpecs.isArchived(archived));
+
+        return anneeAlternanceRepository.findAll(spec).stream()
+                .map(AnneeAlternance::getApprenti)
+                .sorted(Comparator.comparing(Apprenti::getNom)
+                        .thenComparing(Apprenti::getPrenom))
+                .toList();
+    }
+
+    public void deleteByApprentiId(Long apprentiId) {
+
     }
 }
 

@@ -1,7 +1,7 @@
 package ApplicationDeSuiviDeTutorat.Controller;
 
 import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiAnneeAlternanceDTO;
-import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiDetailDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
@@ -45,8 +45,8 @@ public class ApprentiController {
     }
 
     @PutMapping("/{id}")
-    public String updateTraineeById(@PathVariable Long id,@ModelAttribute Apprenti updatedTrainee ){
-        apprentiService.updateApprentiBilanById(id, updatedTrainee);
+    public String updateTraineeById(@PathVariable Long id,@ModelAttribute ApprentiDetailDTO updatedTrainee ){
+        apprentiService.updateApprentiById(id, updatedTrainee);
         return STR."redirect:/apprenti/\{id}";
     }
 

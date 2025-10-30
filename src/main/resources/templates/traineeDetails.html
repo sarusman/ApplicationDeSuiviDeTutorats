@@ -63,7 +63,7 @@
                     </tr>
                     <tr>
                         <th>Année académique</th>
-                        <td th:text="${apprentieDetailDTO.anneeAlternance.anneeAcademique != null && apprentieDetailDTO.anneeAlternance.anneeAcademique != '' ? apprentieDetailDTO.anneeAlternance.anneeAcademique : 'NA'}"></td>
+                        <td th:text="${apprentieDetailDTO.anneeAlternance.anneeAcademique != null && apprentieDetailDTO.anneeAlternance.anneeAcademique.name() != '' ? apprentieDetailDTO.anneeAlternance.anneeAcademique.name() : 'NA'}"></td>
                     </tr>
                     <tr>
                         <th>Entreprise</th>

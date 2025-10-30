@@ -1,19 +1,17 @@
 package ApplicationDeSuiviDeTutorat.Controller.Web;
 
 import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiAnneeAlternanceDTO;
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiDetailDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import ApplicationDeSuiviDeTutorat.Repository.AnneeAcademiqueRepository;
+import ApplicationDeSuiviDeTutorat.Repository.AnneeAlternanceRepository;
 import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
-import ApplicationDeSuiviDeTutorat.Service.ApprentiService;
-import ApplicationDeSuiviDeTutorat.Service.EntrepriseService;
-import ApplicationDeSuiviDeTutorat.Service.ProgrammeService;
-import ApplicationDeSuiviDeTutorat.Service.UtilisateurService;
+import ApplicationDeSuiviDeTutorat.Service.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,17 +30,21 @@ public class ApprentiWebController {
     private final EntrepriseService entrepriseService;
     private final AnneeAcademiqueRepository anneeAcademiqueRepository;
     private final TuteurEntrepriseRepository tuteurEntrepriseRepository;
+    private final AnneeAlternanceRepository anneeAlternanceRepository;
+    private final AnneeAlternanceService anneeAlternanceService;
 
     public ApprentiWebController(UtilisateurRepository utilisateurRepository, ApprentiService apprentiService,
                                  UtilisateurService utilisateurService,
                                  ProgrammeService programmeService,
-                                 EntrepriseService entrepriseService, AnneeAcademiqueRepository anneeAcademiqueRepository, TuteurEntrepriseRepository tuteurEntrepriseRepository) {
+                                 EntrepriseService entrepriseService, AnneeAcademiqueRepository anneeAcademiqueRepository, TuteurEntrepriseRepository tuteurEntrepriseRepository, AnneeAlternanceRepository anneeAlternanceRepository, AnneeAlternanceService anneeAlternanceService) {
         this.apprentiService = apprentiService;
         this.utilisateurService = utilisateurService;
         this.programmeService = programmeService;
         this.entrepriseService = entrepriseService;
         this.anneeAcademiqueRepository = anneeAcademiqueRepository;
         this.tuteurEntrepriseRepository = tuteurEntrepriseRepository;
+        this.anneeAlternanceRepository = anneeAlternanceRepository;
+        this.anneeAlternanceService = anneeAlternanceService;
     }
 
     @GetMapping("/{id}")
@@ -75,7 +77,7 @@ public class ApprentiWebController {
 
     @PostMapping("/update/{id}")
     public String updateTraineeById(@PathVariable Long id,
-                                    @ModelAttribute Apprenti updatedTrainee,
+                                    @ModelAttribute ApprentiDetailDTO updatedTrainee,
                                     Principal principal,
                                     RedirectAttributes redirectAttributes) {
 
@@ -87,10 +89,10 @@ public class ApprentiWebController {
             Apprenti actuel = apprentiService.getApprentiById(id)
                     .orElseThrow(() -> new IllegalStateException("Apprenti introuvable"));
 
-            String nouvelEmail = updatedTrainee.getAdresseElectronique();
+            String nouvelEmail = updatedTrainee.getApprenti().getAdresseElectronique();
             String ancienEmail = actuel.getAdresseElectronique();
 
-            String nouveauTel = updatedTrainee.getTelephone();
+            String nouveauTel = updatedTrainee.getApprenti().getTelephone();
             String ancienTel = actuel.getTelephone();
 
             boolean emailChange = (nouvelEmail != null && !nouvelEmail.equalsIgnoreCase(ancienEmail));
@@ -113,7 +115,7 @@ public class ApprentiWebController {
                 return "redirect:/apprenti/" + id;
             }
 
-            apprentiService.updateApprentiBilanById(id, updatedTrainee);
+            apprentiService.updateApprentiById(id, updatedTrainee);
 
             redirectAttributes.addFlashAttribute(
                     "updateSuccess",
