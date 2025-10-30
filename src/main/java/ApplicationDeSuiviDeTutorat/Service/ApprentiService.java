@@ -4,13 +4,12 @@ import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
 import ApplicationDeSuiviDeTutorat.Repository.AnneeAlternanceRepository;
-import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
+import ApplicationDeSuiviDeTutorat.Repository.ApprentiRepository;
 import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -18,22 +17,22 @@ import java.util.Optional;
 
 @Service
 public class ApprentiService {
-    private final ApprentiBilanRepository apprentiBilanRepository;
+    private final ApprentiRepository apprentiRepository;
     private final UtilisateurRepository utilisateurRepository;
     private final AnneeAlternanceRepository anneeAlternanceRepository;
 
-    public ApprentiService(ApprentiBilanRepository apprentiBilanRepository, UtilisateurRepository utilisateurRepository, AnneeAlternanceRepository anneeAlternanceRepository) {
-        this.apprentiBilanRepository = apprentiBilanRepository;
+    public ApprentiService(ApprentiRepository apprentiRepository, UtilisateurRepository utilisateurRepository, AnneeAlternanceRepository anneeAlternanceRepository) {
+        this.apprentiRepository = apprentiRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.anneeAlternanceRepository = anneeAlternanceRepository;
     }
 
     public List<Apprenti> getAllApprentis() {
-        return apprentiBilanRepository.findAll();
+        return apprentiRepository.findAll();
     }
 
     public Optional<Apprenti> getApprentiById(Long id) {
-        Optional<Apprenti> singleApprenti = apprentiBilanRepository.findById(id);
+        Optional<Apprenti> singleApprenti = apprentiRepository.findById(id);
 
         return Optional.ofNullable(
                 singleApprenti.orElseThrow(
@@ -48,12 +47,12 @@ public class ApprentiService {
      */
     @Transactional
     public Apprenti createApprenti(Apprenti apprenti) {
-        return apprentiBilanRepository.save(apprenti);
+        return apprentiRepository.save(apprenti);
     }
 
     @Transactional
     public Apprenti updateApprentiBilanById(Long id, Apprenti updatedApprenti) {
-        Apprenti apprentiToUpdate = apprentiBilanRepository.findById(id)
+        Apprenti apprentiToUpdate = apprentiRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Apprenti non trouvé avec l'id : " + id));
 
         apprentiToUpdate.setNom(updatedApprenti.getNom());
@@ -61,7 +60,7 @@ public class ApprentiService {
         apprentiToUpdate.setAdresseElectronique(updatedApprenti.getAdresseElectronique());
         apprentiToUpdate.setTelephone(updatedApprenti.getTelephone());
 
-        return apprentiBilanRepository.save(apprentiToUpdate);
+        return apprentiRepository.save(apprentiToUpdate);
     }
 
     /**
@@ -104,10 +103,10 @@ public class ApprentiService {
      */
     @Transactional
     public void deleteApprentiById(Long id) {
-        if (!apprentiBilanRepository.existsById(id)) {
+        if (!apprentiRepository.existsById(id)) {
             throw new EntityNotFoundException(STR."Apprenti non trouvé avec l'id : \{id}");
         }
-        apprentiBilanRepository.deleteById(id);
+        apprentiRepository.deleteById(id);
     }
 
     public AnneeAlternance createAnneeAlternance(AnneeAlternance anneeAlternance) {

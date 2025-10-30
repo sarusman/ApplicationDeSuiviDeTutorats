@@ -20,7 +20,8 @@ public class AnneeAlternance {
     @JoinColumn(name = "annee_academique", nullable = false)
     private AnneeAcademique anneeAcademique;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
     private Programme programme;
 
     @ManyToOne

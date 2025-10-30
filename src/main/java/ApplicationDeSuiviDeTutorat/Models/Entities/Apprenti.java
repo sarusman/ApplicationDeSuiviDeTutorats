@@ -1,4 +1,5 @@
 package ApplicationDeSuiviDeTutorat.Models.Entities;
+import ApplicationDeSuiviDeTutorat.Models.Enums.EtatApprenti;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,9 +21,12 @@ public class Apprenti {
     @Column(length = 20,  nullable = false,  unique = true)
     private String telephone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EtatApprenti etat = EtatApprenti.ACTIF;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
     public String getPrenom() { return prenom; }
@@ -31,5 +35,6 @@ public class Apprenti {
     public void setAdresseElectronique(String adresseElectronique) { this.adresseElectronique = adresseElectronique; }
     public String getTelephone() { return telephone; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
-
+    public EtatApprenti getEtat() { return etat; }
+    public void setEtat(EtatApprenti etat) { this.etat = etat; }
 }

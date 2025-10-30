@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface ApprentiBilanRepository extends JpaRepository<Apprenti, Long> {
+public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 }
