@@ -23,7 +23,7 @@ import java.security.Principal;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/api/apprenti")
+@RequestMapping("/apprenti")
 public class ApprentiWebController {
 
     private final ApprentiService apprentiService;

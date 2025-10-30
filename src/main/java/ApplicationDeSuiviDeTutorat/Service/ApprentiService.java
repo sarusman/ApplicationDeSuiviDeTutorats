@@ -151,6 +151,9 @@ public class ApprentiService {
             apprentiDetailDTO.setAnneeAlternance(currentAlternanceOpt);
         }
 
+        if (apprentiDetailDTO == null) throw new NullPointerException("Apprenti details not found");
+        if (apprentiDetailDTO.getApprenti() == null) throw  new NullPointerException("Apprenti null");
+        if (apprentiDetailDTO.getAnneeAlternance() == null) throw  new NullPointerException("Annee Alternance null");
         return apprentiDetailDTO;
     }
 

@@ -1,5 +1,8 @@
 use base_altn72;
 
+INSERT INTO utilisateur (id, password, role, username)
+VALUES (1, '$2a$10$lfOzkh7nx/rfwFuTSLtYLuqlofcSFw1MPE/sdDQZNhyNJXZjddDCa', 'TUTEUR', '0');
+
 INSERT INTO annee_academique (commentaire, date_debut, date_fin)
 VALUES ('Première année', '2019-09-20', '2020-07-04'),
        ('Second année', '2020-09-28', '2021-07-02'),
