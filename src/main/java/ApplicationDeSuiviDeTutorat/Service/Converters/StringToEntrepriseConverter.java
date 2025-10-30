@@ -1,7 +1,7 @@
 package ApplicationDeSuiviDeTutorat.Service.Converters;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.Entreprise;
-import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
+import ApplicationDeSuiviDeTutorat.Repositoryf.EntrepriseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

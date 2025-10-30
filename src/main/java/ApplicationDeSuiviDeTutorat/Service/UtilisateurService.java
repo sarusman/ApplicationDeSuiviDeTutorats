@@ -4,7 +4,7 @@ import ApplicationDeSuiviDeTutorat.Exceptions.DuplicateUsernameException;
 import ApplicationDeSuiviDeTutorat.Exceptions.UtilisateurNotFoundException;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
-import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
+import ApplicationDeSuiviDeTutorat.Repositoryf.UtilisateurRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

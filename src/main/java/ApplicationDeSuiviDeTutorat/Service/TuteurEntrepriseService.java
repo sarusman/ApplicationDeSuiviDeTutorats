@@ -2,7 +2,7 @@ package ApplicationDeSuiviDeTutorat.Service;
 
 import ApplicationDeSuiviDeTutorat.Models.DTO.TuteurEntrepriseDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.TuteurEntreprise;
-import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
+import ApplicationDeSuiviDeTutorat.Repositoryf.TuteurEntrepriseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
