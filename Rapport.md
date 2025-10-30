@@ -251,6 +251,8 @@ Lister les apprentis actifs d'une année donnée, avec leur entreprise, triés p
 - Déploiement opérationnel sur Render
 
 **Vincent PIERRO**
+- Creation repository et controlleur
+- Creation du dashboard
 - Implémentation de la gestion d'année académique
 
 **Jean MOTTE**
