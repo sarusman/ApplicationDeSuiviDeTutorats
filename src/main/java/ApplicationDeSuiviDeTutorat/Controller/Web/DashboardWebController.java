@@ -6,7 +6,7 @@ import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import ApplicationDeSuiviDeTutorat.Service.ApprentiService;
 import ApplicationDeSuiviDeTutorat.Service.UtilisateurService;
 import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
-import ApplicationDeSuiviDeTutorat.repository.TuteurEntrepriseRepository;
+import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

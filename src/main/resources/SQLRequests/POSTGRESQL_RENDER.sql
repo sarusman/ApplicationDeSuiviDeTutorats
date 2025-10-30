@@ -16,3 +16,13 @@ INSERT INTO visite (id, date, commentaire, apprenti_id) VALUES
   (302, DATE '2025-04-10', 'Suivi technique',     202),
   (303, DATE '2025-05-20', 'Préparation soutenance', 203)
 ON CONFLICT (id) DO NOTHING;
+
+
+INSERT INTO tuteur_entreprise
+  (nom, prenom, poste, adresse_electronique, telephone, remarques, entreprise_id)
+VALUES
+  ('Lefevre', 'Camille', 'Responsable R&D', 'camille.lefevre@capgemini.com', '0601020304', 'Disponible mar/jeu', 1),
+  ('Moreau',  'Hugo',    'Chef de projet',  'hugo.moreau@airbus.com',       '0602030405', 'Préférer e-mail',    2),
+  ('Garcia',  'Emma',    'Tech Lead',       'emma.garcia@orange.com',       '0603040506', 'Réponse 24h',        3),
+  ('Dubois',  'Lina',    'Encadrante',      'lina.dubois@capgemini.com',    '0604050607', 'Site Paris 17e',     1),
+  ('Roux',    'Yanis',   'Maître d''apprent.', 'yanis.roux@airbus.com',     '0605060708', 'Visites le vendredi', 2);
