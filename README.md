@@ -1,60 +1,160 @@
 # Application Suivi Tutorat (AST)
 
-### _Réalisé par Jean MOTTE ; Vincent PIERRO ; Sarusman SATKUNARAJAH_
+## Auteurs
+- Jean MOTTE
+- Vincent PIERRO
+- Sarusman SATKUNARAJAH
 
-## Diagramme Cas D'utilisation
+---
 
-<img width="2162" height="1254" alt="ZLPDJXin5Dxx54_f0X0ALUcY5Q8H8QGgKa6eeKXTLSxCI-8oOwV-IK5Ljpr0Jq7EaPlq97ssPuQPIQ1XW_tcUt_V-t5EZENQkZnZE_3k-Jz2d0a-rJpF4LA4X1j8TvmLcJ3S2YMX2_tHTNyBIop3YGMhG8lfp48gD2RU0ZEtGiuvkO0vJsxv54VsFaFmdxcSPbW3E8CK0S9F1d2gT8fwe3AbuSKR_jQBI7-gbPDf8KQSi5-CySJIhNFjB3" src="https://github.com/user-attachments/assets/8a3fb733-efc0-431a-aa9c-67e96ef64981" />
+## Stack Technique
 
-## Script SQL de lancement
-- Se trouver à l'emplacement `src/main/resources/seed.sql`
+**IDE** : IntelliJ IDEA  
+**Build Tool** : Maven  
+**Langage** : Java 21  
+**Base de données locale** : MariaDB  
+**Base de données distante** : PostgreSQL  
+**Déploiement** : Docker + Render  
 
-## Usage de l'application
-- Lien d'accès à l'application déployée : _TBD_
-- Identifiants de connexion :
-    - username : test
-    - password : 1234
+---
 
-## Tooling
-- IDE : IntelliJ IDEA
-- Build Tool : Maven
-- Langage : Java 21
-- SGBD locale : mariadb
-- SGBD distante : _TBD_
+## Installation Locale
 
-## Swagger
+### Prérequis
+- Java 21
+- IntelliJ IDEA
+- XAMPP ou MySQL Server
 
-- Lien vers la documentation Swagger : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-- À noter que le swagger ne recense que les API REST ; et donc pas les vues thymeleaf
+### Étape 1 : Configurer la connexion à la base de données
 
-## Questions / Réponses
-a) Sur quel aspect de votre travail souhaitez-vous attirer l'attention du correcteur ?
-- Vues Thymeleaf
-- Sécurité (Spring Security)
-- Mélange vues thymeleaf et API REST
+1. Dans IntelliJ, accédez à la configuration de connexion MySQL
+2. Paramétrez les identifiants de votre serveur local
+3. Renseignez le nom de la base de données dans les paramètres
 
-b) Quelle est la plus grande difficulté que vous avez rencontrée ? Comment avez-vous
-géré/solutionné/contourné cette difficulté ?
-- Modification du modèle de données tardivement dans le projet afin de gérer l'année académique et sa gestion
-- L'application était très avancée, et nous avons dû ajouter cette section afin de répondre aux consignes
-- Il a donc fallu ajouter cette section de manière fine afin de ne pas avoir à modifier trop en profondeur la codebase
+Script SQL local : [MYSQLDB_LOCAL.sql](https://github.com/sarusman/ApplicationDeSuiviDeTutorats/blob/master/src/main/resources/SQLRequests/MYSQLDB_LOCAL.sql)
 
-c) Quelle a été la contribution de chaque membre de l'équipe ?
-- Saru : Sécurité, SSO, gestion des exceptions et initiation de la vue dashboard
-- Vincent : Implémentation de la feature de gestion d'année académique
-- Jean : Dashboard, filtre dashboard, ajout d'apprenti, édition d'apprenti, snackbar, filtre , API REST, documentation swagger
+### Étape 2 : Lancer l'application
 
-d) Si vous deviez retenir trois points de ce cours en général et de ce projet en particulier,
-quels seraient ces trois points ?
-- Importance de la modélisation avant de démarrer à coder
-- Spring boot est très versatile, permettant de mélanger API REST et vues thymeleaf SSR
-- Importance de la communication sur un projet de petite ampleur, à réaliser dans un lapse de temps court
+Exécutez l'application depuis IntelliJ via le bouton de lancement
 
-e) Les fonctionnalités que vous n'avez pas eu le temps de mettre en œuvre et pourquoi.
-- NA
+### Étape 3 : Accéder à l'application
 
-f) A quel niveau, dans votre projet, avez-vous réussi à respecter entièrement ou
-partiellement les principes SOLID ?
-- Single Responsability Principle au niveau des classes définies + modèle de données. Les classes sont limitées ; mais j'ai l'impression qu'on entre dans un anti-pattern d'anemic domain model
-- Open Closed Principle : Les classes sont ouvertes à l'extension mais fermées à la modification
-- Dependency Inversion Principle : nous avons injecté les dépendances via des interfaces dans les services et les contrôleurs
+Rendez-vous sur **http://localhost:8080**
+
+---
+
+## Accès et Connexion
+
+### Identifiants par défaut
+- **ID utilisateur** : tuteur
+- **Mot de passe** : 1234
+
+**Note** : Le mot de passe est chiffré en SHA256. Il est inutile de créer un utilisateur manuellement en base de données.
+
+### Créer un nouvel utilisateur
+- Local : http://localhost:8080/register
+- Distante : https://applicationdesuividetutorats.onrender.com/register
+
+### Persistance de session
+L'application utilise les cookies du navigateur. Vous resterez connecté après un redémarrage.
+
+---
+
+## Déploiement
+
+**URL déployée** : https://applicationdesuividetutorats.onrender.com/
+
+L'application est déployée sur Render via une image Docker.
+
+Script PostgreSQL pour Render : [POSTGRESQL_RENDER.sql](https://github.com/sarusman/ApplicationDeSuiviDeTutorats/blob/master/src/main/resources/SQLRequests/POSTGRESQL_RENDER.sql)
+
+---
+
+## Documentation API
+
+**Swagger local** : http://localhost:8080/swagger-ui.html  
+**Swagger Render** : https://applicationdesuividetutorats.onrender.com/swagger-ui.html  
+**API Docs** : https://applicationdesuividetutorats.onrender.com/v3/api-docs
+
+---
+
+## Fonctionnalités Principales
+
+### Authentification & Sécurité (Sarusman)
+- Login/mot de passe sécurisé via Spring Security
+- Gestion des erreurs de connexion
+- Affichage du prénom de l'utilisateur connecté
+- Déconnexion avec fermeture de session
+
+### Gestion des Apprentis (Jean)
+- Ajout d'apprentis
+- Édition de profils
+- Notifications via Snackbar
+
+### Dashboard (Jean)
+- Vue d'ensemble des données
+- Filtrage et recherche avancée
+
+### Recherche & Filtrage (Sarusman)
+- Recherche par entreprise
+- Recherche par mission (mot-clé)
+- Filtrage par année académique
+
+### Gestion d'année académique (Vincent)
+- Suivi des périodes de formation
+- Gestion des cycles académiques
+
+### API REST (Jean)
+- Endpoints pour intégration tierce
+- Documentation complète via Swagger
+
+### Gestion des exceptions (Sarusman)
+- Messages d'erreur clairs et explicites
+
+---
+
+## Architecture & Principes SOLID
+
+### Single Responsibility Principle
+Classes bien segmentées avec responsabilités uniques au niveau du modèle de données et des services.
+
+### Open/Closed Principle
+Classes ouvertes à l'extension, fermées à la modification.
+
+### Dependency Inversion Principle
+Injection de dépendances via interfaces dans les services et contrôleurs.
+
+---
+
+## Défis & Solutions
+
+**Défi majeur** : Modification tardive du modèle de données pour intégrer la gestion d'année académique  
+**Solution** : Refactorisation fine de la codebase pour minimiser l'impact sur les modules existants
+
+---
+
+## Points Clés du Projet
+
+1. **Modélisation avant développement** : L'importance d'une architecture bien pensée en amont
+2. **Polyvalence de Spring Boot** : Capacité à mixer API REST et vues Thymeleaf SSR
+3. **Communication d'équipe** : Essentielle pour coordonner un petit projet dans un court délai
+
+---
+
+## Contributions par Membre
+
+**Sarusman SATKUNARAJAH**
+- Authentification sécurisée et gestion de session
+- Recherche par entreprise, mission et année académique
+- Documentation Swagger
+- Déploiement opérationnel
+- Gestion des exceptions
+
+**Vincent PIERRO**
+- Implémentation de la gestion d'année académique
+
+**Jean MOTTE**
+- Dashboard et filtrage
+- Gestion des apprentis (ajout, édition)
+- Interface utilisateur (Snackbar, filtres)
+- API REST et documentation Swagger
