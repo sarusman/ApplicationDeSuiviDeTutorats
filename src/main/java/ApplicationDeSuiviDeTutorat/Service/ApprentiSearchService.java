@@ -3,7 +3,7 @@ package ApplicationDeSuiviDeTutorat.Service;
 import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiDto;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
-import ApplicationDeSuiviDeTutorat.Repositoryf.ApprentiBilanRepository;
+import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

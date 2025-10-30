@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutorat.Repositoryf;
+package ApplicationDeSuiviDeTutorat.Repository;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.TuteurEntreprise;
 import org.springframework.data.jpa.repository.JpaRepository;

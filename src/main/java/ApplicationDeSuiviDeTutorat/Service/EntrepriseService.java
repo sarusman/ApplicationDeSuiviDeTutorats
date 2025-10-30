@@ -1,7 +1,7 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.Entreprise;
-import ApplicationDeSuiviDeTutorat.Repositoryf.EntrepriseRepository;
+import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

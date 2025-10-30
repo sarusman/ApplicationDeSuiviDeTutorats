@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutorat.Repositoryf;
+package ApplicationDeSuiviDeTutorat.Repository;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
