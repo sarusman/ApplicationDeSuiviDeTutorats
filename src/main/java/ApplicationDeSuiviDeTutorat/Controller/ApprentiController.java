@@ -1,5 +1,6 @@
 package ApplicationDeSuiviDeTutorat.Controller;
 
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiAnneeAlternanceDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
@@ -53,13 +54,13 @@ public class ApprentiController {
      * Traite la soumission du formulaire d'ajout d'apprenti depuis la modale.
      */
     @PostMapping("/ajouter")
-    public String ajouterApprenti(@ModelAttribute Apprenti apprenti, @ModelAttribute AnneeAlternance anneeAlternance, HttpServletRequest request) {
-        if(apprenti == null || anneeAlternance == null || request == null) throw new IllegalArgumentException(); // Change exception
+    public String ajouterApprenti(@ModelAttribute ApprentiAnneeAlternanceDTO anneeAlternance, HttpServletRequest request) {
+        if(anneeAlternance == null || request == null) throw new IllegalArgumentException(); // Change exception
 
         Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("user");
         Long tuteurId = utilisateur.getId();
 
-        apprentiService.createApprenti(apprenti, tuteurId);
+        apprentiService.createApprenti(anneeAlternance, tuteurId);
 
         return "redirect:/dashboard";
     }

@@ -1,8 +1,6 @@
 package ApplicationDeSuiviDeTutorat.Controller.Web;
 
-import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiFormDTO;
-import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
-import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiAnneeAlternanceDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import ApplicationDeSuiviDeTutorat.Repository.AnneeAcademiqueRepository;
@@ -49,15 +47,12 @@ public class DashboardWebController {
         Utilisateur utilisateur = utilisateurService.trouverParUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
 
-        model.addAttribute("apprentis", utilisateurService.trouverApprentisParTuteurId(utilisateur.getId()));
-        model.addAttribute("nouvelApprenti", new Apprenti());
-        model.addAttribute("nouvelleAnneeAlternance", new AnneeAlternance());
-        model.addAttribute("utilisateur", utilisateur);
+        model.addAttribute("apprentiDetailDTO", apprentiService.toTabDTO(utilisateur.getId()));
+        model.addAttribute("ApprentiAlternanceDTO", new ApprentiAnneeAlternanceDTO());
         model.addAttribute("programmes", Programme.values());
         model.addAttribute("entreprises", entrepriseRepository.findAll());
         model.addAttribute("anneesAcademique", anneeAcademiqueRepository.findAll());
         model.addAttribute("tuteurEntreprise", tuteurEntrepriseRepository.findAll());
-        model.addAttribute("ApprentiFormDTO", new ApprentiFormDTO());
 
         return "dashboard";
     }

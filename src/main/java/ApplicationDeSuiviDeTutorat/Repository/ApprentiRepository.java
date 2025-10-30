@@ -12,6 +12,4 @@ public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
     boolean existsByAdresseElectronique(String adresseElectronique);
 
     boolean existsByTelephone(String telephone);
-
-    List<Apprenti> findByTuteurPedagogique_Id(Long tuteurId);
 }

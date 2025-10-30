@@ -54,13 +54,99 @@ VALUES (0, 1, 1, 1, 1, 1),
        (2, 8, 3, 2, 8, 1),
        (2, 9, 3, 3, 9, 1);
 
-SELECT aa.* FROM annee_alternance aa
-JOIN apprenti a ON aa.apprenti_id = a.id
-WHERE a.etat = 'ACTIF'
-  AND (aa.apprenti_id, aa.annee_academique) IN (
-    SELECT aa_sub.apprenti_id, MAX(aa_sub.annee_academique)
-    FROM annee_alternance aa_sub
-             JOIN apprenti a_sub ON aa_sub.apprenti_id = a_sub.id
-    WHERE a_sub.etat = 'ACTIF'
-    GROUP BY aa_sub.apprenti_id)
+INSERT INTO visite (commentaires, date, format, annee_alternance_id)
+VALUES
+-- === ANNEE_ACADEMIQUE 1 (2019-09-20 → 2020-07-04) ===
+('Bonne première rencontre.', '2019-10-10 10:00:00', 'PRESENTIEL', 1),
+('Suivi de mi-parcours.', '2020-02-15 14:00:00', 'VISIO', 1),
+('Visite finale.', '2020-06-20 09:30:00', 'PRESENTIEL', 1),
+
+('Échange initial positif.', '2019-10-12 09:30:00', 'VISIO', 4),
+('Bon suivi à mi-année.', '2020-03-01 10:00:00', 'VISIO', 4),
+('Clôture d’année.', '2020-06-15 14:30:00', 'PRESENTIEL', 4),
+
+('Prise de contact réussie.', '2019-10-05 09:00:00', 'PRESENTIEL', 5),
+('Bon suivi du projet.', '2020-02-20 11:00:00', 'VISIO', 5),
+('Dernière visite.', '2020-06-25 13:00:00', 'VISIO', 5),
+
+('Visite d’intégration.', '2019-10-02 14:00:00', 'PRESENTIEL', 6),
+('Point technique.', '2020-03-10 10:00:00', 'VISIO', 6),
+('Visite finale.', '2020-06-18 09:00:00', 'VISIO', 6),
+
+('Première rencontre.', '2019-10-01 09:00:00', 'PRESENTIEL', 10),
+('Suivi du semestre.', '2020-02-28 14:30:00', 'VISIO', 10),
+('Clôture prévue.', '2020-06-26 10:00:00', 'PRESENTIEL', 10),
+
+('Visite initiale.', '2019-10-09 10:00:00', 'PRESENTIEL', 11),
+('Point d’étape.', '2020-02-22 11:30:00', 'VISIO', 11),
+('Dernière visite.', '2020-06-30 15:00:00', 'VISIO', 11),
+
+('Bonne intégration.', '2019-10-04 09:00:00', 'PRESENTIEL', 12),
+('Suivi de progression.', '2020-03-05 13:30:00', 'VISIO', 12),
+('Visite de fin.', '2020-06-29 09:30:00', 'VISIO', 12),
+
+('Très bon démarrage.', '2019-09-30 14:00:00', 'PRESENTIEL', 7),
+('Bilan mi-parcours.', '2020-02-25 09:30:00', 'VISIO', 7),
+('Visite finale.', '2020-06-20 11:00:00', 'VISIO', 7),
+
+('Rencontre initiale.', '2019-09-25 15:00:00', 'PRESENTIEL', 8),
+('Suivi régulier.', '2020-03-03 10:00:00', 'VISIO', 8),
+('Dernière visite.', '2020-06-28 13:00:00', 'VISIO', 8),
+
+('Entretien de lancement.', '2019-09-26 09:00:00', 'PRESENTIEL', 9),
+('Suivi de mi-année.', '2020-02-18 14:00:00', 'VISIO', 9),
+('Clôture de stage.', '2020-07-01 09:00:00', 'VISIO', 9),
+
+-- === ANNEE_ACADEMIQUE 2 (2020-09-28 → 2021-07-02) ===
+('Rencontre d’ouverture.', '2020-10-05 09:00:00', 'PRESENTIEL', 2),
+('Suivi technique.', '2021-02-20 11:00:00', 'VISIO', 2),
+('Visite finale.', '2021-06-25 10:30:00', 'VISIO', 2),
+
+('Début prometteur.', '2020-10-10 10:00:00', 'PRESENTIEL', 13),
+('Suivi projet.', '2021-03-01 09:00:00', 'VISIO', 13),
+('Visite finale.', '2021-06-28 14:00:00', 'VISIO', 13),
+
+('Très bon échange.', '2020-10-12 14:00:00', 'PRESENTIEL', 14),
+('Avancement satisfaisant.', '2021-02-25 10:30:00', 'VISIO', 14),
+('Dernière visite.', '2021-06-30 09:00:00', 'VISIO', 14),
+
+('Bonne implication.', '2020-10-08 09:00:00', 'PRESENTIEL', 15),
+('Suivi régulier.', '2021-03-05 11:00:00', 'VISIO', 15),
+('Clôture prévue.', '2021-06-20 13:00:00', 'VISIO', 15),
+
+('Très motivé.', '2020-10-03 13:30:00', 'PRESENTIEL', 8),
+('Progrès visibles.', '2021-02-19 09:00:00', 'VISIO', 8),
+('Dernier suivi.', '2021-06-25 15:00:00', 'PRESENTIEL', 8),
+
+('Visite initiale réussie.', '2020-09-30 10:30:00', 'PRESENTIEL', 9),
+('Suivi de parcours.', '2021-03-03 10:00:00', 'VISIO', 9),
+('Clôture finale.', '2021-06-28 14:00:00', 'VISIO', 9),
+
+('Début d’année efficace.', '2020-10-06 10:00:00', 'PRESENTIEL', 4),
+('Suivi de mi-année.', '2021-02-23 09:30:00', 'VISIO', 4),
+('Dernière visite.', '2021-06-29 11:00:00', 'PRESENTIEL', 4),
+
+('Rencontre initiale.', '2020-10-02 09:00:00', 'PRESENTIEL', 5),
+('Bon suivi.', '2021-03-02 14:00:00', 'VISIO', 5),
+('Clôture de l’année.', '2021-06-26 09:30:00', 'VISIO', 5),
+
+('Prise de contact.', '2020-09-29 14:00:00', 'PRESENTIEL', 6),
+('Suivi intermédiaire.', '2021-02-21 10:00:00', 'VISIO', 6),
+('Dernière visite.', '2021-06-27 13:30:00', 'VISIO', 6),
+
+-- === ANNEE_ACADEMIQUE 3 (2021-09-26 → 2022-07-03) ===
+('Début d’année prometteur.', '2021-10-05 09:30:00', 'PRESENTIEL', 16),
+('Suivi de progression.', '2022-02-15 14:00:00', 'VISIO', 16),
+('Visite finale.', '2022-06-28 10:00:00', 'VISIO', 16),
+
+('Bonne dynamique.', '2021-10-10 10:00:00', 'PRESENTIEL', 17),
+('Évaluation de mi-parcours.', '2022-03-01 09:00:00', 'VISIO', 17),
+('Dernière visite.', '2022-06-25 11:00:00', 'PRESENTIEL', 17),
+
+('Visite d’ouverture.', '2021-10-02 10:30:00', 'PRESENTIEL', 15),
+('Suivi semestriel.', '2022-02-20 11:30:00', 'VISIO', 15),
+('Clôture finale.', '2022-06-30 09:30:00', 'VISIO', 15);
+
+
+
 

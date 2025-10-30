@@ -1,5 +1,6 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiAnneeAlternanceDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAcademique;
 import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
@@ -31,8 +32,18 @@ public class AnneeAlternanceService {
         this.missionRepository = missionRepository;
     }
 
-    public void creationAnneeAcademique(AnneeAcademique anneeAcademique){
-        anneeAcademiqueRepository.save(anneeAcademique);
+    public void creationAnneeAcademique(ApprentiAnneeAlternanceDTO apprentiAnneeAlternanceDTO, Apprenti apprenti) {
+        AnneeAlternance anneeAlternance = new AnneeAlternance();
+
+        anneeAlternance.setApprenti(apprenti);
+        anneeAlternance.setAnneeAcademique(apprentiAnneeAlternanceDTO.getAnneeAcademique());
+        anneeAlternance.setProgramme(apprentiAnneeAlternanceDTO.getProgramme());
+        anneeAlternance.setEntreprise(apprentiAnneeAlternanceDTO.getEntreprise());
+        anneeAlternance.setTuteurEntreprise(apprentiAnneeAlternanceDTO.getTuteurEntreprise());
+        anneeAlternance.setTuteurPedagogique(apprentiAnneeAlternanceDTO.getTuteurPedagogique());
+        anneeAlternance.setMission(apprentiAnneeAlternanceDTO.getMission());
+
+        anneeAlternanceRepository.save(anneeAlternance);
     }
 
     // Determine la valeur suivante de Programme

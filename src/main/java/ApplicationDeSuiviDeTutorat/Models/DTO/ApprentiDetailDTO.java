@@ -3,14 +3,14 @@ package ApplicationDeSuiviDeTutorat.Models.DTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 
-public class ApprentiFormDTO{
-    private Apprenti apprenti;
-    private AnneeAlternance anneeAlternance;
+public class ApprentiDetailDTO {
+    public Apprenti apprenti;
+    public AnneeAlternance anneeAlternance;
 
     // Constructeurs
-    public ApprentiFormDTO() {}
+    public ApprentiDetailDTO() {}
 
-    public ApprentiFormDTO(Apprenti apprenti,  AnneeAlternance anneeAlternance) {
+    public ApprentiDetailDTO(Apprenti apprenti, AnneeAlternance anneeAlternance) {
         this.apprenti = apprenti;
         this.anneeAlternance = anneeAlternance;
     }

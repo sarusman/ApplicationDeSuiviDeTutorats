@@ -1,8 +1,9 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
 import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiAnneeAlternanceDTO;
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiDetailDTO;
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiTabDTO;
 import ApplicationDeSuiviDeTutorat.Models.Entities.*;
-import ApplicationDeSuiviDeTutorat.Models.Enums.Programme;
 import ApplicationDeSuiviDeTutorat.Repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -10,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class ApprentiService {
@@ -23,18 +21,20 @@ public class ApprentiService {
     private final VisiteRepository visiteRepository;
     // Ajout de la dépendance pour l'année académique
     private final AnneeAcademiqueRepository anneeAcademiqueRepository;
+    private final AnneeAlternanceService anneeAlternanceService;
 
 
     public ApprentiService(ApprentiRepository apprentiRepository,
                            UtilisateurRepository utilisateurRepository,
                            AnneeAlternanceRepository anneeAlternanceRepository,
                            VisiteRepository visiteRepository,
-                           AnneeAcademiqueRepository anneeAcademiqueRepository) { // Injection de dépendance
+                           AnneeAcademiqueRepository anneeAcademiqueRepository, AnneeAlternanceService anneeAlternanceService) { // Injection de dépendance
         this.apprentiRepository = apprentiRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.anneeAlternanceRepository = anneeAlternanceRepository;
         this.visiteRepository = visiteRepository;
         this.anneeAcademiqueRepository = anneeAcademiqueRepository; // Initialisation
+        this.anneeAlternanceService = anneeAlternanceService;
     }
 
     public List<Apprenti> getAllApprentis() {
@@ -50,15 +50,18 @@ public class ApprentiService {
     }
 
     @Transactional
-    public Apprenti createApprenti(ApprentiAnneeAlternanceDTO dto, String tuteurId) {
+    public Apprenti createApprenti(ApprentiAnneeAlternanceDTO dto, Long tuteurId) {
         Apprenti apprenti = new Apprenti();
-        apprenti.setNom(dto.nom());
-        apprenti.setPrenom(dto.prenom());
-        apprenti.setAdresseElectronique(dto.adresseElectronique());
-        apprenti.setTelephone(dto.telephone());
+        apprenti.setNom(dto.getNom());
+        apprenti.setPrenom(dto.getPrenom());
+        apprenti.setAdresseElectronique(dto.getAdresseElectronique());
+        apprenti.setTelephone(dto.getTelephone());
 
+        apprentiRepository.save(apprenti);
+        dto.setTuteurPedagogique(utilisateurRepository.findById(tuteurId).orElseThrow());
+        anneeAlternanceService.creationAnneeAcademique(dto, apprenti);
 
-        return apprentiRepository.save(apprenti);
+        return apprenti;
     }
 
     @Transactional
@@ -105,65 +108,50 @@ public class ApprentiService {
         return visiteRepository.findProchaineNative(apprenti.getId(), LocalDate.from(LocalDateTime.now()));
     }
 
-    /**
-     * Convertit un Apprenti en ApprentiAnneeAlternanceDTO.
-     * Les données liées (tuteur, entreprise) sont récupérées depuis la dernière AnneeAlternance.
-     */
-//    private ApprentiAnneeAlternanceDTO toDto(Apprenti a, AnneeAcademique anneeAcademique) {
-//        if (a == null) return null;
-//
-//        // Chercher la dernière année d'alternance pour obtenir les informations contextuelles
-//        Optional<AnneeAlternance> derniereAnneeOpt = anneeAlternanceRepository
-//                .findByApprentiId(a.getId())
-//                .stream()
-//                .max(Comparator.comparing(an -> an.getAnneeAcademique().getDate_debut())); // Supposant que AnneeAcademique a une année
-//
-//        Entreprise entreprise = null;
-//        Utilisateur tuteur = null;
-//
-//        if (derniereAnneeOpt.isPresent()) {
-//            AnneeAlternance derniereAnnee = derniereAnneeOpt.get();
-//            if (derniereAnnee.getEntreprise() != null) {
-//                entreprise = derniereAnnee.getEntreprise();
-//            }
-//            if (derniereAnnee.getTuteurPedagogique() != null) {
-//                tuteur = derniereAnnee.getTuteurPedagogique();
-//            }
-//        }
-//
-//        return new ApprentiAnneeAlternanceDTO(
-//                a.getId(),
-//                a.getNom(),
-//                a.getPrenom(),
-//                a.getAdresseElectronique(),
-//                a.getTelephone(),
-//                anneeAcademique,
-//
-//
-//        );
-//    }
+    public List<ApprentiTabDTO> toTabDTO(Long tuteurId) {
+        String entrepriseRaisonSociale = "";
+        String missionMotsCles = "NA";
+        String anneeAcademiqueDisplay = "";
+        String programmeStr = "";
 
+        // Fetch the relevant AnneeAlternance to get related entities
+        List<AnneeAlternance> currentAlternanceOpt = anneeAlternanceRepository.findLastForAllActif();
+        List<AnneeAlternance> anneeAlternanceTuteur = currentAlternanceOpt.stream().filter(
+                anneeAlternance -> Objects.equals(anneeAlternance.getTuteurPedagogique() != null ? anneeAlternance.getTuteurPedagogique().getId() : null, tuteurId)).toList();
 
-//    public Optional<ApprentiAnneeAlternanceDTO> getApprentiAnneeAlternanceDTOById(Long id) {
-//        return getApprentiById(id).map(this::toDto);
-//    }
+        List<ApprentiTabDTO> returnList = new ArrayList<>();
 
-    /**
-     * Récupère la liste des apprentis (DTO) pour un tuteur donné pour l'année en cours.
-     * @param tuteurId L'ID du tuteur.
-     * @return Une liste de ApprentiAnneeAlternanceDTO.
-     */
-//    public List<ApprentiAnneeAlternanceDTO> getApprentisPourTuteur(Long tuteurId) {
-//        // La logique pour trouver l'année "actuelle" est nécessaire.
-//        // Ici, nous récupérons toutes les années d'alternance pour ce tuteur.
-//        // Il faudrait idéalement filtrer par l'année académique en cours.
-//        List<AnneeAlternance> anneesAlternance = anneeAlternanceRepository
-//                .findByTuteurPedagogiqueId(tuteurId);
-//
-//        return anneesAlternance.stream()
-//                .map(AnneeAlternance::getApprenti) // Extrait l'apprenti de chaque année d'alternance
-//                .distinct() // Assure qu'on n'a pas de doublons si un apprenti a plusieurs années avec le même tuteur
-//                .map(this::toDto) // Convertit chaque apprenti en DTO
-//                .collect(Collectors.toList());
-//    }
+        if (!anneeAlternanceTuteur.isEmpty()) {
+            for (AnneeAlternance anneeAlternance : anneeAlternanceTuteur) {
+                // 1. Entreprise
+                ApprentiTabDTO current = new ApprentiTabDTO(anneeAlternance.getApprenti().getId(),
+                        anneeAlternance.getApprenti().getNom(),
+                        anneeAlternance.getApprenti().getPrenom(),
+                        anneeAlternance.getApprenti().getAdresseElectronique(),
+                        anneeAlternance.getApprenti().getTelephone(),
+                        anneeAlternance.getProgramme() != null ? anneeAlternance.getProgramme().name() : programmeStr,
+                        anneeAlternance.getEntreprise() != null ? anneeAlternance.getEntreprise().getRaisonSociale() : entrepriseRaisonSociale,
+                        anneeAlternance.getMission() != null ? anneeAlternance.getMission().getMotsCles() : missionMotsCles,
+                        anneeAlternance.getAnneeAcademique() != null ? anneeAlternance.getAnneeAcademique().name() : anneeAcademiqueDisplay);
+
+                returnList.add(current);
+            }
+        }
+
+        return returnList;
+    }
+
+    public ApprentiDetailDTO toDetailDTO(Apprenti apprenti) {
+
+        AnneeAlternance currentAlternanceOpt = anneeAlternanceRepository.findLastById(apprenti.getId());
+        ApprentiDetailDTO apprentiDetailDTO = new ApprentiDetailDTO();
+
+        if (currentAlternanceOpt != null) {
+            apprentiDetailDTO.setApprenti(currentAlternanceOpt.getApprenti());
+            apprentiDetailDTO.setAnneeAlternance(currentAlternanceOpt);
+        }
+
+        return apprentiDetailDTO;
+    }
+
 }

@@ -7,15 +7,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "annee_alternance")
-@IdClass(AnneeAlternanceId.class)
 public class AnneeAlternance {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
-    @JoinColumn(name = "apprenti_id", nullable = false) // foreign key column
+    @JoinColumn(name = "apprenti_id", nullable = false)
     private Apprenti apprenti;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "annee_academique", nullable = false)
     private AnneeAcademique anneeAcademique;
@@ -112,6 +113,14 @@ public class AnneeAlternance {
 
     public void setEvaluations(List<EvaluationEcole> evaluations) {
         this.evaluations = evaluations;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
 
