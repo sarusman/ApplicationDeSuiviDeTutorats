@@ -2,9 +2,14 @@ package ApplicationDeSuiviDeTutorat.Repository;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
-@Repository
-public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
+public interface ApprentiBilanRepository extends JpaRepository<Apprenti, Long> {
+
+    boolean existsByAdresseElectronique(String adresseElectronique);
+
+    boolean existsByTelephone(String telephone);
+
+    List<Apprenti> findByTuteurPedagogique_Id(Long tuteurId);
 }

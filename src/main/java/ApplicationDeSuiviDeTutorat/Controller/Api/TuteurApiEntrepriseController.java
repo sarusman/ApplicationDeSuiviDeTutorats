@@ -1,4 +1,4 @@
-package ApplicationDeSuiviDeTutorat.Controller;
+package ApplicationDeSuiviDeTutorat.Controller.Api;
 
 import ApplicationDeSuiviDeTutorat.Models.DTO.TuteurEntrepriseDTO;
 import ApplicationDeSuiviDeTutorat.Service.TuteurEntrepriseService;
@@ -8,19 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
-// Choix de JM : utiliser un rest controller + préfixe pour distinguer des controller renvoyant des vues thymeleaf
 @RestController
 @Tag(name = "Tuteurs API", description = "API pour la gestion des tuteurs d'entreprise")
 @RequestMapping("/api/tuteurs")
-public class TuteurEntrepriseController {
+public class TuteurApiEntrepriseController {
 
     private final TuteurEntrepriseService tuteurEntrepriseService;
 
     @Autowired
-    public TuteurEntrepriseController(TuteurEntrepriseService tuteurEntrepriseService) {
+    public TuteurApiEntrepriseController(TuteurEntrepriseService tuteurEntrepriseService) {
         this.tuteurEntrepriseService = tuteurEntrepriseService;
     }
 

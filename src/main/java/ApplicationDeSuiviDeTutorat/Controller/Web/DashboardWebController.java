@@ -9,35 +9,53 @@ import ApplicationDeSuiviDeTutorat.Repository.AnneeAcademiqueRepository;
 import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
 import ApplicationDeSuiviDeTutorat.Repository.TuteurEntrepriseRepository;
 import ApplicationDeSuiviDeTutorat.Service.UtilisateurService;
-import jakarta.servlet.http.HttpServletRequest;
+import ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository;
+import ApplicationDeSuiviDeTutorat.repository.TuteurEntrepriseRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
+
 @Controller
 public class DashboardController {
 
+    private final ApprentiService apprentiService;
     private final UtilisateurService utilisateurService;
     private final EntrepriseRepository entrepriseRepository;
     private final AnneeAcademiqueRepository anneeAcademiqueRepository;
     private final TuteurEntrepriseRepository tuteurEntrepriseRepository;
+    private final ApprentiService apprentiService;
+    private final EntrepriseRepository entrepriseRepository;
+    private final TuteurEntrepriseRepository tuteurEntrepriseRepository;
 
-    public DashboardController(
-            UtilisateurService utilisateurService,
-            ApplicationDeSuiviDeTutorat.Repository.EntrepriseRepository entrepriseRepository, AnneeAcademiqueRepository anneeAcademiqueRepository, TuteurEntrepriseRepository tuteurEntrepriseRepository
-    ){
+    public DashboardController(UtilisateurService utilisateurService,
+                               ApprentiService apprentiService,
+                               EntrepriseRepository entrepriseRepository,
+                               TuteurEntrepriseRepository tuteurEntrepriseRepository,
+                               UtilisateurService utilisateurService,
+                               EntrepriseRepository entrepriseRepository,
+                               AnneeAcademiqueRepository anneeAcademiqueRepository,
+                               TuteurEntrepriseRepository tuteurEntrepriseRepository) {
+
         this.utilisateurService = utilisateurService;
+        this.apprentiService = apprentiService;
         this.entrepriseRepository = entrepriseRepository;
         this.anneeAcademiqueRepository = anneeAcademiqueRepository;
         this.tuteurEntrepriseRepository = tuteurEntrepriseRepository;
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(HttpServletRequest request, Model model) {
-        Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("user");
-        if (utilisateur == null) {
+    public String dashboard(Principal principal, Model model) {
+        if (principal == null) {
             return "redirect:/login";
         }
+
+        String username = principal.getName();
+        Utilisateur utilisateur = utilisateurService.trouverParUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+
         model.addAttribute("apprentis", utilisateurService.trouverApprentisParTuteurId(utilisateur.getId()));
         model.addAttribute("nouvelApprenti", new Apprenti());
         model.addAttribute("nouvelleAnneeAlternance", new AnneeAlternance());

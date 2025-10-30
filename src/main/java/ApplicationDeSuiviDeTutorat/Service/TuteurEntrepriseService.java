@@ -25,6 +25,9 @@ public class TuteurEntrepriseService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
+    public List<TuteurEntreprise> findAll() {
+        return tuteurEntrepriseRepository.findAll();
+    }
 
     private TuteurEntrepriseDTO convertToDto(TuteurEntreprise tuteur) {
         return new TuteurEntrepriseDTO(

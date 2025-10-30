@@ -1,132 +1,187 @@
-    function showTab(tabId, buttonID) {
+function showTab(tabId, buttonID) {
     const tabs = document.querySelectorAll('.tab');
     tabs.forEach(tab => tab.classList.remove('active'));
 
     const buttons = document.querySelectorAll('.button');
     buttons.forEach(button => button.classList.remove('active'));
 
-    document.getElementById(tabId).classList.add('active');
-    document.getElementById(buttonID).classList.add('active');
+    const targetTab = document.getElementById(tabId);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+
+    const targetButton = document.getElementById(buttonID);
+    if (targetButton) {
+        targetButton.classList.add('active');
+    }
 }
 
-    function rowClicked(value) {
+function rowClicked(value) {
     location.href = value;
 }
 
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const entrepriseSelect = document.getElementById('entrepriseSelect');
     const tuteurSelect = document.getElementById('tuteurSelect');
 
-    entrepriseSelect.addEventListener('change', function () {
-    const entrepriseId = this.value;
+    if (entrepriseSelect && tuteurSelect) {
+        entrepriseSelect.addEventListener('change', function () {
+            const entrepriseId = this.value;
 
-    tuteurSelect.innerHTML = '<option value="">-- Choisir une entreprise dabord --</option>';
-    tuteurSelect.disabled = true;
+            tuteurSelect.innerHTML = '<option value="">-- Choisir une entreprise d\'abord --</option>';
+            tuteurSelect.disabled = true;
 
-    if (entrepriseId) {
-    const url = `/api/tuteurs/by-entreprise/${entrepriseId}`;
+            if (entrepriseId) {
+                const url = `/api/tuteurs/by-entreprise/${entrepriseId}`;
 
-    fetch(url)
-    .then(response => {
-    if (!response.ok) {
-    throw new Error('La réponse du réseau n\'était pas valide');
-}
-    return response.json();
-})
-    .then(tuteurs => {
-    // Vider le select (sauf la première option)
-    tuteurSelect.innerHTML = '<option value="">Choisir un tuteur...</option>';
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Réponse réseau invalide");
+                        }
+                        return response.json();
+                    })
+                    .then(tuteurs => {
+                        tuteurSelect.innerHTML = '<option value="">Choisir un tuteur...</option>';
 
-    // Remplir le select avec les tuteurs reçus
-    tuteurs.forEach(tuteur => {
-    const option = document.createElement('option');
-    option.value = tuteur.id;
-    option.textContent = tuteur.prenom + ' ' + tuteur.nom;
-    tuteurSelect.appendChild(option);
-});
+                        tuteurs.forEach(tuteur => {
+                            const option = document.createElement('option');
+                            option.value = tuteur.id;
+                            option.textContent = tuteur.prenom + ' ' + tuteur.nom;
+                            tuteurSelect.appendChild(option);
+                        });
 
-    // Activer le champ tuteur
-    tuteurSelect.disabled = false;
-})
-    .catch(error => {
-    console.error('Erreur lors de la récupération des tuteurs:', error);
-    tuteurSelect.innerHTML = '<option value="">Erreur de chargement</option>';
-});
-}
-});
-});
+                        tuteurSelect.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des tuteurs:', error);
+                        tuteurSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+                    });
+            }
+        });
+    }
 
-<!--    Suppression d'un apprenti -->
-    document.addEventListener('DOMContentLoaded', function () {
     const confirmationModal = document.getElementById('confirmationSuppressionModal');
     if (confirmationModal) {
-    confirmationModal.addEventListener('show.bs.modal', function (event) {
-    // 'event.relatedTarget' est le lien <a> qui a déclenché la modale
-    const button = event.relatedTarget;
+        confirmationModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
 
-    // Récupérer les données depuis les attributs data-*
-    const nom = button.getAttribute('data-nom');
-    const prenom = button.getAttribute('data-prenom');
-    const deleteUrl = button.getAttribute('data-url');
+            const nom = button.getAttribute('data-nom');
+            const prenom = button.getAttribute('data-prenom');
+            const deleteUrl = button.getAttribute('data-url');
 
-    // Mettre à jour le texte de la modale
-    const modalText = confirmationModal.querySelector('#modalText');
-    modalText.textContent = `Êtes-vous certain de vouloir supprimer l'apprenti ${prenom} ${nom} ?`;
+            const modalText = confirmationModal.querySelector('#modalText');
+            modalText.textContent = `Êtes-vous certain de vouloir supprimer l'apprenti ${prenom} ${nom} ?`;
 
-    const deleteForm = confirmationModal.querySelector('#deleteForm');
-    deleteForm.setAttribute('action', deleteUrl);
-});
-}
-});
+            const deleteForm = confirmationModal.querySelector('#deleteForm');
+            deleteForm.setAttribute('action', deleteUrl);
+        });
+    }
 
+    const inputNomPrenom = document.getElementById('filterNomPrenom');
+    const inputEntreprise = document.getElementById('filterEntreprise');
+    const inputMission = document.getElementById('filterMission');
+    const inputAnnee = document.getElementById('filterAnnee');
+    const resetBtn = document.getElementById('resetFiltersBtn');
 
-<!-- Filtrage du tableau des apprentis -->
-    document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('searchApprenti');
-    const tableBody = document.querySelector('#apprenti table tbody');
-    const dataRows = tableBody.querySelectorAll('tr.apprenti-row');
+    const dataRows = Array.from(document.querySelectorAll('.apprenti-row'));
     const noResultsRow = document.getElementById('noResultsRow');
-    let debounceTimer;
 
-    const debounce = (func, delay) => {
-    return function(...args) {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-    func.apply(this, args);
-}, delay);
-};
-};
+    function normalise(str) {
+        return (str || '')
+            .toString()
+            .trim()
+            .toLowerCase();
+    }
 
-    const filterTable = () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    let visibleRowsCount = 0;
+    function applyFilters() {
+        const fNom = inputNomPrenom ? normalise(inputNomPrenom.value) : '';
+        const fEnt = inputEntreprise ? normalise(inputEntreprise.value) : '';
+        const fMission = inputMission ? normalise(inputMission.value) : '';
+        const fAnnee = inputAnnee ? normalise(inputAnnee.value) : '';
 
-    dataRows.forEach(row => {
-    const cells = row.getElementsByTagName('td');
+        let visibleCount = 0;
 
-    const nom = cells[0].textContent.toLowerCase();
-    const prenom = cells[1].textContent.toLowerCase();
-    const entreprise = cells[3].textContent.toLowerCase();
-    const mission = cells[4].textContent.toLowerCase();
+        dataRows.forEach(row => {
+            const valueNomPrenom = normalise(row.getAttribute('data-fullname'));
+            const valueEntreprise = normalise(row.getAttribute('data-entreprise'));
+            const valueMission = normalise(row.getAttribute('data-mission'));
+            const valueAnnee = normalise(row.getAttribute('data-annee'));
 
-    if (nom.includes(searchTerm) ||
-    prenom.includes(searchTerm) ||
-    entreprise.includes(searchTerm) ||
-    mission.includes(searchTerm))
-{
-    row.style.display = ''; // Affiche la ligne
-    visibleRowsCount++;
-} else {
-    row.style.display = 'none'; // Cache la ligne
-}
-});
+            const matchNom = !fNom || valueNomPrenom.includes(fNom);
+            const matchEnt = !fEnt || valueEntreprise.includes(fEnt);
+            const matchMissionOk = !fMission || valueMission.includes(fMission);
+            const matchAnnee = !fAnnee || valueAnnee.includes(fAnnee);
 
-    if (visibleRowsCount === 0 && searchTerm !== '') {
-    noResultsRow.style.display = 'table-row';
-} else {
-    noResultsRow.style.display = 'none';
-}
-};
+            const matchAll = matchNom && matchEnt && matchMissionOk && matchAnnee;
 
-    searchInput.addEventListener('keyup', debounce(filterTable, 300));
+            row.style.display = matchAll ? '' : 'none';
+
+            if (matchAll) {
+                visibleCount++;
+            }
+        });
+
+        if (noResultsRow) {
+            noResultsRow.style.display = (visibleCount === 0 ? '' : 'none');
+        }
+    }
+
+    function resetFilters() {
+        if (inputNomPrenom) inputNomPrenom.value = '';
+        if (inputEntreprise) inputEntreprise.value = '';
+        if (inputMission) inputMission.value = '';
+        if (inputAnnee) inputAnnee.value = '';
+        applyFilters();
+    }
+
+    if (inputNomPrenom) inputNomPrenom.addEventListener('input', applyFilters);
+    if (inputEntreprise) inputEntreprise.addEventListener('input', applyFilters);
+    if (inputMission) inputMission.addEventListener('input', applyFilters);
+    if (inputAnnee) inputAnnee.addEventListener('input', applyFilters);
+    if (resetBtn) resetBtn.addEventListener('click', resetFilters);
+
+    const searchInput = document.getElementById('searchApprenti');
+    if (searchInput) {
+        let debounceTimer;
+
+        const debounce = (func, delay) => {
+            return function (...args) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        };
+
+        const filterLegacy = () => {
+            const term = searchInput.value.toLowerCase();
+            let visibleRowsCount = 0;
+
+            dataRows.forEach(row => {
+                const cells = row.getElementsByTagName('td');
+                const nom = (cells[0]?.textContent || '').toLowerCase();
+                const prenom = (cells[1]?.textContent || '').toLowerCase();
+                const entreprise = (cells[3]?.textContent || '').toLowerCase();
+                const mission = (cells[4]?.textContent || '').toLowerCase();
+
+                const match =
+                    nom.includes(term) ||
+                    prenom.includes(term) ||
+                    entreprise.includes(term) ||
+                    mission.includes(term);
+
+                row.style.display = match ? '' : 'none';
+                if (match) visibleRowsCount++;
+            });
+
+            if (noResultsRow) {
+                noResultsRow.style.display = (visibleRowsCount === 0 && term !== '') ? '' : 'none';
+            }
+        };
+
+        searchInput.addEventListener('keyup', debounce(filterLegacy, 300));
+    }
+
+    applyFilters();
 });

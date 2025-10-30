@@ -1,13 +1,19 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
 import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
+import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiDto;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
+import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
+import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
+import ApplicationDeSuiviDeTutorat.Repository.VisiteRepository;
+import ApplicationDeSuiviDeTutorat.repository.UtilisateurRepository;
 import ApplicationDeSuiviDeTutorat.Repository.AnneeAlternanceRepository;
 import ApplicationDeSuiviDeTutorat.Repository.ApprentiRepository;
 import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,10 +27,11 @@ public class ApprentiService {
     private final UtilisateurRepository utilisateurRepository;
     private final AnneeAlternanceRepository anneeAlternanceRepository;
 
-    public ApprentiService(ApprentiRepository apprentiRepository, UtilisateurRepository utilisateurRepository, AnneeAlternanceRepository anneeAlternanceRepository) {
+    public ApprentiService(ApprentiRepository apprentiRepository, UtilisateurRepository utilisateurRepository, AnneeAlternanceRepository anneeAlternanceRepository, VisiteRepository visiteRepository) {
         this.apprentiRepository = apprentiRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.anneeAlternanceRepository = anneeAlternanceRepository;
+        this.visiteRepository = visiteRepository;
     }
 
     public List<Apprenti> getAllApprentis() {
@@ -36,8 +43,9 @@ public class ApprentiService {
 
         return Optional.ofNullable(
                 singleApprenti.orElseThrow(
-                        () -> new IllegalStateException(
-                                "Apprenti with " + id + " does not exist")));
+                        () -> new IllegalStateException("Apprenti with " + id + " does not exist")
+                )
+        );
     }
 
     /**
@@ -46,8 +54,16 @@ public class ApprentiService {
      * @return L'apprenti sauvegardé.
      */
     @Transactional
-    public Apprenti createApprenti(Apprenti apprenti) {
-        return apprentiRepository.save(apprenti);
+    public Apprenti createApprenti(Apprenti apprenti, Long tuteurId) {
+        Utilisateur tuteurPedagogique = utilisateurRepository
+                .findById(tuteurId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Utilisateur (Tuteur) non trouvé avec l'id : " + tuteurId)
+                );
+
+        apprenti.setTuteurPedagogique(tuteurPedagogique);
+
+        return apprentiBilanRepository.save(apprenti);
     }
 
     @Transactional
@@ -63,54 +79,65 @@ public class ApprentiService {
         return apprentiRepository.save(apprentiToUpdate);
     }
 
-    /**
-     * Trouve la dernière visite passée pour un apprenti donné.
-     * @param apprenti L'apprenti pour lequel chercher la visite.
-     * @return un Optional contenant la visite la plus récente, ou un Optional vide.
-     */
-    public Optional<Visite> findDerniereVisite(Apprenti apprenti) {
-        if (apprenti == null || anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).isEmpty()) {
-            return Optional.empty();
-        }
-        LocalDateTime aujourdhui = LocalDateTime.now();
-        return anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).stream().findFirst()
-                .map(anneeAlternance -> anneeAlternance.getVisites().stream()
-                        .filter(v -> v.getDate() != null && v.getDate().isBefore(aujourdhui))
-                        .max(Comparator.comparing(Visite::getDate)))
-                .orElse(Optional.empty());
-    }
-
-    /**
-     * Trouve la prochaine visite future pour un apprenti donné.
-     * @param apprenti L'apprenti pour lequel chercher la visite.
-     * @return un Optional contenant la visite future la plus proche, ou un Optional vide.
-     */
-    public Optional<Visite> findProchaineVisite(Apprenti apprenti) {
-        if (apprenti == null || anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).isEmpty()) {
-            return Optional.empty();
-        }
-        LocalDateTime aujourdhui = LocalDateTime.now();
-        return anneeAlternanceRepository.findAllByApprenti(apprenti.getId()).stream().findFirst()
-                .map(anneeAlternance -> anneeAlternance.getVisites().stream()
-                        .filter(v -> v.getDate() != null && v.getDate().isAfter(aujourdhui))
-                        .min(Comparator.comparing(Visite::getDate)))
-                .orElse(Optional.empty());
-    }
-
-    /**
-     * Supprime un apprenti par son ID.
-     * @param id L'ID de l'apprenti à supprimer.
-     */
     @Transactional
     public void deleteApprentiById(Long id) {
         if (!apprentiRepository.existsById(id)) {
-            throw new EntityNotFoundException(STR."Apprenti non trouvé avec l'id : \{id}");
+            throw new EntityNotFoundException("Apprenti non trouvé avec l'id : " + id);
         }
         apprentiRepository.deleteById(id);
     }
 
-    public AnneeAlternance createAnneeAlternance(AnneeAlternance anneeAlternance) {
-        return anneeAlternanceRepository.save(anneeAlternance);
+    public boolean existeAdresse(String adresseElectronique) {
+        return apprentiBilanRepository.existsByAdresseElectronique(adresseElectronique);
     }
 
+    public boolean existeTelephone(String telephone) {
+        return apprentiBilanRepository.existsByTelephone(telephone);
+    }
+
+    public Optional<Visite> findDerniereVisite(Apprenti apprenti) {
+        if (apprenti == null || apprenti.getId() == null) return Optional.empty();
+        return visiteRepository.findDerniereNative(apprenti.getId(), LocalDate.now()
+        );
+    }
+
+    public Optional<Visite> findProchaineVisite(Apprenti apprenti) {
+        if (apprenti == null || apprenti.getId() == null) return Optional.empty();
+        return visiteRepository.findProchaineNative(apprenti.getId(), LocalDate.now());
+    }
+
+    private ApprentiDto toDto(Apprenti a) {
+        if (a == null) return null;
+
+        String entrepriseNom = (a.getEntreprise() != null)
+                ? a.getEntreprise().getNom()
+                : null;
+
+        String tuteurNom = (a.getTuteurPedagogique() != null)
+                ? a.getTuteurPedagogique().getUsername()
+                : null;
+
+        return new ApprentiDto(
+                a.getId(),
+                a.getNom(),
+                a.getPrenom(),
+                a.getAdresseElectronique(),
+                a.getTelephone(),
+                entrepriseNom,
+                tuteurNom
+        );
+    }
+
+    public Optional<ApprentiDto> getApprentiDtoById(Long id) {
+        return getApprentiById(id).map(this::toDto);
+    }
+
+    public List<ApprentiDto> getApprentisPourTuteur(Long tuteurId) {
+        List<Apprenti> apprentis = apprentiBilanRepository
+                .findByTuteurPedagogique_Id(tuteurId);
+
+        return apprentis.stream()
+                .map(this::toDto)
+                .toList();
+    }
 }
