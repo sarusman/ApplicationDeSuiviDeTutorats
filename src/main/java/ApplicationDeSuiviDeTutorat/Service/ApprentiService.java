@@ -10,8 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ApprentiService {
@@ -42,9 +42,10 @@ public class ApprentiService {
     }
 
     public Optional<Apprenti> getApprentiById(Long id) {
+        Optional<Apprenti> singleApprenti = apprentiBilanRepository.findById(id);
         return Optional.ofNullable(
-                apprentiRepository.findById(id).orElseThrow(
-                        () -> new IllegalStateException("Apprenti with id " + id + " does not exist")
+                singleApprenti.orElseThrow(
+                        () -> new IllegalStateException("Apprenti with " + id + " does not exist")
                 )
         );
     }
@@ -68,19 +69,41 @@ public class ApprentiService {
     public Apprenti updateApprentiBilanById(Long id, Apprenti updatedApprenti) {
         Apprenti apprentiToUpdate = apprentiRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Apprenti non trouvé avec l'id : " + id));
+        Apprenti apprentiToUpdate = apprentiBilanRepository.findById(id)
+                .orElseThrow(() -> new ApprentiNotFoundException("Apprenti non trouvé avec l'id : " + id));
+
+        String newEmail = updatedApprenti.getAdresseElectronique();
+        String oldEmail = apprentiToUpdate.getAdresseElectronique();
+        if (newEmail != null && !newEmail.equalsIgnoreCase(oldEmail)
+                && apprentiBilanRepository.existsByAdresseElectronique(newEmail)) {
+            throw new DuplicateEmailException("Cet e-mail est déjà utilisé.");
+        }
+
+        String newTel = updatedApprenti.getTelephone();
+        String oldTel = apprentiToUpdate.getTelephone();
+        if (newTel != null && !newTel.isBlank()
+                && (oldTel == null || !newTel.equals(oldTel))
+                && apprentiBilanRepository.existsByTelephone(newTel)) {
+            throw new DuplicateTelephoneException("Ce numéro de téléphone est déjà utilisé.");
+        }
 
         apprentiToUpdate.setNom(updatedApprenti.getNom());
         apprentiToUpdate.setPrenom(updatedApprenti.getPrenom());
         apprentiToUpdate.setAdresseElectronique(updatedApprenti.getAdresseElectronique());
         apprentiToUpdate.setTelephone(updatedApprenti.getTelephone());
+        apprentiToUpdate.setAdresseElectronique(newEmail);
+        apprentiToUpdate.setTelephone(newTel);
+        apprentiToUpdate.setProgramme(updatedApprenti.getProgramme());
 
         return apprentiRepository.save(apprentiToUpdate);
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRED)
     public void deleteApprentiById(Long id) {
         if (!apprentiRepository.existsById(id)) {
             throw new EntityNotFoundException("Apprenti non trouvé avec l'id : " + id);
+        if (!apprentiBilanRepository.existsById(id)) {
+            throw new ApprentiNotFoundException("Apprenti non trouvé avec l'id : " + id);
         }
         // Il faudrait aussi gérer la suppression en cascade des AnneeAlternance associées
         // selon la configuration de la relation (e.g., orphanRemoval=true)
@@ -95,9 +118,6 @@ public class ApprentiService {
         return apprentiRepository.existsByTelephone(telephone);
     }
 
-    // Ces deux méthodes dépendent de la logique de votre repository.
-    // La requête native doit être adaptée pour chercher les visites
-    // à travers les AnneeAlternance liées à l'apprenti.
     public Optional<Visite> findDerniereVisite(Apprenti apprenti) {
         if (apprenti == null || apprenti.getId() == null) return Optional.empty();
         return visiteRepository.findDerniereNative(apprenti.getId(), LocalDate.now());
@@ -137,10 +157,29 @@ public class ApprentiService {
                 returnList.add(current);
             }
         }
+    private ApprentiDto toDto(Apprenti a) {
+        if (a == null) return null;
+        String entrepriseNom = (a.getEntreprise() != null) ? a.getEntreprise().getNom() : null;
+        String tuteurNom = (a.getTuteurPedagogique() != null) ? a.getTuteurPedagogique().getUsername() : null;
+        return new ApprentiDto(
+                a.getId(),
+                a.getNom(),
+                a.getPrenom(),
+                a.getAdresseElectronique(),
+                a.getTelephone(),
+                entrepriseNom,
+                tuteurNom
+        );
+    }
 
         return returnList;
     }
 
+    public List<ApprentiDto> getApprentisPourTuteur(Long tuteurId) {
+        List<Apprenti> apprentis = apprentiBilanRepository.findByTuteurPedagogique_Id(tuteurId);
+        return apprentis.stream().map(this::toDto).toList();
+    }
+}
     public ApprentiDetailDTO toDetailDTO(Apprenti apprenti) {
 
         AnneeAlternance currentAlternanceOpt = anneeAlternanceRepository.findLastById(apprenti.getId());
@@ -157,4 +196,4 @@ public class ApprentiService {
         return apprentiDetailDTO;
     }
 
-}
+

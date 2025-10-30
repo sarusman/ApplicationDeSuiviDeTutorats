@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface TuteurEntrepriseRepository extends JpaRepository<TuteurEntreprise, Long> {
-
+    boolean existsByAdresseElectroniqueIgnoreCase(String adresseElectronique);
+    boolean existsByTelephone(String telephone);
     List<TuteurEntreprise> findByEntrepriseId(Long entrepriseId);
 }

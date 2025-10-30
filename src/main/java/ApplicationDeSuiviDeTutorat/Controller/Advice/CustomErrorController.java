@@ -15,7 +15,6 @@ public class CustomErrorController implements ErrorController {
     public String handleError(HttpServletRequest request, Model model) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
-        // Vérifier d'abord le paramètre de query (venant de Security)
         String statusParam = request.getParameter("status");
         int statusCode;
 
