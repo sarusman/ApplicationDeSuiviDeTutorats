@@ -18,51 +18,77 @@
 
 ---
 
-## Installation Locale
+## Diagramme Cas d'Utilisation
 
-### Prérequis
-- Java 21
-- IntelliJ IDEA
-- XAMPP ou MySQL Server
-
-### Étape 1 : Configurer la connexion à la base de données
-
-1. Dans IntelliJ, accédez à la configuration de connexion MySQL
-2. Paramétrez les identifiants de votre serveur local
-3. Renseignez le nom de la base de données dans les paramètres
-
-Script SQL local : [MYSQLDB_LOCAL.sql](https://github.com/sarusman/ApplicationDeSuiviDeTutorats/blob/master/src/main/resources/SQLRequests/MYSQLDB_LOCAL.sql)
-
-### Étape 2 : Lancer l'application
-
-Exécutez l'application depuis IntelliJ via le bouton de lancement
-
-### Étape 3 : Accéder à l'application
-
-Rendez-vous sur **http://localhost:8080**
+![Diagramme des cas d'utilisation](https://github.com/user-attachments/assets/8a3fb733-efc0-431a-aa9c-67e96ef64981)
 
 ---
 
-## Accès et Connexion
+## Installation Locale
 
-### Identifiants par défaut
-- **ID utilisateur** : tuteur
-- **Mot de passe** : 1234
+### Prérequis
+- Java 21 installé
+- IntelliJ IDEA
+- XAMPP ou MySQL Server lancé
 
-**Note** : Le mot de passe est chiffré en SHA256. Il est inutile de créer un utilisateur manuellement en base de données.
+### Étape 1 : Configurer la connexion à la base de données
+
+**1a - Ouvrir le gestionnaire de bases de données** :
+![Configuration 1](https://github.com/user-attachments/assets/5f7da6e2-888a-4109-b2b8-95e0c4b70379)
+
+**1b - Ajouter une nouvelle connexion MySQL** :
+![Configuration 2](https://github.com/user-attachments/assets/db45135e-361c-40e3-8530-e97c6531b70a)
+
+**1c - Renseigner le nom de la base de données** :
+![Configuration 3](https://github.com/user-attachments/assets/419fc555-d8ea-4815-b6c2-4927f13ccad4)
+
+Utilisez le script SQL pour créer la BDD locale : [MYSQLDB_LOCAL.sql](https://github.com/sarusman/ApplicationDeSuiviDeTutorats/blob/master/src/main/resources/SQLRequests/MYSQLDB_LOCAL.sql)
+
+### Étape 2 : Lancer l'application
+
+Cliquez sur le bouton de lancement de l'application dans IntelliJ :
+![Lancer l'application](https://github.com/user-attachments/assets/1b426351-cd0d-4a4e-93ea-e7bddf549ece)
+
+### Étape 3 : Accéder à l'application
+
+Une fois l'application démarrée, rendez-vous sur :
+- **Local** : http://localhost:8080
+
+---
+
+## Connexion à l'Application
+
+### Identifiants par défaut (Local & Distante)
+- **Identifiant** : `tuteur`
+- **Mot de passe** : `1234`
+
+**⚠️ Important** : Le mot de passe est chiffré en SHA256 en base de données. Il est inutile de créer manuellement un utilisateur SQL.
 
 ### Créer un nouvel utilisateur
-- Local : http://localhost:8080/register
-- Distante : https://applicationdesuividetutorats.onrender.com/register
 
-### Persistance de session
-L'application utilise les cookies du navigateur. Vous resterez connecté après un redémarrage.
+**Local** :
+```
+http://localhost:8080/register
+```
+
+**Distante** :
+```
+https://applicationdesuividetutorats.onrender.com/register
+```
+
+### Gestion de session
+L'application utilise les cookies du navigateur pour maintenir votre session. Vous resterez connecté après un redémarrage du navigateur.
 
 ---
 
 ## Déploiement
 
-**URL déployée** : https://applicationdesuividetutorats.onrender.com/
+### URL de l'application déployée
+```
+https://applicationdesuividetutorats.onrender.com/
+```
+
+**Identifiants** : `tuteur` / `1234`
 
 L'application est déployée sur Render via une image Docker.
 
@@ -70,25 +96,36 @@ Script PostgreSQL pour Render : [POSTGRESQL_RENDER.sql](https://github.com/sarus
 
 ---
 
-## Documentation API
+## Documentation API (Swagger)
 
-**Swagger local** : http://localhost:8080/swagger-ui.html  
-**Swagger Render** : https://applicationdesuividetutorats.onrender.com/swagger-ui.html  
-**API Docs** : https://applicationdesuividetutorats.onrender.com/v3/api-docs
+### Local
+```
+http://localhost:8080/swagger-ui.html
+```
+
+### Distante
+```
+https://applicationdesuividetutorats.onrender.com/swagger-ui.html
+```
+
+### API Docs JSON
+```
+https://applicationdesuividetutorats.onrender.com/v3/api-docs
+```
 
 ---
 
 ## Fonctionnalités Principales
 
 ### Authentification & Sécurité (Sarusman)
-- Login/mot de passe sécurisé via Spring Security
+- Login/mot de passe sécurisé avec Spring Security
 - Gestion des erreurs de connexion
 - Affichage du prénom de l'utilisateur connecté
-- Déconnexion avec fermeture de session
+- Déconnexion sécurisée avec fermeture de session
 
 ### Gestion des Apprentis (Jean)
-- Ajout d'apprentis
-- Édition de profils
+- Ajout de nouveaux apprentis
+- Édition des profils
 - Notifications via Snackbar
 
 ### Dashboard (Jean)
@@ -105,11 +142,12 @@ Script PostgreSQL pour Render : [POSTGRESQL_RENDER.sql](https://github.com/sarus
 - Gestion des cycles académiques
 
 ### API REST (Jean)
-- Endpoints pour intégration tierce
+- Endpoints RESTful pour intégration tierce
 - Documentation complète via Swagger
 
 ### Gestion des exceptions (Sarusman)
 - Messages d'erreur clairs et explicites
+- Gestion robuste des cas d'erreur
 
 ---
 
@@ -126,9 +164,10 @@ Injection de dépendances via interfaces dans les services et contrôleurs.
 
 ---
 
-## Défis & Solutions
+## Défis Rencontrés & Solutions
 
 **Défi majeur** : Modification tardive du modèle de données pour intégrer la gestion d'année académique  
+**Impact** : L'application était avancée, ajout de cette section pour respecter les consignes  
 **Solution** : Refactorisation fine de la codebase pour minimiser l'impact sur les modules existants
 
 ---
@@ -143,18 +182,20 @@ Injection de dépendances via interfaces dans les services et contrôleurs.
 
 ## Contributions par Membre
 
-**Sarusman SATKUNARAJAH**
+### Sarusman SATKUNARAJAH
 - Authentification sécurisée et gestion de session
 - Recherche par entreprise, mission et année académique
 - Documentation Swagger
-- Déploiement opérationnel
+- Déploiement opérationnel sur Render
 - Gestion des exceptions
 
-**Vincent PIERRO**
+### Vincent PIERRO
 - Implémentation de la gestion d'année académique
+- Architecture du module académique
 
-**Jean MOTTE**
-- Dashboard et filtrage
+### Jean MOTTE
+- Dashboard et ses filtres
 - Gestion des apprentis (ajout, édition)
 - Interface utilisateur (Snackbar, filtres)
 - API REST et documentation Swagger
+- Interface utilisateur globale
