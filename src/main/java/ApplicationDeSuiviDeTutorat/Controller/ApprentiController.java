@@ -59,11 +59,7 @@ public class ApprentiController {
         Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("user");
         Long tuteurId = utilisateur.getId();
 
-        apprentiService.createApprenti(apprenti);
-
-        anneeAlternance.setApprenti(apprenti);
-        anneeAlternance.setTuteurPedagogique(utilisateur);
-        apprentiService.createAnneeAlternance(anneeAlternance);
+        apprentiService.createApprenti(apprenti, tuteurId);
 
         return "redirect:/dashboard";
     }

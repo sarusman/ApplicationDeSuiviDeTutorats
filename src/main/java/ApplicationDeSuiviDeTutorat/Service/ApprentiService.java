@@ -1,23 +1,19 @@
 package ApplicationDeSuiviDeTutorat.Service;
 
-import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.DTO.ApprentiDto;
+import ApplicationDeSuiviDeTutorat.Models.Entities.AnneeAlternance;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Apprenti;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Utilisateur;
 import ApplicationDeSuiviDeTutorat.Models.Entities.Visite;
-import ApplicationDeSuiviDeTutorat.Repository.ApprentiBilanRepository;
-import ApplicationDeSuiviDeTutorat.Repository.VisiteRepository;
-import ApplicationDeSuiviDeTutorat.repository.UtilisateurRepository;
-import ApplicationDeSuiviDeTutorat.Repository.AnneeAlternanceRepository;
-import ApplicationDeSuiviDeTutorat.Repository.ApprentiRepository;
+import ApplicationDeSuiviDeTutorat.Repository.*;
 import ApplicationDeSuiviDeTutorat.Repository.UtilisateurRepository;
+import ApplicationDeSuiviDeTutorat.Repository.ApprentiRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +22,12 @@ public class ApprentiService {
     private final ApprentiRepository apprentiRepository;
     private final UtilisateurRepository utilisateurRepository;
     private final AnneeAlternanceRepository anneeAlternanceRepository;
+    private final VisiteRepository visiteRepository;
 
-    public ApprentiService(ApprentiRepository apprentiRepository, UtilisateurRepository utilisateurRepository, AnneeAlternanceRepository anneeAlternanceRepository, VisiteRepository visiteRepository) {
+    public ApprentiService(ApprentiRepository apprentiRepository,
+                           UtilisateurRepository utilisateurRepository,
+                           AnneeAlternanceRepository anneeAlternanceRepository,
+                           VisiteRepository visiteRepository) {
         this.apprentiRepository = apprentiRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.anneeAlternanceRepository = anneeAlternanceRepository;
@@ -61,10 +61,17 @@ public class ApprentiService {
                         new EntityNotFoundException("Utilisateur (Tuteur) non trouvé avec l'id : " + tuteurId)
                 );
 
-        apprenti.setTuteurPedagogique(tuteurPedagogique);
+            // TODO : Create Alternance Year with Apprenti
 
-        return apprentiBilanRepository.save(apprenti);
+//        anneeAlternance.setApprenti(apprenti);
+//        anneeAlternance.setTuteurPedagogique(utilisateur);
+//        createAnneeAlternance(anneeAlternance);
+//        apprenti.setTuteurPedagogique(tuteurPedagogique);
+
+        return apprentiRepository.save(apprenti);
     }
+
+    private void createAnneeAlternance(AnneeAlternance anneeAlternance) {}
 
     @Transactional
     public Apprenti updateApprentiBilanById(Long id, Apprenti updatedApprenti) {
@@ -88,11 +95,11 @@ public class ApprentiService {
     }
 
     public boolean existeAdresse(String adresseElectronique) {
-        return apprentiBilanRepository.existsByAdresseElectronique(adresseElectronique);
+        return apprentiRepository.existsByAdresseElectronique(adresseElectronique);
     }
 
     public boolean existeTelephone(String telephone) {
-        return apprentiBilanRepository.existsByTelephone(telephone);
+        return apprentiRepository.existsByTelephone(telephone);
     }
 
     public Optional<Visite> findDerniereVisite(Apprenti apprenti) {
@@ -103,7 +110,7 @@ public class ApprentiService {
 
     public Optional<Visite> findProchaineVisite(Apprenti apprenti) {
         if (apprenti == null || apprenti.getId() == null) return Optional.empty();
-        return visiteRepository.findProchaineNative(apprenti.getId(), LocalDate.now());
+        return visiteRepository.findProchaineNative(apprenti.getId(), LocalDateTime.now());
     }
 
     private ApprentiDto toDto(Apprenti a) {
@@ -133,7 +140,7 @@ public class ApprentiService {
     }
 
     public List<ApprentiDto> getApprentisPourTuteur(Long tuteurId) {
-        List<Apprenti> apprentis = apprentiBilanRepository
+        List<Apprenti> apprentis = apprentiRepository
                 .findByTuteurPedagogique_Id(tuteurId);
 
         return apprentis.stream()
