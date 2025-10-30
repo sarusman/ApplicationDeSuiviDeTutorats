@@ -31,6 +31,8 @@
 - IntelliJ IDEA
 - XAMPP ou MySQL Server lancé
 
+## Lancement en local
+
 ### Étape 1 : Configurer la connexion à la base de données
 
 **1a - Ouvrir le gestionnaire de bases de données** :
