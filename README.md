@@ -112,6 +112,26 @@ OpenAPI : https://applicationdesuividetutorats.onrender.com/v3/api-docs
 ```
 
 ---
+## Requête SQL Brute
+
+Voir `Apprenti_actif.sql`
+
+### Objectif
+
+Lister les apprentis actifs d'une année donnée, avec leur entreprise, triés par nom/prénom, et un filtre simple sur le nom.
+
+### Justification de conception
+
+- **Projection ciblée** : évite SELECT * pour limiter l'I/O
+- **LEFT JOIN** : conserve les apprentis sans entreprise (si possible dans le modèle)
+- **Filtre optionnel** : :q ignoré s'il est NULL
+- **Tri déterministe** : par nom puis prénom (cohérent pour l'UX)
+
+### Limites connues
+
+- **LIKE '%…%'** : reste peu indexable (coûteux sur gros volumes)
+- **Sensibilité casse/accents** : dépendante de la collation (usage de LOWER seulement pour la casse)
+
 
 ## Routes et Fonctionnalités
 
